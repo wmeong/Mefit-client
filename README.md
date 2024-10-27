@@ -17,3 +17,14 @@ https://rosedaily101.tistory.com/31
 뜨면 3버전을 사용하기 때문에 그대로 엔터 치기
 그다음 url 에 써진대로 따라하기
 6. 서버 키기 npm run serve
+>
+> 1. 데이터베이스 생성하기
+(채지피티한테 데이터베이스 생성방법 물어보기 mefit_dev로 생성)
+
+2. 연결하기 
+데이터베이스 - 연결 들어가서 mysql선택 후
+database: mefit_dev
+username : mefit
+password: 기존 mysql 패스워드 
+
+Driver properties -> 없는거 받기
