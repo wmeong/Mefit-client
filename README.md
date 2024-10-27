@@ -23,8 +23,9 @@ https://rosedaily101.tistory.com/31
 
 2. 연결하기 
 데이터베이스 - 연결 들어가서 mysql선택 후
-database: mefit_dev
-username : mefit
-password: 기존 mysql 패스워드 
+> database: mefit_dev
+> username : 기존 mysql 아이디 (root)
+> password: 기존 mysql 패스워드 
 
-Driver properties -> 없는거 받기
+> Driver properties -> 없는거 받기
+
