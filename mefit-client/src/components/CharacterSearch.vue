@@ -38,7 +38,7 @@ export default {
           `http://localhost:8081/api/characters/ocid`,
           { params: { name: this.characterName } } // 쿼리 파라미터 전달
         );
-
+        console.log('OCID Response:', ocidResponse); //성공적으로 받아왔으니 화면에 뿌려보시오 ㅎ
         const ocid = ocidResponse.data.ocid;
 
         if (!ocid) {
@@ -47,18 +47,18 @@ export default {
         }
 
         // 2단계: ocid로 캐릭터 정보를 가져와 서버에 저장
-        const saveResponse = await axios.post(
-          `http://localhost:8081/api/characters/save`,
-          { ocid: ocid } // POST 바디에 ocid 전달
-        );
+        // const saveResponse = await axios.post(
+        //   `http://localhost:8081/api/characters/save`,
+        //   { ocid: ocid } // POST 바디에 ocid 전달
+        // );
 
-        if (saveResponse.status === 200) {
-          // 서버에서 저장된 캐릭터 정보를 받아와 화면에 표시
-          this.character = saveResponse.data;
-          this.message = 'Character saved successfully!';
-        } else {
-          this.message = 'Failed to save character.';
-        }
+        // if (saveResponse.status === 200) {
+        //   // 서버에서 저장된 캐릭터 정보를 받아와 화면에 표시
+        //   this.character = saveResponse.data;
+        //   this.message = 'Character saved successfully!';
+        // } else {
+        //   this.message = 'Failed to save character.';
+        // }
       } catch (error) {
         console.error(error);
         this.message = 'An error occurred while saving the character.';
