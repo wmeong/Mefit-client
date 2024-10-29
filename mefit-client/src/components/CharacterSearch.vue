@@ -6,13 +6,13 @@
 
     <div v-if="character">
       <h2>Character Info</h2>
-      <p><strong>Name:</strong> {{ character.characterName }}</p>
-      <p><strong>World:</strong> {{ character.worldName }}</p>
-      <p><strong>Gender:</strong> {{ character.characterGender }}</p>
-      <p><strong>Class:</strong> {{ character.characterClass }}</p>
-      <p><strong>Level:</strong> {{ character.characterLevel }}</p>
-      <p><strong>Guild:</strong> {{ character.characterGuildName }}</p>
-      <img :src="character.characterImage" alt="Character Image" />
+      <p><strong>Name:</strong> {{ character.character_name }}</p>
+      <p><strong>World:</strong> {{ character.world_name }}</p>
+      <p><strong>Gender:</strong> {{ character.character_gender }}</p>
+      <p><strong>Class:</strong> {{ character.character_class }}</p>
+      <p><strong>Level:</strong> {{ character.character_level }}</p>
+      <p><strong>Guild:</strong> {{ character.character_guild_name }}</p>
+      <img :src="character.character_image" alt="Character Image" />
     </div>
 
     <p v-if="message">{{ message }}</p>
@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       characterName: '', // 검색할 캐릭터 이름
-      character: null,    // 검색된 캐릭터 정보 저장
+      character: {},    // 검색된 캐릭터 정보 저장
       message: '',        // 결과 메시지
     };
   },
@@ -38,13 +38,13 @@ export default {
           `http://localhost:8081/api/characters/ocid`,
           { params: { name: this.characterName } } // 쿼리 파라미터 전달
         );
-        console.log('OCID Response:', ocidResponse); //성공적으로 받아왔으니 화면에 뿌려보시오 ㅎ
-        const ocid = ocidResponse.data.ocid;
+        console.log('OCID Response:', ocidResponse);
+        console.log('OCID Response.data:', ocidResponse.data); 
+        this.character = ocidResponse.data;
+        console.log('캐릭터',this.character);
+        console.log(this.character.characterName)
 
-        if (!ocid) {
-          this.message = 'Character not found.';
-          return;
-        }
+  
 
         // 2단계: ocid로 캐릭터 정보를 가져와 서버에 저장
         // const saveResponse = await axios.post(
