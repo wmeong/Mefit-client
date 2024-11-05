@@ -1,15 +1,11 @@
 <template>
-<div class="component">
-
-</div>    
+  <div>
+    <h1>This is a Ranking page</h1>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'ComponentName',
+  name: "Ranking",
 };
 </script>
-
-<style scoped>
-
-</style>

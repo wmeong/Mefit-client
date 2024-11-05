@@ -1,15 +1,11 @@
 <template>
-<div class="component">
-
-</div>    
+  <div>
+    <h1>This is a CodiSimulation page</h1>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'ComponentName',
+  name: "CodiSimulation",
 };
 </script>
-
-<style scoped>
-
-</style>

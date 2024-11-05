@@ -1,28 +1,43 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <CharacterSearch />
+    <!-- 헤더 -->
+    <AppHeader />
+
+    <!-- 콘텐츠 영역 -->
+    <AppContent />
+	
+    <!-- 풋터 -->
+    <AppFooter />
   </div>
 </template>
 
 <script>
-import CharacterSearch from './components/CharacterSearch.vue';
+import AppHeader from './layouts/AppHeader.vue';
+import AppContent from './layouts/AppContent.vue';
+import AppFooter from './layouts/AppFooter.vue';
 
 export default {
   name: 'App',
   components: {
-    CharacterSearch,
-  },
-};
+    AppHeader,
+    AppContent,
+    AppFooter
+  }
+}
 </script>
 
 <style>
+html, body {
+  padding: 0;
+  margin: 0;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 0;
+  padding: 0;
 }
 </style>
