@@ -19,56 +19,76 @@ export default {
 }
 </script>
 
+
 <style scoped>
 header {
-  width: 100%;
-  text-align: center;
-  position: relative;
-  height: 120px;
-  border-bottom: 1px solid #35495e;
-  padding-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff; /* 배경을 흰색으로 변경 */
+  padding: 15px 40px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
-  position: absolute;
-  top: 20px;
-  left: 20px;
+  margin: 0;
+}
+
+header h1 .logo img {
+  width: 130px;
 }
 
 .menuWrap {
   display: flex;
-  justify-content: flex-end;
-  margin-right: 20px;
+  align-items: center;
 }
 
-header ul.menu {
+.menu {
   display: flex;
-  gap: 10px;
-}
-
-header ul.menu li {
+  gap: 20px;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
+.menu li {
+  position: relative;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #333; /* 글자색을 진한 회색으로 */
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px 15px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 5px;
+}
+
+.menu a:hover {
+  background-color: #f0f0f0; /* 호버 시 밝은 회색 배경 */
+  color: #333;
+}
+
+/* 모바일 환경을 위한 스타일 */
 @media (max-width: 768px) {
   header {
-    height: auto;
-    padding: 10px;
+    flex-direction: column;
+    padding: 20px;
   }
 
   header h1 {
-    position: static;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
 
   .menuWrap {
-    flex-direction: column;
-    align-items: center;
+    width: 100%;
+    justify-content: center;
   }
 
-  header ul.menu {
+  .menu {
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
   }
 }
 </style>

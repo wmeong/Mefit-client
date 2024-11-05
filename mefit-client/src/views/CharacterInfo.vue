@@ -4,6 +4,9 @@
     <input v-model="characterName" placeholder="Enter character name" />
     <button @click="searchAndSaveCharacter">Search & Save</button>
 
+   <v-color-picker></v-color-picker>
+
+
     <div v-if="character">
       <h2>Character Info</h2>
       <p><strong>Name:</strong> {{ character.character_name }}</p>
