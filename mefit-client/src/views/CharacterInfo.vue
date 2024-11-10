@@ -12,7 +12,7 @@
           class="mb-4"
           @keyup.enter="searchAndSaveCharacter"
         ></v-text-field>
-        
+
         <v-btn
           color="primary"
           dark
@@ -54,24 +54,94 @@
                 v-model="selectedColor"
                 flat
                 hide-canvas
+                @input="resetHSB"
               ></v-color-picker>
-              <v-btn
-                color="primary"
-                @click="addColorToList"
-                class="mt-3"
-              >
+              <v-btn color="primary" @click="addColorToList" class="mt-3">
                 색상 추가
               </v-btn>
             </v-col>
             <v-col cols="4">
               <div class="color-box">
-                <div v-for="(color, index) in colorList" :key="index" class="color-swatch" :style="{ backgroundColor: color }"></div>
+                <div
+                  v-for="(color, index) in colorList"
+                  :key="index"
+                  class="color-swatch"
+                  :style="{ backgroundColor: color }"
+                ></div>
                 <v-btn icon @click="clearColorList" class="clear-button">
                   <v-icon>mdi-trash-can-outline</v-icon>
                 </v-btn>
               </div>
             </v-col>
           </v-row>
+
+          <!-- 색조, 채도, 명도 조절 슬라이더와 버튼 -->
+          <v-row class="mt-4">
+            <!-- 색조 -->
+            <v-col cols="8">
+              <v-slider
+                v-model="hue"
+                label="색조"
+                min="0"
+                max="360"
+                class="mt-2"
+                @input="updateColor"
+              ></v-slider>
+            </v-col>
+            <v-col cols="2">
+              <span>{{ Math.round(hue) }}</span>
+            </v-col>
+            <v-col cols="2" class="d-flex align-center">
+              <v-btn small @click="adjustHue(-1)">-</v-btn>
+              <v-btn small @click="adjustHue(1)">+</v-btn>
+            </v-col>
+
+            <!-- 채도 -->
+            <v-col cols="8">
+              <v-slider
+                v-model="saturation"
+                label="채도"
+                min="-99"
+                max="99"
+                class="mt-2"
+                @input="updateColor"
+              ></v-slider>
+            </v-col>
+            <v-col cols="2">
+              <span>{{ Math.round(saturation) }}</span>
+            </v-col>
+            <v-col cols="2" class="d-flex align-center">
+              <v-btn small @click="adjustSaturation(-1)">-</v-btn>
+              <v-btn small @click="adjustSaturation(1)">+</v-btn>
+            </v-col>
+
+            <!-- 명도 -->
+            <v-col cols="8">
+              <v-slider
+                v-model="brightness"
+                label="명도"
+                min="-99"
+                max="99"
+                class="mt-2"
+                @input="updateColor"
+              ></v-slider>
+            </v-col>
+            <v-col cols="2">
+              <span>{{ Math.round(brightness) }}</span>
+            </v-col>
+            <v-col cols="2" class="d-flex align-center">
+              <v-btn small @click="adjustBrightness(-1)">-</v-btn>
+              <v-btn small @click="adjustBrightness(1)">+</v-btn>
+            </v-col>
+          </v-row>
+
+          <!-- 계산된 색상 미리보기 -->
+          <div
+            class="computed-color-preview mt-4"
+            :style="{ backgroundColor: computedColor }"
+          >
+            <p class="text-center">미리보기</p>
+          </div>
         </v-card>
 
         <!-- 오류 메시지 표시 -->
@@ -90,12 +160,24 @@ export default {
   name: "CharacterInfo",
   data() {
     return {
-      characterName: "", // 검색할 캐릭터 이름
-      character: {}, // 검색된 캐릭터 정보 저장
-      message: "", // 결과 메시지
-      selectedColor: "", // 현재 선택된 색상
-      colorList: [] // 선택된 색상 목록
+      characterName: "",
+      character: {},
+      message: "",
+      selectedColor: "#ffffff",
+      colorList: [],
+      hue: 0,
+      saturation: 0,
+      brightness: 0
     };
+  },
+  computed: {
+    computedColor() {
+      const hsl = this.hexToHSL(this.selectedColor);
+      hsl.h = (hsl.h + this.hue) % 360;
+      hsl.s = Math.min(100, Math.max(0, hsl.s + this.saturation));
+      hsl.l = Math.min(100, Math.max(0, hsl.l + this.brightness));
+      return this.hslToHex(hsl.h, hsl.s, hsl.l);
+    }
   },
   methods: {
     async searchAndSaveCharacter() {
@@ -105,7 +187,7 @@ export default {
           { params: { name: this.characterName } }
         );
         this.character = ocidResponse.data;
-        this.message = ""; // 오류 메시지 초기화
+        this.message = "";
       } catch (error) {
         console.error(error);
         this.message = "캐릭터 정보를 불러오는 중 오류가 발생했습니다.";
@@ -117,14 +199,77 @@ export default {
       }
     },
     clearColorList() {
-      this.colorList = []; // 색상 목록 초기화
+      this.colorList = [];
+    },
+    adjustHue(amount) {
+      this.hue = Math.min(360, Math.max(0, this.hue + amount));
+    },
+    adjustSaturation(amount) {
+      this.saturation = Math.min(99, Math.max(-99, this.saturation + amount));
+    },
+    adjustBrightness(amount) {
+      this.brightness = Math.min(99, Math.max(-99, this.brightness + amount));
+    },
+    resetHSB() {
+      this.hue = 0;
+      this.saturation = 0;
+      this.brightness = 0;
+      this.updateColor();
+    },
+    updateColor() {
+      this.computedColor;
+    },
+    hexToHSL(hex) {
+      let r = 0, g = 0, b = 0;
+      if (hex.length === 4) {
+        r = parseInt(hex[1] + hex[1], 16);
+        g = parseInt(hex[2] + hex[2], 16);
+        b = parseInt(hex[3] + hex[3], 16);
+      } else if (hex.length === 7) {
+        r = parseInt(hex[1] + hex[2], 16);
+        g = parseInt(hex[3] + hex[4], 16);
+        b = parseInt(hex[5] + hex[6], 16);
+      }
+      r /= 255;
+      g /= 255;
+      b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h = 0, s = 0, l = (max + min) / 2;
+      if (max !== min) {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+      return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+    },
+    hslToHex(h, s, l) {
+      s /= 100;
+      l /= 100;
+      const c = (1 - Math.abs(2 * l - 1)) * s;
+      const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+      const m = l - c / 2;
+      let r = 0, g = 0, b = 0;
+      if (0 <= h && h < 60) { r = c; g = x; b = 0; }
+      else if (60 <= h && h < 120) { r = x; g = c; b = 0; }
+      else if (120 <= h && h < 180) { r = 0; g = c; b = x; }
+      else if (180 <= h && h < 240) { r = 0; g = x; b = c; }
+      else if (240 <= h && h < 300) { r = x; g = 0; b = c; }
+      else if (300 <= h && h < 360) { r = c; g = 0; b = x; }
+      r = Math.round((r + m) * 255).toString(16).padStart(2, '0');
+      g = Math.round((g + m) * 255).toString(16).padStart(2, '0');
+      b = Math.round((b + m) * 255).toString(16).padStart(2, '0');
+      return `#${r}${g}${b}`;
     }
-  },
+  }
 };
 </script>
 
 <style scoped>
-/* 모던한 스타일 추가 */
 .modern-title {
   color: #2c3e50;
   font-weight: bold;
@@ -158,5 +303,12 @@ export default {
   position: absolute;
   top: 5px;
   right: 5px;
+}
+.computed-color-preview {
+  width: 100%;
+  height: 50px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 </style>
