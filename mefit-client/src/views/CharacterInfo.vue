@@ -24,30 +24,6 @@
         </v-btn>
 
         <!-- 캐릭터 정보 카드 -->
-        <!-- <v-card v-if="character" class="mb-4 pa-4 elevation-2 modern-card">
-          <v-card-title class="headline text-center">
-            {{ character.character_name }}
-          </v-card-title>
-          <v-card-subtitle class="text-center">
-            <p><strong>월드:</strong> {{ character.world_name }}</p>
-            <p><strong>성별:</strong> {{ character.character_gender }}</p>
-            <p><strong>직업:</strong> {{ character.character_class }}</p>
-            <p><strong>레벨:</strong> {{ character.character_level }}</p>
-            <p><strong>길드:</strong> {{ character.character_guild_name }}</p>
-          </v-card-subtitle>
-
-
-          <v-card-text class="text-center">
-            <v-img
-              :src="character.character_image"
-              alt="Character Image"
-              contain
-              max-height="200"
-            ></v-img>
-          </v-card-text>
-        </v-card> -->
-
-  <!-- 캐릭터 정보 카드 -->
         <v-card v-if="character" class="mb-4 pa-4 elevation-2 modern-card">
           <v-card-title class="headline text-center">
             {{ character.character_name }}
@@ -234,6 +210,7 @@ export default {
   },
   methods: {
     async searchAndSaveCharacter() {
+      if (!this.characterName) return; // 캐릭터 이름이 없으면 중단
       try {
         const ocidResponse = await axios.get(
           `http://localhost:8081/api/characters/ocid`,
@@ -242,7 +219,7 @@ export default {
         this.character = ocidResponse.data;
         this.message = "";
       } catch (error) {
-        console.error(error);
+        console.error("캐릭터 정보를 불러오는 중 오류가 발생했습니다:", error);
         this.message = "캐릭터 정보를 불러오는 중 오류가 발생했습니다.";
       }
     },
@@ -317,6 +294,20 @@ export default {
       g = Math.round((g + m) * 255).toString(16).padStart(2, '0');
       b = Math.round((b + m) * 255).toString(16).padStart(2, '0');
       return `#${r}${g}${b}`;
+    }
+  },
+  watch: {
+    // 라우터의 query 파라미터가 변경될 때마다 searchAndSaveCharacter 호출
+    "$route.query.q"(newQuery) {
+      this.characterName = newQuery;
+      this.searchAndSaveCharacter();
+    }
+  },
+  created() {
+    // 컴포넌트가 생성될 때 URL에서 캐릭터 이름을 가져와 검색
+    this.characterName = this.$route.query.q || "";
+    if (this.characterName) {
+      this.searchAndSaveCharacter();
     }
   }
 };
