@@ -24,6 +24,30 @@
         </v-btn>
 
         <!-- 캐릭터 정보 카드 -->
+        <!-- <v-card v-if="character" class="mb-4 pa-4 elevation-2 modern-card">
+          <v-card-title class="headline text-center">
+            {{ character.character_name }}
+          </v-card-title>
+          <v-card-subtitle class="text-center">
+            <p><strong>월드:</strong> {{ character.world_name }}</p>
+            <p><strong>성별:</strong> {{ character.character_gender }}</p>
+            <p><strong>직업:</strong> {{ character.character_class }}</p>
+            <p><strong>레벨:</strong> {{ character.character_level }}</p>
+            <p><strong>길드:</strong> {{ character.character_guild_name }}</p>
+          </v-card-subtitle>
+
+
+          <v-card-text class="text-center">
+            <v-img
+              :src="character.character_image"
+              alt="Character Image"
+              contain
+              max-height="200"
+            ></v-img>
+          </v-card-text>
+        </v-card> -->
+
+  <!-- 캐릭터 정보 카드 -->
         <v-card v-if="character" class="mb-4 pa-4 elevation-2 modern-card">
           <v-card-title class="headline text-center">
             {{ character.character_name }}
@@ -35,13 +59,42 @@
             <p><strong>레벨:</strong> {{ character.character_level }}</p>
             <p><strong>길드:</strong> {{ character.character_guild_name }}</p>
           </v-card-subtitle>
-          <v-card-text class="text-center">
+          <v-card-text class="d-flex justify-center">
+            <!-- 메인 컬러 표시 -->
+            <v-col cols="3">
+              <h3 class="text-center">메인컬러</h3>
+              <v-row>
+                <v-col
+                  v-for="(color, index) in character.main_colors"
+                  :key="'main-color-' + index"
+                  class="d-flex justify-center mb-2"
+                >
+                  <v-avatar :color="color" size="36"></v-avatar>
+                </v-col>
+              </v-row>
+            </v-col>
+
+            <!-- 캐릭터 이미지 -->
             <v-img
               :src="character.character_image"
               alt="Character Image"
               contain
               max-height="200"
             ></v-img>
+
+            <!-- 서브 컬러 표시 -->
+            <v-col cols="3">
+              <h3 class="text-center">서브컬러</h3>
+              <v-row>
+                <v-col
+                  v-for="(color, index) in character.sub_colors"
+                  :key="'sub-color-' + index"
+                  class="d-flex justify-center mb-2"
+                >
+                  <v-avatar :color="color" size="36"></v-avatar>
+                </v-col>
+              </v-row>
+            </v-col>
           </v-card-text>
         </v-card>
 
