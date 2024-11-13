@@ -14,10 +14,13 @@
         ></v-text-field>
 
         <v-btn
-          color="primary"
+          style="
+            background-color: #ffebf5;
+            box-shadow: 0px 4px 10px rgba(255, 182, 193, 0.3);
+          "
           dark
           @click="searchAndSaveCharacter"
-          class="mb-4"
+          class="mb-4 rounded-button"
           block
         >
           검색 및 저장
@@ -85,7 +88,14 @@
                 hide-canvas
                 @input="resetHSB"
               ></v-color-picker>
-              <v-btn color="primary" @click="addColorToList" class="mt-3">
+              <v-btn
+                style="
+                  background-color: #ffebf5;
+                  box-shadow: 0px 2px 5px rgba(255, 182, 193, 0.2);
+                "
+                @click="addColorToList"
+                class="mt-3 rounded-button"
+              >
                 색상 추가
               </v-btn>
             </v-col>
@@ -196,7 +206,7 @@ export default {
       colorList: [],
       hue: 0,
       saturation: 0,
-      brightness: 0
+      brightness: 0,
     };
   },
   computed: {
@@ -206,7 +216,7 @@ export default {
       hsl.s = Math.min(100, Math.max(0, hsl.s + this.saturation));
       hsl.l = Math.min(100, Math.max(0, hsl.l + this.brightness));
       return this.hslToHex(hsl.h, hsl.s, hsl.l);
-    }
+    },
   },
   methods: {
     async searchAndSaveCharacter() {
@@ -250,7 +260,9 @@ export default {
       this.computedColor;
     },
     hexToHSL(hex) {
-      let r = 0, g = 0, b = 0;
+      let r = 0,
+        g = 0,
+        b = 0;
       if (hex.length === 4) {
         r = parseInt(hex[1] + hex[1], 16);
         g = parseInt(hex[2] + hex[2], 16);
@@ -263,45 +275,85 @@ export default {
       r /= 255;
       g /= 255;
       b /= 255;
-      const max = Math.max(r, g, b), min = Math.min(r, g, b);
-      let h = 0, s = 0, l = (max + min) / 2;
+      const max = Math.max(r, g, b),
+        min = Math.min(r, g, b);
+      let h = 0,
+        s = 0,
+        l = (max + min) / 2;
       if (max !== min) {
         const d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
         switch (max) {
-          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-          case g: h = (b - r) / d + 2; break;
-          case b: h = (r - g) / d + 4; break;
+          case r:
+            h = (g - b) / d + (g < b ? 6 : 0);
+            break;
+          case g:
+            h = (b - r) / d + 2;
+            break;
+          case b:
+            h = (r - g) / d + 4;
+            break;
         }
         h /= 6;
       }
-      return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+      return {
+        h: Math.round(h * 360),
+        s: Math.round(s * 100),
+        l: Math.round(l * 100),
+      };
     },
     hslToHex(h, s, l) {
       s /= 100;
       l /= 100;
       const c = (1 - Math.abs(2 * l - 1)) * s;
-      const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+      const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
       const m = l - c / 2;
-      let r = 0, g = 0, b = 0;
-      if (0 <= h && h < 60) { r = c; g = x; b = 0; }
-      else if (60 <= h && h < 120) { r = x; g = c; b = 0; }
-      else if (120 <= h && h < 180) { r = 0; g = c; b = x; }
-      else if (180 <= h && h < 240) { r = 0; g = x; b = c; }
-      else if (240 <= h && h < 300) { r = x; g = 0; b = c; }
-      else if (300 <= h && h < 360) { r = c; g = 0; b = x; }
-      r = Math.round((r + m) * 255).toString(16).padStart(2, '0');
-      g = Math.round((g + m) * 255).toString(16).padStart(2, '0');
-      b = Math.round((b + m) * 255).toString(16).padStart(2, '0');
+      let r = 0,
+        g = 0,
+        b = 0;
+      if (0 <= h && h < 60) {
+        r = c;
+        g = x;
+        b = 0;
+      } else if (60 <= h && h < 120) {
+        r = x;
+        g = c;
+        b = 0;
+      } else if (120 <= h && h < 180) {
+        r = 0;
+        g = c;
+        b = x;
+      } else if (180 <= h && h < 240) {
+        r = 0;
+        g = x;
+        b = c;
+      } else if (240 <= h && h < 300) {
+        r = x;
+        g = 0;
+        b = c;
+      } else if (300 <= h && h < 360) {
+        r = c;
+        g = 0;
+        b = x;
+      }
+      r = Math.round((r + m) * 255)
+        .toString(16)
+        .padStart(2, "0");
+      g = Math.round((g + m) * 255)
+        .toString(16)
+        .padStart(2, "0");
+      b = Math.round((b + m) * 255)
+        .toString(16)
+        .padStart(2, "0");
       return `#${r}${g}${b}`;
-    }
+    },
   },
   watch: {
     // 라우터의 query 파라미터가 변경될 때마다 searchAndSaveCharacter 호출
     "$route.query.q"(newQuery) {
       this.characterName = newQuery;
       this.searchAndSaveCharacter();
-    }
+    },
   },
   created() {
     // 컴포넌트가 생성될 때 URL에서 캐릭터 이름을 가져와 검색
@@ -309,7 +361,7 @@ export default {
     if (this.characterName) {
       this.searchAndSaveCharacter();
     }
-  }
+  },
 };
 </script>
 
@@ -320,7 +372,7 @@ export default {
   font-size: 1.5em;
 }
 .modern-card {
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   color: #2c3e50;
   border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
