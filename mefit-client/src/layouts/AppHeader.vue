@@ -7,7 +7,7 @@
         <li><router-link to="/characterinfo">캐릭터정보</router-link></li>
         <li><router-link to="/ranking">랭킹</router-link></li>
         <li><router-link to="/codisimulation">코디시뮬</router-link></li>
-        <li><router-link to="/market">경매장</router-link></li>
+        <li><router-link to="/royal-simulation">로얄스타일</router-link></li> <!-- 새로운 메뉴 추가 -->
       </ul>
     </div>
   </header>
@@ -16,9 +16,8 @@
 <script>
 export default {
   name: "AppHeader"
-}
+};
 </script>
-
 
 <style scoped>
 header {
