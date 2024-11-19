@@ -8,7 +8,11 @@
           <p v-if="result" class="text-center mt-4">
             <strong>Result:</strong> {{ result.itemName }}
           </p>
-          <v-img v-if="result" :src="result.imageUrl" class="simulation-result-image mx-auto mt-4"></v-img>
+          <v-img
+            v-if="result"
+            :src="result.imageUrl"
+            class="simulation-result-image mx-auto mt-4"
+          ></v-img>
         </v-card>
       </v-col>
     </v-row>
@@ -48,10 +52,12 @@ export default {
     // 서버에서 아이템 목록 가져오기
     async fetchItems() {
       try {
-        const response = await axios.get("http://localhost:8080/api/royal-style");
+        const response = await axios.get("http://localhost:8081/api/royal-style");
         this.items = response.data.map((item) => ({
           ...item,
-          imageUrl: `/assets/images/${item.itemName.replace(/ /g, "_")}.png`, // 이미지 경로 매핑
+          imageUrl: `/assets/images/${encodeURIComponent(
+            item.itemName.replace(/ /g, "_").replace(/[^\w]/g, "")
+          )}.png`, // 이미지 경로 매핑
         }));
         console.log("Fetched items:", this.items); // 데이터 확인용
       } catch (error) {
@@ -60,14 +66,24 @@ export default {
       }
     },
     // 뽑기 시뮬레이션
-    simulate() {
-      if (this.items.length > 0) {
-        const randomIndex = Math.floor(Math.random() * this.items.length);
-        const selectedItem = this.items[randomIndex];
-        this.result = selectedItem; // 결과 저장
-        this.inventory.push(selectedItem); // 인벤토리에 추가
-      } else {
-        alert("No items available. Please fetch the data first.");
+    async simulate() {
+      try {
+        const response = await axios.get("http://localhost:8081/api/royal-style/random");
+        if (response.data.length > 0) {
+          const selectedItem = response.data[0];
+          this.result = {
+            ...selectedItem,
+            imageUrl: `/assets/images/${encodeURIComponent(
+              selectedItem.itemName.replace(/ /g, "_").replace(/[^\w]/g, "")
+            )}.png`,
+          };
+          this.inventory.push(this.result); // 인벤토리에 추가
+        } else {
+          alert("No items found in the simulation.");
+        }
+      } catch (error) {
+        console.error("Failed to simulate:", error);
+        alert("Failed to simulate. Please try again later.");
       }
     },
   },
