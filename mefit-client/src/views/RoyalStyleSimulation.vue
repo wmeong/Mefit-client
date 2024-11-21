@@ -4,7 +4,7 @@
       <v-col cols="12" md="8" lg="6">
         <v-card class="pa-4 mb-4 elevation-2 modern-card">
           <h2 class="text-center">Royal Style Simulator</h2>
-          <v-btn class="ma-2" color="primary" @click="simulate">Simulate</v-btn>
+            <v-btn class="ma-2" color="primary" @click="simulate">Simulate</v-btn>
           <p v-if="result" class="text-center mt-4">
             <strong>Result:</strong> {{ result.itemName }}
           </p>
@@ -69,8 +69,10 @@ export default {
     async simulate() {
       try {
         const response = await axios.get("http://localhost:8081/api/royal-style/random");
-        if (response.data.length > 0) {
-          const selectedItem = response.data[0];
+        console.log(response); // 응답 데이터 확인
+        if (response.data) {
+          const selectedItem = response.data; // 단일 객체로 처리
+          console.log("selectedItem:", selectedItem);
           this.result = {
             ...selectedItem,
             imageUrl: `/assets/images/${encodeURIComponent(
