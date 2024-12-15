@@ -59,15 +59,21 @@ export default {
     };
   },
   methods: {
+    /**
+     * 검색 쿼리를 기반으로 CharacterInfo 페이지로 이동
+     */
     search() {
       if (this.searchQuery) {
         this.$router.push({ name: "CharacterInfo", query: { q: this.searchQuery } });
       }
     },
+
+    /**
+     * 인기 캐릭터 목록 가져오기
+     */
     async fetchPopularCharacters() {
       try {
         const response = await axios.get("http://localhost:8081/api/characters/popular?limit=10");
-        console.log(response.data);
 
         // 데이터 구조에 맞게 매핑
         this.popularCharacters = response.data.map(character => ({
@@ -75,22 +81,34 @@ export default {
           characterLevel: character.character_level,
           characterClass: character.character_class,
           worldName: character.world_name,
-          characterImage: character.character_image,
+          characterImage: character.character_image || "https://via.placeholder.com/150", // 디폴트 이미지 추가
         }));
       } catch (error) {
         console.error("Failed to fetch popular characters:", error);
       }
     },
-    loadMoreCharacters() {
-      // 추가 데이터를 로드할 수 있는 경우, 여기에 스크롤 페이징 로직 추가
-    },
+
+    /**
+     * 인기 캐릭터 클릭 시 CharacterInfo로 이동
+     */
     selectCharacter(name) {
-      this.searchQuery = name;
-      this.search();
-    }
+      // 캐릭터 이름을 쿼리로 전달하여 CharacterInfo 페이지로 이동
+      this.$router.push({
+        name: "CharacterInfo",
+        query: { q: name },
+      });
+    },
+
+    /**
+     * 더보기 버튼 클릭 시 추가 캐릭터 불러오기 (페이징 처리 가능)
+     */
+    loadMoreCharacters() {
+      console.log("Load more characters... (페이징 로직 구현)");
+    },
   },
   created() {
-    this.fetchPopularCharacters(); // 컴포넌트 생성 시 인기 캐릭터 목록 가져오기
+    // 컴포넌트 생성 시 인기 캐릭터 목록 가져오기
+    this.fetchPopularCharacters();
   },
 };
 </script>

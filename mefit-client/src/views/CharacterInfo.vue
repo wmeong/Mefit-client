@@ -1,4 +1,3 @@
-
 <template>
   <v-container>
     <v-row class="align-center justify-center">
@@ -207,17 +206,19 @@
 <script>
 import axios from "axios";
 
-
 export default {
   name: "CharacterInfo",
   data() {
     return {
-      characterName: "",
-      character: {},
-      message: "",
+      characterName: "", // 검색어
+      character: {}, // 캐릭터 데이터
+      message: "", // 오류 메시지
     };
   },
   methods: {
+    /**
+     * 캐릭터 정보를 API에서 검색 및 저장
+     */
     async searchAndSaveCharacter() {
       if (!this.characterName) return; // 캐릭터 이름이 없으면 중단
       try {
@@ -232,6 +233,14 @@ export default {
         this.message = "캐릭터 정보를 불러오는 중 오류가 발생했습니다.";
       }
     },
+  },
+  created() {
+    // 라우터의 쿼리에서 캐릭터 이름 가져오기
+    this.characterName = this.$route.query.q || "";
+    if (this.characterName) {
+      // 캐릭터 이름이 있을 경우 API 호출
+      this.searchAndSaveCharacter();
+    }
   },
 };
 </script>
@@ -254,5 +263,12 @@ export default {
   padding: 8px;
   background-color: #f9f9f9;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: border 0.3s ease; /* 부드러운 효과 */
 }
+
+.equipment-item:hover {
+  border: 1px solid #ff88aa; /* hover 시 테두리를 진하게 */
+  box-shadow: 0px 4px 10px rgba(255, 136, 170, 0.3); /* 부드러운 그림자 효과 추가 */
+}
+
 </style>
