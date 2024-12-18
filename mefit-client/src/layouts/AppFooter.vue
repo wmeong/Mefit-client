@@ -22,8 +22,10 @@ footer {
 
 @media (max-width: 768px) {
   footer {
-    font-size: 14px; /* 모바일에서 글자 크기 줄이기 */
-    margin: 20px 0 0 0;
+    font-size: 12px; /* 글자 크기 줄이기 */
+    margin: 10px 0 0 0; /* 위쪽 여백 줄이기 */
+    padding: 5px 0; /* 패딩 줄이기 */
   }
 }
+
 </style>
