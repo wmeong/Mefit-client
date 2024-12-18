@@ -13,7 +13,7 @@
                 <div v-for="hat in items.hats" :key="hat.id">
                     <button @click="selectItem('hat', hat.image_url)">
                         <img :src="hat.image_url" alt="Hat" class="thumbnail" />
-                    </button>
+                    </button> 
                 </div>
             </div>
 

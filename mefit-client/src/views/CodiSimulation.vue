@@ -30,7 +30,7 @@
         <input
           type="range"
           min="-99"
-          max="99"
+          max="99" 
           v-model="saturation"
           @input="onUserAdjustment"
         />
