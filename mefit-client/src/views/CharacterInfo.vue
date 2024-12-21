@@ -29,28 +29,28 @@
                 <!-- 캐릭터 정보 카드 -->
                 <v-card class="mb-4 pa-4 elevation-2 modern-card">
                     <v-card-title class="headline text-center">
-                        {{ character.character_name || "캐릭터 이름" }}
+                        {{ characterInfo.character_name || "캐릭터 이름" }}
                     </v-card-title>
                     <v-card-subtitle class="text-center">
                         <p>
                             <strong>월드:</strong>
-                            {{ character.world_name || "월드명" }}
+                            {{ characterInfo.world_name || "월드명" }}
                         </p>
                         <p>
                             <strong>성별:</strong>
-                            {{ character.character_gender || "성별" }}
+                            {{ characterInfo.character_gender || "성별" }}
                         </p>
                         <p>
                             <strong>직업:</strong>
-                            {{ character.character_class || "직업" }}
+                            {{ characterInfo.character_class || "직업" }}
                         </p>
                         <p>
                             <strong>레벨:</strong>
-                            {{ character.character_level || "레벨" }}
+                            {{ characterInfo.character_level || "레벨" }}
                         </p>
                         <p>
                             <strong>길드:</strong>
-                            {{ character.character_guild_name || "길드명" }}
+                            {{ characterInfo.character_guild_name || "길드명" }}
                         </p>
                     </v-card-subtitle>
                     <v-card-text class="d-flex justify-center">
@@ -61,7 +61,7 @@
                                 <v-col
                                     v-for="(
                                         color, index
-                                    ) in character.main_colors || [
+                                    ) in characterInfo.main_colors || [
                                         '#ccc',
                                         '#ddd',
                                     ]"
@@ -79,7 +79,7 @@
                         <!-- 캐릭터 이미지 -->
                         <v-img
                             :src="
-                                character.character_image ||
+                                characterInfo.character_image ||
                                 'https://via.placeholder.com/150'
                             "
                             alt="Character Image"
@@ -94,7 +94,7 @@
                                 <v-col
                                     v-for="(
                                         color, index
-                                    ) in character.sub_colors || [
+                                    ) in characterInfo.sub_colors || [
                                         '#eee',
                                         '#fff',
                                     ]"
@@ -112,156 +112,23 @@
                 </v-card>
 
                 <!-- 장비 리스트 추가 -->
-                <v-card class="pa-4 mb-4 elevation-2 modern-card">
-                    <v-card-title class="headline text-center"
-                        >장비 목록</v-card-title
+                <v-row>
+                    <v-col
+                        v-for="item in filteredItems"
+                        :key="item.type"
+                        cols="4"
+                        class="d-flex flex-column align-center mb-4 equipment-item"
                     >
-                    <v-row>
-                        <v-col
-                            cols="4"
-                            class="d-flex flex-column align-center mb-4 equipment-item"
-                        >
-                            <v-img
-                                src="https://via.placeholder.com/50"
-                                alt="모자"
-                                contain
-                                max-height="50"
-                                max-width="50"
-                            ></v-img>
-                            <span class="text-center mt-2">모자</span>
-                        </v-col>
-                        <v-col
-                            cols="4"
-                            class="d-flex flex-column align-center mb-4 equipment-item"
-                        >
-                            <img
-                                src="https://open.api.nexon.com/static/maplestory/item/icon/KEPCNEGG"
-                                alt="헤어"
-                                contain
-                                max-height="50"
-                                max-width="50"
-                            />
-                            <span class="text-center mt-2">헤어</span>
-                        </v-col>
-                        <v-col
-                            cols="4"
-                            class="d-flex flex-column align-center mb-4 equipment-item"
-                        >
-                            <img
-                                src="https://via.placeholder.com/50"
-                                alt="성형"
-                                contain
-                                max-height="50"
-                                max-width="50"
-                            />
-                            <span class="text-center mt-2">성형</span>
-                        </v-col>
-                        <v-col
-                            cols="4"
-                            class="d-flex flex-column align-center mb-4 equipment-item"
-                        >
-                            <v-img
-                                src="https://via.placeholder.com/50"
-                                alt="얼장"
-                                contain
-                                max-height="50"
-                                max-width="50"
-                            ></v-img>
-                            <span class="text-center mt-2">얼장</span>
-                        </v-col>
-                        <v-col
-                            cols="4"
-                            class="d-flex flex-column align-center mb-4 equipment-item"
-                        >
-                            <v-img
-                                src="https://via.placeholder.com/50"
-                                alt="눈장"
-                                contain
-                                max-height="50"
-                                max-width="50"
-                            ></v-img>
-                            <span class="text-center mt-2">눈장</span>
-                        </v-col>
-                        <v-col
-                            cols="4"
-                            class="d-flex flex-column align-center mb-4 equipment-item"
-                        >
-                            <v-img
-                                src="https://via.placeholder.com/50"
-                                alt="귀걸"
-                                contain
-                                max-height="50"
-                                max-width="50"
-                            ></v-img>
-                            <span class="text-center mt-2">귀걸</span>
-                        </v-col>
-                        <v-col
-                            cols="4"
-                            class="d-flex flex-column align-center mb-4 equipment-item"
-                        >
-                            <v-img
-                                src="https://via.placeholder.com/50"
-                                alt="상의"
-                                contain
-                                max-height="50"
-                                max-width="50"
-                            ></v-img>
-                            <span class="text-center mt-2">상의</span>
-                        </v-col>
-                        <v-col
-                            cols="4"
-                            class="d-flex flex-column align-center mb-4 equipment-item"
-                        >
-                            <v-img
-                                src="https://via.placeholder.com/50"
-                                alt="신발"
-                                contain
-                                max-height="50"
-                                max-width="50"
-                            ></v-img>
-                            <span class="text-center mt-2">신발</span>
-                        </v-col>
-                        <v-col
-                            cols="4"
-                            class="d-flex flex-column align-center mb-4 equipment-item"
-                        >
-                            <v-img
-                                src="https://via.placeholder.com/50"
-                                alt="망토"
-                                contain
-                                max-height="50"
-                                max-width="50"
-                            ></v-img>
-                            <span class="text-center mt-2">망토</span>
-                        </v-col>
-                        <v-col
-                            cols="4"
-                            class="d-flex flex-column align-center mb-4 equipment-item"
-                        >
-                            <v-img
-                                src="https://via.placeholder.com/50"
-                                alt="무기"
-                                contain
-                                max-height="50"
-                                max-width="50"
-                            ></v-img>
-                            <span class="text-center mt-2">무기</span>
-                        </v-col>
-                        <v-col
-                            cols="4"
-                            class="d-flex flex-column align-center mb-4 equipment-item"
-                        >
-                            <v-img
-                                src="https://via.placeholder.com/50"
-                                alt="피부"
-                                contain
-                                max-height="50"
-                                max-width="50"
-                            ></v-img>
-                            <span class="text-center mt-2">피부</span>
-                        </v-col>
-                    </v-row>
-                </v-card>
+                        <img
+                            :src="item.icon"
+                            :alt="item.type"
+                            contain
+                            max-height="50"
+                            max-width="50"
+                        />
+                        <span class="text-center mt-2">{{ item.name }}</span>
+                    </v-col>
+                </v-row>
 
                 <!-- 오류 메시지 표시 -->
                 <v-alert v-if="message" type="error" outlined class="mt-4">
@@ -280,8 +147,24 @@ export default {
     data() {
         return {
             characterName: "", // 검색어
-            character: {}, // 캐릭터 데이터
+            characterInfo: {}, // 캐릭터 정보 데이터
             message: "", // 오류 메시지
+            characterCasyItem : [],
+            REQUIRED_ITEM_TYPES: [
+                { type: "헤어", icon: "https://via.placeholder.com/50", name: "헤어" },
+                { type: "성형", icon: "https://via.placeholder.com/50", name: "성형" },
+                { type: "피부", icon: "https://via.placeholder.com/50", name: "피부" },
+                { type: "모자", icon: "", name: "" },
+                { type: "얼장", icon: "", name: "" },
+                { type: "눈장", icon: "", name: "" },
+                { type: "귀걸", icon: "", name: "" },
+                { type: "상의", icon: "", name: "" },
+                { type: "하의", icon: "", name: "" },
+                { type: "신발", icon: "", name: "" },
+                { type: "장갑", icon: "", name: "" },
+                { type: "망토", icon: "", name: "" },
+                { type: "무기", icon: "", name: "" },
+            ],
         };
     },
     methods: {
@@ -295,7 +178,9 @@ export default {
                     `http://localhost:8081/api/characters/ocid`,
                     { params: { name: this.characterName } }
                 );
-                this.character = ocidResponse.data;
+                this.characterInfo = ocidResponse.data.characterInfoDTO;
+                this.characterCasyItem = ocidResponse.data.searchedCashItemDTOS;
+                console.log(this.characterCasyItem);
                 this.message = "";
             } catch (error) {
                 console.error(
@@ -314,6 +199,39 @@ export default {
             this.searchAndSaveCharacter();
         }
     },
+    computed: {
+        filteredItems() {
+            // 캐시 아이템 데이터와 순서 고정을 위해 필터링
+            return this.REQUIRED_ITEM_TYPES.map((itemType) => {
+                // 데이터에서 해당 item_type을 찾기
+                const itemData = this.characterCasyItem.find(
+                    (data) => data.item_type === itemType.type
+                );
+
+                // 데이터가 존재하고 item_name이 있으면 사용
+                if (itemData && itemData.item_name) {
+                    return {
+                        type: itemType.type,
+                        icon: itemData.item_icon || "https://via.placeholder.com/50", // 기본값 처리
+                        name: itemData.item_name,
+                    };
+                }
+
+                // 헤어, 성형, 피부와 같은 기본값 제공
+                if (itemType.name) {
+                    return {
+                        type: itemType.type,
+                        icon: itemType.icon || "https://via.placeholder.com/50", // 기본값 처리
+                        name: itemType.name,
+                    };
+                }
+
+                // 나머지 경우 null 반환
+                return null;
+            }).filter((item) => item !== null); // null 제거
+        },
+    },
+
 };
 </script>
 
