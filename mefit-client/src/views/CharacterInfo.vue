@@ -1,8 +1,9 @@
+최신 코드
 <template>
     <v-container>
         <v-row class="align-center justify-center">
             <v-col cols="12" md="8" lg="6">
-                <h1 class="text-center modern-title mb-5">캐릭터 검색</h1>
+                <h1 class="text-center modern-title mb-5">검색</h1>
 
                 <v-text-field
                     v-model="characterName"
@@ -111,24 +112,43 @@
                     </v-card-text>
                 </v-card>
 
-                <!-- 장비 리스트 추가 -->
-                <v-row>
-                    <v-col
-                        v-for="item in filteredItems"
-                        :key="item.type"
-                        cols="4"
-                        class="d-flex flex-column align-center mb-4 equipment-item"
-                    >
-                        <img
-                            :src="item.icon"
-                            :alt="item.type"
-                            contain
-                            max-height="50"
-                            max-width="50"
-                        />
-                        <span class="text-center mt-2">{{ item.name }}</span>
-                    </v-col>
-                </v-row>
+             <v-row>
+    <v-col
+        v-for="item in filteredItems"
+        :key="item.type"
+        cols="4"
+        class="d-flex flex-column align-center mb-4 equipment-item"
+    >
+        <div class="d-flex align-start">
+            <!-- 아이콘 -->
+            <img
+                :src="item.icon"
+                :alt="item.type"
+                class="equipment-icon"
+            />
+            <!-- 캐시 장비 정보 -->
+            <div class="equipment-details">
+                <span class="equipment-name">{{ item.name }}</span>
+
+                <p class="equipment-subdetails" v-if="item.colorRange">
+                    계열: {{ item.colorRange }}<br />
+                    색: {{ item.colorHue }} 채: {{ item.colorSaturation }} 명: {{ item.colorValue }}
+                </p>
+                <!-- 캐시 skin 정보 -->
+                <p class="equipment-subdetails" v-else-if="item.mixColor">
+                    {{ item.baseColor }} : {{ item.baseColorRate }} <br/>
+                    {{ item.mixColor}} :  {{ item.mixColorRate}}
+                </p>
+            <!-- 캐시 skin 정보 -->
+                <p class="equipment-subdetails" v-else-if="item.colorStyle">
+                    계열: {{ item.colorStyle }}<br />
+                    색: {{ item.skinHue }} 채: {{ item.skinSaturation }} 명: {{ item.skinBrightness }}
+                </p>
+            </div>
+        </div>
+    </v-col>
+</v-row>
+
 
                 <!-- 오류 메시지 표시 -->
                 <v-alert v-if="message" type="error" outlined class="mt-4">
@@ -149,11 +169,12 @@ export default {
             characterName: "", // 검색어
             characterInfo: {}, // 캐릭터 정보 데이터
             message: "", // 오류 메시지
-            characterCasyItem : [],
+            characterCashItem : [], 
+            characterCashFace : [],
             REQUIRED_ITEM_TYPES: [
-                { type: "헤어", icon: "https://via.placeholder.com/50", name: "헤어" },
-                { type: "성형", icon: "https://via.placeholder.com/50", name: "성형" },
-                { type: "피부", icon: "https://via.placeholder.com/50", name: "피부" },
+                { type: "헤어", icon: require("@/assets/hair.png"), name: "" },
+                { type: "성형", icon: require("@/assets/face.png"), name: "" },
+                { type: "피부", icon: require("@/assets/skin.png"), name: "" },
                 { type: "모자", icon: "", name: "" },
                 { type: "얼장", icon: "", name: "" },
                 { type: "눈장", icon: "", name: "" },
@@ -179,8 +200,10 @@ export default {
                     { params: { name: this.characterName } }
                 );
                 this.characterInfo = ocidResponse.data.characterInfoDTO;
-                this.characterCasyItem = ocidResponse.data.searchedCashItemDTOS;
-                console.log(this.characterCasyItem);
+                this.characterCashItem = ocidResponse.data.searchedCashItemDTOS;
+                this.characterCashFace = ocidResponse.data.searchedCashFaceDTOS;
+                console.log("item", this.characterCashItem);
+                  console.log("face", this.characterCashFace);
                 this.message = "";
             } catch (error) {
                 console.error(
@@ -199,38 +222,64 @@ export default {
             this.searchAndSaveCharacter();
         }
     },
-    computed: {
-        filteredItems() {
-            // 캐시 아이템 데이터와 순서 고정을 위해 필터링
-            return this.REQUIRED_ITEM_TYPES.map((itemType) => {
-                // 데이터에서 해당 item_type을 찾기
-                const itemData = this.characterCasyItem.find(
-                    (data) => data.item_type === itemType.type
-                );
+computed: {
+    filteredItems() {
+        return this.REQUIRED_ITEM_TYPES.map((requiredItemType) => {
+            // 캐릭터의 캐시 아이템 데이터에서 item_type이 requiredItemType.type과 일치하는 데이터를 찾는다.
+            const cashItemData = this.characterCashItem.find(
+                (itemData) => itemData.item_type === requiredItemType.type
+            );
 
-                // 데이터가 존재하고 item_name이 있으면 사용
-                if (itemData && itemData.item_name) {
-                    return {
-                        type: itemType.type,
-                        icon: itemData.item_icon || "https://via.placeholder.com/50", // 기본값 처리
-                        name: itemData.item_name,
-                    };
-                }
+            const cashFaceData = this.characterCashFace.find(
+                (itemData) => itemData.item_type === requiredItemType.type
+            );
 
-                // 헤어, 성형, 피부와 같은 기본값 제공
-                if (itemType.name) {
-                    return {
-                        type: itemType.type,
-                        icon: itemType.icon || "https://via.placeholder.com/50", // 기본값 처리
-                        name: itemType.name,
-                    };
-                }
 
-                // 나머지 경우 null 반환
-                return null;
-            }).filter((item) => item !== null); // null 제거
-        },
+            // 아이템 데이터가 있으면 세부 정보를 추가
+            if (cashItemData && cashItemData.item_name) {
+                return {
+                    type: requiredItemType.type,
+                    icon: cashItemData.item_icon || "https://via.placeholder.com/50",
+                    name: cashItemData.item_name,
+                    colorRange: cashItemData.color_range || null, // null로 유지
+                    colorHue: cashItemData.color_hue || 0,
+                    colorSaturation: cashItemData.color_saturation || 0,
+                    colorValue: cashItemData.color_value || 0,
+                };
+            }
+
+            if (cashFaceData && cashFaceData.item_name) {
+                return {
+                    type: requiredItemType.type,
+                    icon: requiredItemType.icon,
+                    name: cashFaceData.item_name,
+                    baseColor: cashFaceData.base_color,
+                    baseColorRate: 100-cashFaceData.mix_rate + "%",
+                    mixColor: cashFaceData.mix_color,
+                    mixColorRate: cashFaceData.mix_rate + "%",
+                    colorStyle: cashFaceData.color_style || null, // null로 유지
+                    skinHue: cashFaceData.skin_hue || 0,
+                    skinSaturation: cashFaceData.skin_saturation || 0,
+                    skinBrightness: cashFaceData.skin_brightness || 0, 
+                };
+            }
+
+            // 기본값 반환
+            if (requiredItemType.name) {
+                return {
+                    type: requiredItemType.type,
+                    icon: requiredItemType.icon || "https://via.placeholder.com/50",
+                    name: requiredItemType.name,
+                };
+            }
+
+            return null; // 아이템이 없으면 null
+        }).filter((item) => item !== null);
     },
+},
+
+
+
 
 };
 </script>
@@ -247,10 +296,14 @@ export default {
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 .equipment-item {
+    display: flex; /* Flexbox 사용 */
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: flex-start; /* 아이콘과 텍스트를 왼쪽 정렬 */
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 8px;
+    padding: 10px; /* 컨테이너 안쪽 여백 */
     background-color: #f9f9f9;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     transition: border 0.3s ease; /* 부드러운 효과 */
@@ -258,6 +311,39 @@ export default {
 
 .equipment-item:hover {
     border: 1px solid #ff88aa; /* hover 시 테두리를 진하게 */
-    box-shadow: 0px 4px 10px rgba(255, 136, 170, 0.3); /* 부드러운 그림자 효과 추가 */
+    box-shadow: 0px 4px 10px rgba(255, 136, 170, 0.3); /* hover 시 그림자 */
 }
+
+.equipment-icon {
+    flex-shrink: 0; /* 아이콘 크기를 유지 */
+    width: 50px;
+    height: 50px;
+    margin-right: 10px; /* 아이콘과 텍스트 간 간격 */
+    object-fit: contain; /* 이미지 비율 유지 */
+}
+
+.equipment-details {
+    flex-grow: 1; /* 텍스트 부분이 남은 공간 차지 */
+    text-align: left; /* 텍스트는 항상 왼쪽 정렬 */
+}
+
+.equipment-name {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.equipment-subdetails {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.equipment-id {
+    font-size: 10px;
+    color: #999;
+    margin-top: 5px;
+}
+
+
 </style>
