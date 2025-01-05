@@ -117,7 +117,7 @@
         v-for="item in filteredItems"
         :key="item.type"
         cols="4"
-        class="d-flex flex-column align-center mb-4 equipment-item"
+        class="equipment-item"
     >
         <div class="d-flex align-start">
             <!-- 아이콘 -->
@@ -309,8 +309,8 @@ computed: {
     padding: 12px;
     background-color: #ffffff;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    min-height: 100px;
     transition: border 0.3s ease, box-shadow 0.3s ease;
-    min-height: 100px; /* 최소 높이를 고정하여 텍스트 길이에 따라 박스 크기가 달라지지 않도록 설정 */
 }
 
 /* 호버 효과 */
@@ -321,9 +321,10 @@ computed: {
 
 /* 아이콘 이미지 스타일 */
 .equipment-icon {
+    flex-shrink: 0;
     width: 50px;
     height: 50px;
-    margin-right: 16px;
+    margin-right: 12px;
     object-fit: contain;
     border: 2px solid #f0f0f0;
     border-radius: 8px;
@@ -337,8 +338,6 @@ computed: {
     text-align: left;
     line-height: 1.5;
 }
-
-
 
 /* 아이템 이름 스타일 */
 .equipment-name {
