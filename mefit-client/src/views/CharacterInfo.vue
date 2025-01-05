@@ -112,7 +112,7 @@
                     </v-card-text>
                 </v-card>
 
-             <v-row>
+   <v-row>
     <v-col
         v-for="item in filteredItems"
         :key="item.type"
@@ -121,11 +121,14 @@
     >
         <div class="d-flex align-start">
             <!-- 아이콘 -->
-            <img
-                :src="item.icon"
-                :alt="item.type"
-                class="equipment-icon"
-            />
+            <div>
+                <img
+                    :src="item.icon"
+                    :alt="item.type"
+                    class="equipment-icon"
+                />
+            </div>
+
             <!-- 캐시 장비 정보 -->
             <div class="equipment-details">
                 <span class="equipment-name">{{ item.name }}</span>
@@ -134,12 +137,10 @@
                     계열: {{ item.colorRange }}<br />
                     색: {{ item.colorHue }} 채: {{ item.colorSaturation }} 명: {{ item.colorValue }}
                 </p>
-                <!-- 캐시 skin 정보 -->
                 <p class="equipment-subdetails" v-else-if="item.mixColor">
                     {{ item.baseColor }} : {{ item.baseColorRate }} <br/>
                     {{ item.mixColor}} :  {{ item.mixColorRate}}
                 </p>
-            <!-- 캐시 skin 정보 -->
                 <p class="equipment-subdetails" v-else-if="item.colorStyle">
                     계열: {{ item.colorStyle }}<br />
                     색: {{ item.skinHue }} 채: {{ item.skinSaturation }} 명: {{ item.skinBrightness }}
@@ -148,6 +149,7 @@
         </div>
     </v-col>
 </v-row>
+
 
 
                 <!-- 오류 메시지 표시 -->
@@ -283,67 +285,81 @@ computed: {
 
 };
 </script>
-
 <style scoped>
+/* 기존 제목 스타일 */
 .modern-title {
     color: #2c3e50;
     font-weight: bold;
     font-size: 1.5em;
 }
+
+/* 기존 카드 스타일 */
 .modern-card {
     background-color: #ffffff;
     color: #2c3e50;
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
-
+/* 아이템 박스 스타일 */
 .equipment-item {
-    display: flex; /* Flexbox 사용 */
-    align-items: center; /* 수직 가운데 정렬 */
-    justify-content: flex-start; /* 아이콘과 텍스트를 왼쪽 정렬 */
+    display: flex;
+    align-items: center;
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 10px; /* 컨테이너 안쪽 여백 */
-    background-color: #f9f9f9;
+    padding: 12px;
+    background-color: #ffffff;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    transition: border 0.3s ease; /* 부드러운 효과 */
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    min-height: 100px; /* 최소 높이를 고정하여 텍스트 길이에 따라 박스 크기가 달라지지 않도록 설정 */
 }
 
+/* 호버 효과 */
 .equipment-item:hover {
     border: 1px solid #ff88aa; /* hover 시 테두리를 진하게 */
     box-shadow: 0px 4px 10px rgba(255, 136, 170, 0.3); /* hover 시 그림자 */
 }
 
+/* 아이콘 이미지 스타일 */
 .equipment-icon {
-    flex-shrink: 0; /* 아이콘 크기를 유지 */
     width: 50px;
     height: 50px;
-    margin-right: 10px; /* 아이콘과 텍스트 간 간격 */
-    object-fit: contain; /* 이미지 비율 유지 */
+    margin-right: 16px;
+    object-fit: contain;
+    border: 2px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 6px;
+    background-color: #f9f9f9;
 }
 
+/* 텍스트 부분 스타일 */
 .equipment-details {
-    flex-grow: 1; /* 텍스트 부분이 남은 공간 차지 */
-    text-align: left; /* 텍스트는 항상 왼쪽 정렬 */
+    flex-grow: 1;
+    text-align: left;
+    line-height: 1.5;
 }
 
+
+
+/* 아이템 이름 스타일 */
 .equipment-name {
     font-weight: bold;
     font-size: 14px;
     margin-bottom: 5px;
 }
 
+/* 세부 정보 텍스트 스타일 */
 .equipment-subdetails {
     font-size: 12px;
     color: #666;
     line-height: 1.4;
 }
 
+
+/* 아이템 ID 텍스트 스타일 */
 .equipment-id {
     font-size: 10px;
     color: #999;
     margin-top: 5px;
 }
-
-
 </style>
+

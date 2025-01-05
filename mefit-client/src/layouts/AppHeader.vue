@@ -10,12 +10,39 @@
         <li><router-link to="/royal-simulation">로얄스타일</router-link></li> <!-- 새로운 메뉴 추가 -->
       </ul>
     </div>
+        <v-btn
+      @click="toggleDarkMode"
+      outlined
+      class="theme-toggle-btn"
+    >
+      {{ isDarkMode ? '라이트 모드' : '다크 모드' }}
+    </v-btn>
   </header>
 </template>
 
 <script>
 export default {
-  name: "AppHeader"
+  name: "AppHeader",
+  data() {
+    return {
+      isDarkMode: false, // 초기 모드는 라이트 모드
+    };
+  },
+  methods: {
+    toggleDarkMode() {
+      this.isDarkMode = !this.isDarkMode;
+      this.$vuetify.theme.dark = this.isDarkMode;
+
+      // 다크 모드에 따라 전체 배경색 변경
+      if (this.isDarkMode) {
+        document.body.style.backgroundColor = "#121212"; // 다크 모드 배경
+        document.body.style.color = "#ffffff"; // 다크 모드 텍스트
+      } else {
+        document.body.style.backgroundColor = "#ffffff"; // 라이트 모드 배경
+        document.body.style.color = "#000000"; // 라이트 모드 텍스트
+      }
+    },
+  },
 };
 </script>
 
@@ -89,5 +116,17 @@ header h1 .logo img {
     flex-direction: column;
     gap: 10px;
   }
+
+  .theme-toggle-btn {
+  background-color: #f5f5f5;
+  color: #333;
+  transition: background-color 0.3s ease, color 0.3s ease;
+ }
+
+.theme-toggle-btn:hover {
+  background-color: #333;
+  color: #fff;
+ }
+
 }
 </style>
