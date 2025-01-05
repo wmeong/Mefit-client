@@ -1,144 +1,193 @@
 <template>
-    <v-container>
-        <v-row class="align-center justify-center">
-            <v-col cols="12" md="8" lg="6">
-                <v-card class="pa-4 mb-4 elevation-2 modern-card">
-                    <h2 class="text-center">Royal Style Simulator</h2>
-                    <v-btn class="ma-2" color="primary" @click="simulate"
-                        >Simulate</v-btn
-                    >
-                    <p v-if="result" class="text-center mt-4">
-                        <strong>Result:</strong> {{ result.itemName }}
-                    </p>
-                    <v-img
-                        v-if="result"
-                        :src="result.imageUrl"
-                        class="simulation-result-image mx-auto mt-4"
-                    ></v-img>
-                </v-card>
-            </v-col>
-        </v-row>
+    <div class="royal-style-page">
+        <!-- 상단 버튼 -->
+        <div class="header">
+            <img
+                :src="royalIcon"
+                alt="Royal Style Button"
+                class="royal-button"
+                @click="startSimulation"
+            />
+        </div>
+        <!-- 보물상자 애니메이션 -->
+        <transition name="chest-animation">
+            <div v-if="showChest" class="chest-container">
+                <img :src="chestImage" alt="Chest" class="chest-image" />
+            </div>
+        </transition>
 
-        <!-- 인벤토리 스타일 -->
-        <v-row class="inventory-grid">
-            <v-col
-                v-for="(item, index) in inventory"
-                :key="index"
-                cols="2"
-                class="inventory-item"
-            >
-                <v-img
-                    :src="item.imageUrl"
-                    :alt="item.itemName"
-                    class="item-image"
-                ></v-img>
-                <p class="item-name">{{ item.itemName }}</p>
-            </v-col>
-        </v-row>
-    </v-container>
+        <!-- 팝업 -->
+        <div v-if="showPopup" class="popup-overlay" @click="closePopup">
+            <transition name="popup-animation">
+                <div class="popup-content">
+                    <img
+                        v-if="getPopupImage()"
+                        :src="getPopupImage()"
+                        alt="Item Image"
+                        class="popup-image"
+                    />
+                    <p class="item-name">
+                        {{ simulationResult.processedItemNames }}
+                    </p>
+                    <p class="item-probability">
+                        {{ simulationResult.probability }}
+                    </p>
+                </div>
+            </transition>
+        </div>
+    </div>
 </template>
 
 <script>
 import axios from "axios";
 
 export default {
-    name: "RoyalStyleSimulation",
     data() {
         return {
-            items: [], // 서버에서 가져온 전체 아이템 목록
-            inventory: [], // 인벤토리에 추가된 아이템 목록
-            result: null, // 뽑기 결과
+            simulationResult: {},
+            showPopup: false,
+            showChest: false,
         };
     },
-    methods: {
-        // 서버에서 아이템 목록 가져오기
-        async fetchItems() {
-            try {
-                const response = await axios.get(
-                    "http://localhost:8081/api/royal-style"
-                );
-                this.items = response.data.map((item) => ({
-                    ...item,
-                    imageUrl: `/assets/images/${encodeURIComponent(
-                        item.itemName.replace(/ /g, "_").replace(/[^\w]/g, "")
-                    )}.png`, // 이미지 경로 매핑
-                }));
-                console.log("Fetched items:", this.items); // 데이터 확인용
-            } catch (error) {
-                console.error("Failed to fetch items:", error);
-                alert("Failed to load items. Please try again later.");
-            }
+    computed: {
+        royalIcon() {
+            return require("@/assets/royalstyle/royalicon.png");
         },
-        // 뽑기 시뮬레이션
-        async simulate() {
-            try {
-                const response = await axios.get(
-                    "http://localhost:8081/api/royal-style/random"
-                );
-                console.log(response); // 응답 데이터 확인
-                if (response.data) {
-                    const selectedItem = response.data; // 단일 객체로 처리
-                    console.log("selectedItem:", selectedItem);
-                    this.result = {
-                        ...selectedItem,
-                        imageUrl: `/assets/images/${encodeURIComponent(
-                            selectedItem.itemName
-                                .replace(/ /g, "_")
-                                .replace(/[^\w]/g, "")
-                        )}.png`,
-                    };
-                    this.inventory.push(this.result); // 인벤토리에 추가
-                } else {
-                    alert("No items found in the simulation.");
-                }
-            } catch (error) {
-                console.error("Failed to simulate:", error);
-                alert("Failed to simulate. Please try again later.");
-            }
+        chestImage() {
+            return require("@/assets/royalstyle/royalicon.png");
         },
     },
-    mounted() {
-        // 페이지가 로드되면 아이템 목록 가져오기
-        this.fetchItems();
+    methods: {
+        async startSimulation() {
+            this.showChest = true;
+            setTimeout(async () => {
+                try {
+                    const response = await axios.get(
+                        "http://localhost:8081/api/royal-style/random"
+                    );
+                    this.simulationResult = response.data;
+                    this.showChest = false;
+                    this.showPopup = true;
+                } catch (error) {
+                    console.error("Error starting simulation:", error);
+                }
+            }, 2000);
+        },
+        closePopup() {
+            this.showPopup = false;
+        },
+        getPopupImage() {
+            try {
+                const imageName =
+                    this.simulationResult.processedItemNames[0] + ".png";
+                return require(`/src/assets/royalstyle/${imageName}`);
+            } catch (error) {
+                console.warn("Image not found");
+                return "";
+            }
+        },
     },
 };
 </script>
 
 <style scoped>
-.text-center {
+.royal-style-page {
+    padding: 20px;
     text-align: center;
+    position: relative;
 }
-.mt-4 {
-    margin-top: 16px;
+.header {
+    margin-bottom: 20px;
 }
-.inventory-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 16px;
+.royal-button {
+    cursor: pointer;
+    width: 150px;
+    animation: pulse 1.5s infinite;
 }
-.inventory-item {
-    text-align: center;
-    max-width: 80px;
+
+.chest-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
-.item-image {
+.chest-image {
+    width: 200px;
+    animation: shake 0.8s infinite;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 4px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.popup-content {
     background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: scale(1); /* 수정 */
+}
+.popup-image {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 10px;
 }
 .item-name {
-    font-size: 12px;
-    margin-top: 4px;
-    color: #555;
-    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
-.simulation-result-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 8px;
-    border: 2px solid #000;
+.item-probability {
+    font-size: 16px;
+    color: #666;
+}
+
+/* 애니메이션 효과 */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    20%,
+    60% {
+        transform: translateX(-10px);
+    }
+    40%,
+    80% {
+        transform: translateX(10px);
+    }
+}
+
+.popup-animation-enter-active {
+    animation: scaleUp 0.5s ease-out forwards;
+}
+
+@keyframes scaleUp {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 </style>
