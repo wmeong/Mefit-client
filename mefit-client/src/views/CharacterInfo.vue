@@ -1,39 +1,9 @@
 <template>
-    <v-container class="main-container">
-        <!-- 검색 섹션 -->
-        <v-row class="align-center justify-center">
-            <v-col cols="12" md="8" lg="6">
-                <h1 class="text-center modern-title mb-5">검색</h1>
-
-                <v-text-field
-                    v-model="characterName"
-                    label="캐릭터 이름 입력"
-                    outlined
-                    hide-details
-                    class="mb-4"
-                    @keyup.enter="searchAndSaveCharacter"
-                ></v-text-field>
-
-                <v-btn
-                    style="
-                        background-color: #f4f4f4;
-                        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-                        color: #333;
-                    "
-                    outlined
-                    @click="searchAndSaveCharacter"
-                    class="mb-4 rounded-button"
-                    block
-                >
-                    검색 및 저장
-                </v-btn>
-            </v-col>
-        </v-row>
-
-        <!-- 캐릭터 정보 카드 -->
-        <v-row>
-            <!-- 캐릭터 이미지 영역 -->
-            <v-col cols="12" md="5" class="d-flex flex-column align-center">
+    <v-container class="main-container" fluid>
+        <!-- 캐릭터 이미지와 기본 정보 정렬 -->
+        <v-row class="align-start" dense>
+            <v-col cols="12" md="4" class="character-image-container">
+                <!-- 캐릭터 이미지 -->
                 <v-img
                     :src="
                         characterInfo.character_image ||
@@ -44,12 +14,13 @@
                     width="200"
                     class="character-image"
                 ></v-img>
-
-                <!-- 캐릭터 기본 정보 카드 -->
-                <v-card class="mt-4 pa-4 elevation-2 modern-card">
-                    <v-card-title class="headline text-center">{{
-                        characterInfo.character_name || "캐릭터 이름"
-                    }}</v-card-title>
+            </v-col>
+            <v-col cols="12" md="8">
+                <!-- 기본 정보 및 퍼스널 컬러 분석 결과 -->
+                <v-card class="pa-4 elevation-2 modern-card">
+                    <v-card-title class="headline text-center">
+                        {{ characterInfo.character_name || "캐릭터 이름" }}
+                    </v-card-title>
                     <v-card-subtitle class="text-center">
                         <p>
                             <strong>월드:</strong>
@@ -72,12 +43,7 @@
                             {{ characterInfo.character_guild_name || "길드명" }}
                         </p>
                     </v-card-subtitle>
-                </v-card>
-            </v-col>
-
-            <!-- 퍼스널 컬러 분석 결과 -->
-            <v-col cols="12" md="7">
-                <v-card class="pa-4 elevation-2 modern-card">
+                    <!-- 퍼스널 컬러 분석 결과 -->
                     <h3 class="text-center mb-4">퍼스널 컬러 분석 결과</h3>
                     <h2
                         :class="[
@@ -88,7 +54,6 @@
                     >
                         {{ personalColorAnalysis }}
                     </h2>
-
                     <!-- 메인 컬러 표시 -->
                     <h4 class="text-center">메인컬러</h4>
                     <v-row class="mb-4">
@@ -102,7 +67,6 @@
                             <v-avatar :color="color" size="36"></v-avatar>
                         </v-col>
                     </v-row>
-
                     <!-- 서브 컬러 표시 -->
                     <h4 class="text-center">서브컬러</h4>
                     <v-row>
@@ -121,11 +85,13 @@
         </v-row>
 
         <!-- 캐시 장비 정보 -->
-        <v-row class="mt-5">
+        <v-row class="mt-4" dense>
             <v-col
                 v-for="item in filteredItems"
                 :key="item.type"
-                cols="4"
+                cols="12"
+                sm="6"
+                md="4"
                 class="equipment-item"
             >
                 <div class="d-flex align-start">
@@ -137,32 +103,28 @@
                             class="equipment-icon"
                         />
                     </div>
-
                     <!-- 캐시 장비 정보 -->
                     <div class="equipment-details">
                         <span class="equipment-name">{{ item.name }}</span>
-
                         <p class="equipment-subdetails" v-if="item.colorRange">
-                            계열: {{ item.colorRange }}<br />
-                            색: {{ item.colorHue }} 채:
-                            {{ item.colorSaturation }} 명:
-                            {{ item.colorValue }}
+                            계열: {{ item.colorRange }}<br />색:
+                            {{ item.colorHue }} 채:
+                            {{ item.colorSaturation }} 명: {{ item.colorValue }}
                         </p>
                         <p
                             class="equipment-subdetails"
                             v-else-if="item.mixColor"
                         >
-                            {{ item.baseColor }} : {{ item.baseColorRate }}
-                            <br />
-                            {{ item.mixColor }} : {{ item.mixColorRate }}
+                            {{ item.baseColor }} : {{ item.baseColorRate
+                            }}<br />{{ item.mixColor }} :
+                            {{ item.mixColorRate }}
                         </p>
                         <p
                             class="equipment-subdetails"
                             v-else-if="item.colorStyle"
                         >
-                            계열: {{ item.colorStyle }}<br />
-                            색: {{ item.skinHue }} 채:
-                            {{ item.skinSaturation }} 명:
+                            계열: {{ item.colorStyle }}<br />색:
+                            {{ item.skinHue }} 채: {{ item.skinSaturation }} 명:
                             {{ item.skinBrightness }}
                         </p>
                     </div>
@@ -512,134 +474,72 @@ export default {
     },
 };
 </script>
+
 <style scoped>
 .main-container {
     max-width: 1200px;
     margin: 0 auto;
 }
-
-/* 기존 제목 스타일 */
-.modern-title {
-    color: #2c3e50;
-    font-weight: bold;
-    font-size: 1.5em;
-}
-
-/* 기존 카드 스타일 */
-.modern-card {
-    background-color: #ffffff;
-    color: #2c3e50;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-/* 아이템 박스 스타일 */
-.equipment-item {
+.character-image-container {
     display: flex;
+    justify-content: center;
     align-items: center;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 12px;
-    background-color: #ffffff;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    min-height: 100px;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
+    border-right: 1px solid #ddd;
+    padding-right: 16px;
 }
-
-/* 호버 효과 */
-.equipment-item:hover {
-    border: 1px solid #ff88aa; /* hover 시 테두리를 진하게 */
-    box-shadow: 0px 4px 10px rgba(255, 136, 170, 0.3); /* hover 시 그림자 */
-}
-
-/* 아이콘 이미지 스타일 */
-.equipment-icon {
-    flex-shrink: 0;
-    width: 50px;
-    height: 50px;
-    margin-right: 12px;
-    object-fit: contain;
-    border: 2px solid #f0f0f0;
-    border-radius: 8px;
-    padding: 6px;
-    background-color: #f9f9f9;
-}
-
-/* 텍스트 부분 스타일 */
-.equipment-details {
-    flex-grow: 1;
-    text-align: left;
-    line-height: 1.5;
-}
-
-/* 아이템 이름 스타일 */
-.equipment-name {
-    font-weight: bold;
-    font-size: 14px;
-    margin-bottom: 5px;
-}
-
-/* 세부 정보 텍스트 스타일 */
-.equipment-subdetails {
-    font-size: 12px;
-    color: #666;
-    line-height: 1.4;
-}
-
-/* 아이템 ID 텍스트 스타일 */
-.equipment-id {
-    font-size: 10px;
-    color: #999;
-    margin-top: 5px;
-}
-
-.text-personal-color {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2c3e50;
-}
-
-.modern-card {
-    background-color: #ffffff;
-    color: #2c3e50;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.equipment-item {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 12px;
-    background-color: #ffffff;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    min-height: 100px;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
-}
-
-.equipment-item:hover {
-    border: 1px solid #ff88aa;
-    box-shadow: 0px 4px 10px rgba(255, 136, 170, 0.3);
-}
-
-.equipment-icon {
-    flex-shrink: 0;
-    width: 50px;
-    height: 50px;
-    margin-right: 12px;
-    object-fit: contain;
-    border: 2px solid #f0f0f0;
-    border-radius: 8px;
-    padding: 6px;
-    background-color: #f9f9f9;
-}
-
 .character-image {
     border-radius: 12px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #f9f9f9;
 }
-
+.modern-card {
+    background-color: #ffffff;
+    color: #2c3e50;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 12px;
+}
+.equipment-item {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #ffffff;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    min-height: 100px;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+.equipment-item:hover {
+    border: 1px solid #ff88aa;
+    box-shadow: 0px 4px 10px rgba(255, 136, 170, 0.3);
+}
+.equipment-icon {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    margin-right: 12px;
+    object-fit: contain;
+    border: 2px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 6px;
+    background-color: #f9f9f9;
+}
+.equipment-details {
+    flex-grow: 1;
+    text-align: left;
+    line-height: 1.5;
+}
+.equipment-name {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+.equipment-subdetails {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
 .personal-color-result {
     font-size: 24px;
     font-weight: bold;
@@ -648,28 +548,20 @@ export default {
     border-radius: 8px;
     text-align: center;
 }
-
-/* Spring 그룹 스타일 */
 .personal-color-result.Spring {
-    background-color: #fbe7c6; /* 부드러운 베이지 색 */
-    color: #8d5524; /* 따뜻한 브라운 텍스트 */
+    background-color: #fbe7c6;
+    color: #8d5524;
 }
-
-/* Summer 그룹 스타일 */
 .personal-color-result.Summer {
-    background-color: #e6f7ff; /* 밝은 하늘색 */
-    color: #007acc; /* 시원한 블루 텍스트 */
+    background-color: #e6f7ff;
+    color: #007acc;
 }
-
-/* Autumn 그룹 스타일 */
 .personal-color-result.Autumn {
-    background-color: #fdecc8; /* 부드러운 크림 색 */
-    color: #a64b2a; /* 짙은 오렌지 텍스트 */
+    background-color: #fdecc8;
+    color: #a64b2a;
 }
-
-/* Winter 그룹 스타일 */
 .personal-color-result.Winter {
-    background-color: #f0f4f7; /* 밝은 회색 톤 */
-    color: #3a4e80; /* 딥 블루 텍스트 */
+    background-color: #f0f4f7;
+    color: #3a4e80;
 }
 </style>
