@@ -1,29 +1,142 @@
 <template>
-  <div class="royal-style-page">
-    <!-- 뽑기 버튼 영역 -->
-    <div class="header">
-      <img :src="royalIcon" alt="Royal Style Button" class="royal-button" @click="startSimulation" />
-      <!-- 로얄스타일 뽑기 영역 -->
-      <div class="label-counter">
-        <p>
-          쿠폰 사용 횟수:
-          <span>{{ couponCount }}</span> 개
-        </p>
-        <p>
-          스페셜 라벨:
-          <span>{{ specialLabelCount }}</span> 개
-        </p>
-        <p>
-          사용 캐시:
-          <span>{{ usedCash }}</span> 캐시
-        </p>
-        <!-- 운세 영역 -->
-        <p>
-          오늘의 운세를 확인하세요!
-          <span>{{ fortuneMessage }}</span>
-        </p>
-      </div>
-    </div>
+  <v-container class="pa-4">
+    <!-- 첫 번째 줄: 1번, 3번, 4번 -->
+    <v-row class="px-2">
+      <!-- 1번: 로얄스타일 결산 영역 -->
+      <v-col cols="4" class="royal-style-result">
+        <v-card outlined class="pl-8 pr-8 pt-4" style="min-height: 250px;">
+          <h3 class="font-weight-bold">로얄스타일 결산</h3>
+          <v-row>
+            <v-col cols="6" class="mt-10 result-item">
+              <v-icon color="yellow" class="mr-2">mdi-trophy</v-icon>
+              <v-list-item-content>쿠폰 사용 횟수</v-list-item-content>
+            </v-col>
+            <v-col cols="6" class="text-right mt-10">
+              <v-list-item-content>{{ couponCount }}개</v-list-item-content>
+            </v-col>
+            <v-col cols="6" class="result-item">
+              <v-icon color="grey" class="mr-2">mdi-trophy-variant</v-icon>
+              <v-list-item-content>스페셜 라벨</v-list-item-content>
+            </v-col>
+            <v-col cols="6" class="text-right">
+              <v-list-item-content>{{ specialLabelCount }}개</v-list-item-content>
+            </v-col>
+            <v-col cols="6" class="result-item">
+              <v-icon color="grey" class="mr-2">mdi-trophy-variant</v-icon>
+              <v-list-item-content>사용 캐시</v-list-item-content>
+            </v-col>
+            <v-col cols="6" class="text-right">
+              <v-list-item-content>{{ usedCash }} 캐시</v-list-item-content>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-col>
+
+      <!-- 3번: 로얄스타일 뽑기 영역 -->
+      <v-col cols="5" class="royal-style-pick">
+        <v-card outlined class="pa-4 d-flex flex-column" style="min-height: 250px;">
+          <h3 class="font-weight-bold text-center">로얄스타일 뽑기</h3>
+          <!-- 캐릭터 이미지 -->
+          <v-img
+            :src="characterImage || require('@/assets/royalstyle/royalicon.png')"
+            contain
+            width="110"
+            height="110"
+            class="mb-4 mx-auto"
+          ></v-img>
+          <v-row class="align-center justify-center">
+            <div class="royal-input-wrapper mr-4">
+              <input v-model="characterName" type="text" placeholder="닉네임 입력" class="royal-input" @keyup.enter="searchCharacter"/>
+              <!-- 검색 아이콘 클릭 시 검색 실행 -->
+              <span class="search-icon" @click="searchCharacter">&#128269;</span>
+            </div>
+            <v-btn size="small" class="custom-btn mr-2" color="pink" @click="startSimulation">뽑기</v-btn>
+            <v-btn size="small" class="custom-btn" color="purple" outlined>저장</v-btn>
+          </v-row>
+        </v-card>
+      </v-col>
+
+      <!-- 4번: 운세 영역 -->
+      <v-col cols="3" class="royal-fortune">
+        <v-card
+          outlined
+          class="pa-4 d-flex flex-column justify-start align-center"
+          style="min-height: 250px;"
+        >
+          <h3 class="text-h10 font-weight-bold text-center">로얄깡 운세</h3>
+          <p class="text-center mt-10">{{ fortuneMessage }}</p>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <!-- 두 번째 줄: 2번, 5번 -->
+    <v-row class="mt-4 px-2">
+      <!-- 2번: 실시간 랭킹 영역 -->
+      <v-col cols="4" class="ranking-section">
+        <v-card outlined class="pa-4" style="min-height: 350px; height: 550px;">
+          <h3 class="font-weight-bold">실시간 랭킹 10</h3>
+          <v-list dense>
+            <v-list-item v-for="(user, index) in ranking" :key="index" class="ranking-item">
+              <!-- 순위와 아이콘, 닉네임, 퍼센트 각각의 영역 -->
+              <div class="ranking-row">
+                <!-- 순위와 닉네임 -->
+                <div class="ranking-user-info">
+                  <v-icon
+                    v-if="index === 0"
+                    color="yellow"
+                    class="mr-2 ranking-trophy-icon"
+                  >mdi-trophy</v-icon>
+                  <v-icon
+                    v-else-if="index === 1"
+                    color="grey"
+                    class="mr-2 ranking-trophy-icon"
+                  >mdi-trophy-variant</v-icon>
+                  <v-icon v-else class="mr-2 ranking-user-icon">mdi-account-circle</v-icon>
+                  <span class="ranking-user-name">{{ index + 1 }} {{ user.name }}</span>
+                </div>
+                <!-- 퍼센트 -->
+                <div class="ranking-user-percentage">{{ user.percentage }}%</div>
+              </div>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
+
+      <!-- 5번: 뽑기 결과 저장 영역 -->
+      <v-col cols="8" class="pick-result">
+        <v-card outlined class="pa-4" style="min-height: 350px; height: 550px; overflow-y: auto;">
+          <h3 class="font-weight-bold">로얄스타일 결과</h3>
+          <v-row class="d-flex flex-wrap justify-start">
+            <v-col
+              v-for="(result, index) in recentResults"
+              :key="index"
+              cols="auto"
+              class="d-flex flex-column align-center"
+              style="flex: 0 0 calc(20%); max-width: calc(20%);"
+            >
+              <!-- 이미지 컨테이너: 좌우 배치 -->
+              <div class="result-image-container">
+                <v-img
+                  v-for="(image, imgIndex) in result.images"
+                  :key="imgIndex"
+                  :src="image"
+                  contain
+                  width="50"
+                  height="50"
+                  class="result-image"
+                ></v-img>
+              </div>
+              <!-- 이름 및 확률 -->
+              <div class="result-text font-size:7px">
+                <p class="text-center">{{ result.name }}</p>
+                <p class="text-center">확률: {{ result.probability }}</p>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-col>
+    </v-row>
+
     <!-- 슈피겔만 애니메이션 -->
     <transition name="shupi-animation">
       <div v-if="showShupi" class="shupi-container">
@@ -31,24 +144,25 @@
       </div>
     </transition>
 
-    <!-- 초기화 팝업 -->
-    <div v-if="showResetPopup" class="popup-overlay">
-      <div class="popup-content reset-popup">
-        <p>
+    <!-- 초기화(리셋) 팝업 -->
+    <div v-if="showResetPopup" class="popup-reset">
+      <div class="popup-reset-content reset-popup">
+        <h3 class="popup-reset-title">초기화 확인</h3>
+        <p class="popup-reset-message">
           쿠폰 100개를 소모했습니다.
           <br />초기화하시겠습니까?
         </p>
-        <div class="popup-buttons">
-          <button @click="resetSimulation">예</button>
-          <button @click="cancelReset">아니오</button>
+        <div class="popup-reset-buttons">
+          <v-btn @click="resetSimulation" color="pink" class="popup-reset-button">예</v-btn>
+          <v-btn @click="cancelReset" outlined color="purple" class="popup-reset-button">아니오</v-btn>
         </div>
       </div>
     </div>
 
     <!-- 로얄스타일 뽑기 결과 팝업 -->
-    <div v-if="showPopup" class="popup-overlay" @click="closePopup">
+    <div v-if="showPopup" class="popup-result" @click="closePopup">
       <transition name="popup-animation">
-        <div class="popup-content">
+        <div class="popup-result-content">
           <!-- 폭죽 효과 -->
           <div v-if="isSpecialLabel" class="firework-container">
             <div class="firework"></div>
@@ -64,33 +178,12 @@
           </div>
 
           <!-- 아이템 이름 표시 -->
-          <p class="item-name">{{ formattedItemNames }}</p>
+          <p class="item-name pt-4">{{ formattedItemNames }}</p>
           <p class="item-probability">{{ simulationResult.probability }}</p>
         </div>
       </transition>
     </div>
-
-    <!-- 뽑기 결과 저장 영역 -->
-    <div class="result-table">
-      <div v-for="(result, index) in recentResults" :key="index" class="result-row">
-        <!-- <img :src="result.image" alt="Item Image" class="result-image" />-->
-        <!-- ✅ 모든 이미지 렌더링 -->
-    <div class="result-images-container">
-        <img
-            v-for="(image, imgIndex) in result.images"
-            :key="imgIndex"
-            :src="image"
-            alt="Item Image"
-            class="result-image"
-        />
-    </div>
-        <div class="result-details">
-          <p class="result-name">{{ result.name }}</p>
-          <p class="result-probability">확률: {{ result.probability }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -100,6 +193,8 @@ import confetti from "canvas-confetti";
 export default {
   data() {
     return {
+      characterName: "", // 입력된 캐릭터 이름
+      characterImage: null, // 가져온 캐릭터 이미지 URL
       simulationResult: {},
       showPopup: false,
       showShupi: false,
@@ -109,7 +204,20 @@ export default {
       couponCount: 0, // 쿠폰 사용 횟수
       showResetPopup: false, // 초기화 팝업 표시 여부
       isSimulationDisabled: false, // 시뮬레이션 사용 불가 여부
-      fortuneMessage: ""
+      fortuneMessage: "",
+      ranking: [
+        { name: "쫄루", percentage: 40 },
+        { name: "김용덕", percentage: 33 },
+        { name: "commitnpush", percentage: 31 },
+        { name: "이의상", percentage: 30 },
+        { name: "Jun", percentage: 27 },
+        { name: "아이엠토르", percentage: 25 },
+        { name: "마스터 치프", percentage: 24 },
+        { name: "박소정", percentage: 18 },
+        { name: "OhWhy", percentage: 15 },
+        { name: "농냥이", percentage: 10 }
+      ],
+      drawResults: Array(20).fill(require("@/assets/royalstyle/royalicon.png"))
     };
   },
   computed: {
@@ -137,9 +245,31 @@ export default {
       }
     }
   },
+
   methods: {
+    async searchCharacter() {
+      if (!this.characterName) {
+        alert("닉네임을 입력해주세요.");
+        return;
+      }
+      try {
+        // API 요청
+        const ocidResponse = await axios.get(
+          `http://localhost:8081/api/characters/ocid`,
+          { params: { name: this.characterName } }
+        );
+        this.characterInfo = ocidResponse.data.characterInfoDTO;
+
+        // 가져온 캐릭터 이미지 URL 설정
+        this.characterImage = this.characterInfo.character_image;
+        console.log("Character Image URL:", this.characterImage);
+      } catch (error) {
+        console.error("Error fetching character info:", error);
+        alert("캐릭터 정보를 가져오는 데 실패했습니다.");
+      }
+    },
     async startSimulation() {
-      if (this.isAnimating) return; // 중복 실행 방지
+      if (this.isAnimating || this.showResetPopup) return; // 중복 실행 방지
 
       // 시뮬레이션이 중단된 상태라면 초기화 팝업을 다시 띄움
       if (this.isSimulationDisabled) {
@@ -153,7 +283,7 @@ export default {
       this.isAnimating = true;
       this.showShupi = true;
 
-      // 보물상자 애니메이션 실행
+      // 슈피겔만 애니메이션 실행
       this.timer = setTimeout(async () => {
         await this.showPopupResult();
       }, 400);
@@ -220,11 +350,13 @@ export default {
       this.recentResults = [];
       this.showResetPopup = false;
       this.isSimulationDisabled = false; // 초기화 시 플래그 리셋
-        this.fortuneMessage = "";
+      this.fortuneMessage = "";
+      this.showShupi = false;
     },
     cancelReset() {
       this.isSimulationDisabled = true;
       this.showResetPopup = false;
+      this.showShupi = false;
     },
     skipAnimation(event) {
       if (this.showResetPopup) return; // 초기화 팝업이 열려 있으면 동작 중지
@@ -277,18 +409,15 @@ export default {
         const imageNames = this.simulationResult.processedItemNames
           .split(",")
           .map(name => name.trim());
-        return imageNames.map(imageName =>{
-                  try {
-        // 이미지가 있으면 해당 이미지를 로드
-        return require(`@/assets/royalstyle/${imageName}.png`);
-      } catch (error) {
-        // 이미지가 없으면 디폴트 이미지를 로드
-        return require("@/assets/royalstyle/bomb.png");
-      }
-
-        }
-          
-        );
+        return imageNames.map(imageName => {
+          try {
+            // 이미지가 있으면 해당 이미지를 로드
+            return require(`@/assets/royalstyle/${imageName}.png`);
+          } catch (error) {
+            // 이미지가 없으면 디폴트 이미지를 로드
+            return require("@/assets/royalstyle/bomb.png");
+          }
+        });
       } catch (error) {
         console.warn("Some images not found:", error);
         return [];
@@ -301,15 +430,36 @@ export default {
       const ratio = (this.specialLabelCount / this.couponCount) * 100;
 
       if (ratio <= 10) {
-        this.fortuneMessage = "운이 없네요. 오늘 밤길 조심하세요😂";
+        this.fortuneMessage = `${(
+          (this.specialLabelCount / this.couponCount) *
+          100
+        ).toFixed(1)}%\n오늘은 쉬어가는 날~ 
+        조용히 게임만 즐기세요! 🎮`;
       } else if (ratio > 10 && ratio <= 20) {
-        this.fortuneMessage = "운이 좋을랑 말랑🤔";
+        this.fortuneMessage = `${(
+          (this.specialLabelCount / this.couponCount) *
+          100
+        ).toFixed(1)}%\n조금씩 운이 올라오고 있어요! 
+        다음엔 더 기대해봐요! 😊`;
       } else if (ratio > 20 && ratio <= 30) {
-        this.fortuneMessage = "나 오늘 운 좋을지도🤗";
+        this.fortuneMessage = `${(
+          (this.specialLabelCount / this.couponCount) *
+          100
+        ).toFixed(1)}%\n운이 점점 상승 중! 
+        오늘은 기회가 보이네요! 🍀`;
       } else if (ratio > 30 && ratio <= 40) {
-        this.fortuneMessage = "로얄스타일 사러 달려가시조 롸잇나우🥰";
+        this.fortuneMessage = `${(
+          (this.specialLabelCount / this.couponCount) *
+          100
+        ).toFixed(1)}%\n운빨 대폭발 직전! 
+        이제 한 방이 남았습니다! 🎉`;
       } else {
-        this.fortuneMessage = "당장 로또 사러 나가요!!";
+        this.fortuneMessage = `${(
+          (this.specialLabelCount / this.couponCount) *
+          100
+        ).toFixed(1)}%\n지금이 기회! 
+        오늘의 주인공은 당신입니다! 
+        로또 사세요! 💎`;
       }
     }
   }
@@ -317,32 +467,222 @@ export default {
 </script>
 
 <style scoped>
-.royal-style-page {
-  padding: 20px;
-  text-align: center;
-  position: relative;
-}
-.header {
-  margin-bottom: 20px;
-}
-.royal-button {
-  cursor: pointer;
-  width: 150px;
-  animation: pulse 1.5s infinite;
+body {
+  color: rgb(83, 80, 80); /* 모든 페이지의 기본 글씨 색상을 회색으로 설정 */
 }
 
-.shupi-container {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+v-list-item-content,
+input {
+  color: rgb(
+    83,
+    80,
+    80
+  ) !important; /* 모든 제목, 텍스트 요소도 회색으로 설정 */
+}
+
+/* 1번: 로얄스타일 결과 */
+.royal-style-result {
+}
+.result-item {
+  display: flex;
+  align-items: center;
+}
+
+/* 2번: 실시간 랭킹 */
+.ranking-section {
+}
+
+.ranking-item {
+  padding: 4px 0;
+}
+
+/* 전체 행: 닉네임과 퍼센트를 구분 */
+.ranking-row {
+  display: flex;
+  justify-content: space-between; /* 닉네임 왼쪽, 퍼센트 오른쪽 */
+  align-items: center; /* 수직 정렬 */
+  width: 100%; /* 각 행을 꽉 채움 */
+}
+
+/* 닉네임 및 아이콘 */
+.ranking-user-info {
+  display: flex;
+  align-items: center; /* 닉네임과 아이콘 수직 정렬 */
+}
+
+/* 닉네임 */
+.ranking-user-name {
+  margin-left: 8px; /* 아이콘과 닉네임 간 여백 */
+}
+
+/* 퍼센트 */
+.ranking-user-percentage {
+  text-align: right; /* 오른쪽 정렬 */
+  flex-shrink: 0; /* 줄어들지 않도록 고정 */
+  width: 50px; /* 퍼센트 고정 너비 */
+}
+
+/* 3번: 로얄스타일 뽑기 */
+.royal-style-pick {
+}
+
+/*로얄-인풋 박스*/
+.royal-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  border-radius: 24px; /* 둥글게 */
+  padding: 8px 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 */
+  width: 230px; /* 입력창 너비 */
+}
+/*로얄 인풋 텍스트*/
+.royal-input {
+  border: none;
+  outline: none;
+  flex: 1;
+  background-color: transparent;
+  font-size: 12px;
+}
+.search-icon {
+  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  transition: background-color 0.3s, box-shadow 0.3s; /* 효과 전환 */
+}
+.search-icon:active {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 클릭 시 그림자 축소 */
+  transform: scale(0.95); /* 클릭 시 살짝 눌리는 효과 */
+}
+/* 4번: 운세보기 */
+.royal-fortune {
+  white-space: pre-line; /* 줄바꿈 처리 */
+}
+
+/* 5번: 뽑기 결과 저장 */
+.pick-result {
+  background-color: #fff;
+  overflow-y: auto;
+}
+
+.result-image-container {
+  display: flex; /* 이미지 정렬을 위한 플렉스 박스 */
+  justify-content: center; /* 좌우 정렬 */
+}
+.result-text {
+  font-size: 9.5px;
+}
+
+/* 폭죽 */
+
+.firework-container {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-.shupi-image {
-  width: 200px;
-  animation: shake 0.3s;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
-.popup-overlay {
+.firework {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+  border-radius: 50%;
+  animation: explode 0.8s ease-out forwards;
+}
+
+@keyframes explode {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/*초기화(리셋) 팝업 */
+/* 초기화(리셋) 팝업 */
+.popup-reset {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* 팝업이 항상 위에 표시되도록 */
+}
+
+.popup-reset-content {
+  background-color: #fff;
+  width: 360px;
+  padding: 20px 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.popup-reset-title {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.popup-reset-message {
+  font-size: 13px;
+  margin-bottom: 20px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.popup-reset-buttons {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+.popup-reset-button {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* 애니메이션 효과 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*결과 팝업*/
+.popup-result {
   position: fixed;
   top: 0;
   left: 0;
@@ -353,10 +693,13 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.popup-content {
+.popup-result-content {
   background-color: #fff;
+  width: 320px;
+  height: 150px;
   padding: 20px;
-  border-radius: 10px;
+  font-size: 11px;
+  border-radius: 8px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: scale(1);
@@ -372,64 +715,20 @@ export default {
 }
 
 .popup-image {
-  width: 150px;
-  height: 150px;
-}
-.result-table {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 10px;
-  margin-top: 40px;
+  width: 80px;
+  height: 70px;
 }
 
-/* 태블릿 크기 조정 */
-@media (max-width: 1024px) {
-  .result-table {
-    grid-template-columns: repeat(5, 1fr);
-  }
+/*슈피겔만 이미지 css */
+.shupi-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-
-/* 모바일 크기 조정 */
-@media (max-width: 768px) {
-  .result-table {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.result-image {
-    width: 80px;
-    height: 80px;
-    object-fit: contain; /* ✅ 이미지를 비율에 맞게 조정하여 잘리지 않게 함 */
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 8px; /* 선택사항: 이미지 모서리를 둥글게 */
-}
-
-/* 모바일 크기 조정 */
-@media (max-width: 768px) {
-    .result-image {
-        width: 60px;
-        height: 60px;
-    }
-}
-.result-name {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.result-probability {
-  font-size: 12px;
-  color: #666;
-}
-
-/* 모바일 텍스트 크기 조정 */
-@media (max-width: 768px) {
-  .result-name {
-    font-size: 12px;
-  }
-  .result-probability {
-    font-size: 10px;
-  }
+.shupi-image {
+  width: 200px;
+  animation: shake 0.3s;
 }
 
 /* 애니메이션 효과 */
@@ -472,75 +771,4 @@ export default {
     transform: scale(1);
   }
 }
-
-.firework-container {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.firework {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background-color: transparent;
-  border-radius: 50%;
-  animation: explode 0.8s ease-out forwards;
-}
-
-@keyframes explode {
-  0% {
-    transform: scale(0.5);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(3);
-    opacity: 0;
-  }
-}
-
-/* 전광판 스타일 */
-.button-panel {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.label-counter {
-  font-size: 24px;
-  font-weight: bold;
-  color: #ff477e;
-  background-color: #fff;
-  padding: 10px 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  animation: numberChange 0.3s ease-in-out;
-}
-
-/* 숫자 변경 시 애니메이션 */
-@keyframes numberChange {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-.result-images-container {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
-}
-
-
-
-
 </style>
