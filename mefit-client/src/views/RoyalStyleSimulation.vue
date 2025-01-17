@@ -26,7 +26,7 @@
               <v-list-item-content>사용 캐시</v-list-item-content>
             </v-col>
             <v-col cols="6" class="text-right">
-              <v-list-item-content>{{ usedCash }} 캐시</v-list-item-content>
+              <v-list-item-content>{{ formattedUsedCash }} 캐시</v-list-item-content>
             </v-col>
           </v-row>
         </v-card>
@@ -46,7 +46,13 @@
           ></v-img>
           <v-row class="align-center justify-center">
             <div class="royal-input-wrapper mr-4">
-              <input v-model="characterName" type="text" placeholder="닉네임 입력" class="royal-input" @keyup.enter="searchCharacter"/>
+              <input
+                v-model="characterName"
+                type="text"
+                placeholder="닉네임 입력"
+                class="royal-input"
+                @keyup.enter="searchCharacter"
+              />
               <!-- 검색 아이콘 클릭 시 검색 실행 -->
               <span class="search-icon" @click="searchCharacter">&#128269;</span>
             </div>
@@ -112,9 +118,16 @@
               :key="index"
               cols="auto"
               class="d-flex flex-column align-center"
-              style="flex: 0 0 calc(20%); max-width: calc(20%);"
+              style="flex: 0 0 calc(20%); max-width: calc(20%); position: relative;"
             >
-              <!-- 이미지 컨테이너: 좌우 배치 -->
+              <!-- Special Label 표시 -->
+              <img
+                v-if="result.isSpecial"
+                :src="require('@/assets/special.png')"
+                alt="Special Label"
+                class="special-label"
+              />
+              <!-- 이미지 컨테이너 -->
               <div class="result-image-container">
                 <v-img
                   v-for="(image, imgIndex) in result.images"
@@ -129,7 +142,7 @@
               <!-- 이름 및 확률 -->
               <div class="result-text font-size:7px">
                 <p class="text-center">{{ result.name }}</p>
-                <p class="text-center">확률: {{ result.probability }}</p>
+                <p class="text-center">{{ result.probability }}</p>
               </div>
             </v-col>
           </v-row>
@@ -174,6 +187,12 @@
           <div class="popup-image-container">
             <div v-for="(image, index) in getPopupImages()" :key="index">
               <img :src="image" alt="Item Image" class="popup-image" />
+              <!-- Special Label 이미지 표시 -->
+              <img
+                v-if="isSpecialLabel"
+                :src="require('@/assets/special.png')"
+                alt="Special Label"
+              />
             </div>
           </div>
 
@@ -243,6 +262,9 @@ export default {
       } else {
         return this.simulationResult.processedItemNames;
       }
+    },
+    formattedUsedCash() {
+      return this.usedCash.toLocaleString(); // 숫자를 1,000 단위로 쉼표 추가
     }
   },
 
@@ -333,7 +355,8 @@ export default {
           images: popupImages, // ✅ 여러 이미지 저장
           //image: this.getPopupImages()[0],
           name: this.formattedItemNames,
-          probability: this.simulationResult.probability
+          probability: this.simulationResult.probability,
+          isSpecial: this.isSpecialLabel
         });
         if (this.recentResults.length > 100) {
           this.recentResults.pop();
@@ -423,45 +446,34 @@ export default {
         return [];
       }
     },
-    calculateFortune() {
-      // 쿠폰이 10개 단위일 때만 계산
-      if (this.couponCount % 10 !== 0) return;
+ calculateFortune() {
+  // 쿠폰이 10개 단위일 때만 계산
+  if (this.couponCount % 10 !== 0) return;
 
-      const ratio = (this.specialLabelCount / this.couponCount) * 100;
+  const ratio = (this.specialLabelCount / this.couponCount) * 100;
 
-      if (ratio <= 10) {
-        this.fortuneMessage = `${(
-          (this.specialLabelCount / this.couponCount) *
-          100
-        ).toFixed(1)}%\n오늘은 쉬어가는 날~ 
-        조용히 게임만 즐기세요! 🎮`;
-      } else if (ratio > 10 && ratio <= 20) {
-        this.fortuneMessage = `${(
-          (this.specialLabelCount / this.couponCount) *
-          100
-        ).toFixed(1)}%\n조금씩 운이 올라오고 있어요! 
-        다음엔 더 기대해봐요! 😊`;
-      } else if (ratio > 20 && ratio <= 30) {
-        this.fortuneMessage = `${(
-          (this.specialLabelCount / this.couponCount) *
-          100
-        ).toFixed(1)}%\n운이 점점 상승 중! 
-        오늘은 기회가 보이네요! 🍀`;
-      } else if (ratio > 30 && ratio <= 40) {
-        this.fortuneMessage = `${(
-          (this.specialLabelCount / this.couponCount) *
-          100
-        ).toFixed(1)}%\n운빨 대폭발 직전! 
-        이제 한 방이 남았습니다! 🎉`;
-      } else {
-        this.fortuneMessage = `${(
-          (this.specialLabelCount / this.couponCount) *
-          100
-        ).toFixed(1)}%\n지금이 기회! 
-        오늘의 주인공은 당신입니다! 
-        로또 사세요! 💎`;
-      }
-    }
+  // 소수점이 0으로 끝나면 정수로 표시, 아니면 소수점 첫째 자리까지 표시
+  const formattedRatio = ratio % 1 === 0 ? ratio.toFixed(0) : ratio.toFixed(1);
+
+  if (ratio <= 10) {
+    this.fortuneMessage = `${formattedRatio}%\n오늘은 쉬어가는 날~ 
+    조용히 게임만 즐기세요! 🎮`;
+  } else if (ratio > 10 && ratio <= 20) {
+    this.fortuneMessage = `${formattedRatio}%\n조금씩 운이 올라오고 있어요! 
+    다음엔 더 기대해봐요! 😊`;
+  } else if (ratio > 20 && ratio <= 30) {
+    this.fortuneMessage = `${formattedRatio}%\n운이 점점 상승 중! 
+    오늘은 기회가 보이네요! 🍀`;
+  } else if (ratio > 30 && ratio <= 40) {
+    this.fortuneMessage = `${formattedRatio}%\n운빨 대폭발 직전! 
+    이제 한 방이 남았습니다! 🎉`;
+  } else {
+    this.fortuneMessage = `${formattedRatio}%\n지금이 기회! 
+    오늘의 주인공은 당신입니다! 
+    로또 사세요! 💎`;
+  }
+}
+
   }
 };
 </script>
@@ -578,6 +590,14 @@ input {
 }
 .result-text {
   font-size: 9.5px;
+}
+.special-label {
+  position: absolute;
+  top: 6px; /* 상단 간격 */
+  left: 8px; /* 우측 간격 */
+  width: 40px; /* 이미지 너비 */
+  height: 40px; /* 이미지 높이 */
+  z-index: 1; /* 다른 요소 위에 표시 */
 }
 
 /* 폭죽 */
@@ -696,7 +716,7 @@ input {
 .popup-result-content {
   background-color: #fff;
   width: 320px;
-  height: 150px;
+  height: 170px;
   padding: 20px;
   font-size: 11px;
   border-radius: 8px;
@@ -710,13 +730,23 @@ input {
 
 .popup-image-container {
   display: flex;
-  gap: 10px;
+  gap: 20px;
   justify-content: center;
+  padding-top: 30px;
 }
 
 .popup-image {
-  width: 80px;
-  height: 70px;
+  width: 52px; /* 이미지의 너비 */
+  height: 48px; /* 이미지의 높이 */
+}
+
+.popup-image-container img[alt="Special Label"] {
+  position: absolute;
+  top: 20px; /* 상단 위치 */
+  left: 53px; /* 왼쪽 위치 */
+  width: 50px; /* 너비 */
+  height: 50px; /* 높이 */
+  z-index: 1; /* 다른 요소 위에 표시 */
 }
 
 /*슈피겔만 이미지 css */
