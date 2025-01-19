@@ -57,7 +57,7 @@
               <span class="search-icon" @click="searchCharacter">&#128269;</span>
             </div>
             <v-btn size="small" class="custom-btn mr-2" color="pink" @click="startSimulation">뽑기</v-btn>
-            <v-btn size="small" class="custom-btn" color="purple" outlined>저장</v-btn>
+            <v-btn size="small" class="custom-btn" color="purple" outlined  @click="saveRanking">저장</v-btn>
           </v-row>
         </v-card>
       </v-col>
@@ -83,9 +83,7 @@
           <h3 class="font-weight-bold">실시간 랭킹 10</h3>
           <v-list dense>
             <v-list-item v-for="(user, index) in ranking" :key="index" class="ranking-item">
-              <!-- 순위와 아이콘, 닉네임, 퍼센트 각각의 영역 -->
               <div class="ranking-row">
-                <!-- 순위와 닉네임 -->
                 <div class="ranking-user-info">
                   <v-icon
                     v-if="index === 0"
@@ -98,9 +96,9 @@
                     class="mr-2 ranking-trophy-icon"
                   >mdi-trophy-variant</v-icon>
                   <v-icon v-else class="mr-2 ranking-user-icon">mdi-account-circle</v-icon>
-                  <span class="ranking-user-name">{{ index + 1 }} {{ user.name }}</span>
+                  <img v-if="index >= 2" :src="user.avatarUrl" alt="Avatar" class="ranking-avatar" />
+                  <span class="ranking-user-name">{{ index + 1 }} {{ user.nickname }}</span>
                 </div>
-                <!-- 퍼센트 -->
                 <div class="ranking-user-percentage">{{ user.percentage }}%</div>
               </div>
             </v-list-item>
@@ -188,11 +186,7 @@
             <div v-for="(image, index) in getPopupImages()" :key="index">
               <img :src="image" alt="Item Image" class="popup-image" />
               <!-- Special Label 이미지 표시 -->
-              <img
-                v-if="isSpecialLabel"
-                :src="require('@/assets/special.png')"
-                alt="Special Label"
-              />
+              <img v-if="isSpecialLabel" :src="require('@/assets/special.png')" alt="Special Label" />
             </div>
           </div>
 
@@ -275,19 +269,50 @@ export default {
         return;
       }
       try {
-        // API 요청
-        const ocidResponse = await axios.get(
-          `http://localhost:8081/api/characters/ocid`,
-          { params: { name: this.characterName } }
+        const response = await axios.get(
+          "http://localhost:8081/api/characters/ocid",
+          {
+            params: { name: this.characterName }
+          }
         );
-        this.characterInfo = ocidResponse.data.characterInfoDTO;
-
-        // 가져온 캐릭터 이미지 URL 설정
-        this.characterImage = this.characterInfo.character_image;
-        console.log("Character Image URL:", this.characterImage);
+        this.characterImage = response.data.characterInfoDTO.character_image;
       } catch (error) {
-        console.error("Error fetching character info:", error);
-        alert("캐릭터 정보를 가져오는 데 실패했습니다.");
+        console.error("캐릭터 정보 조회 실패:", error);
+      }
+    },
+async saveRanking() {
+  if (!this.characterName || !this.characterImage) {
+    alert("닉네임을 검색한 후 저장하세요.");
+    return;
+  }
+
+  try {
+    // 확률 계산
+    const percentage = (this.specialLabelCount / this.couponCount) * 100;
+
+    // API 호출 (Query String 형식)
+    const params = new URLSearchParams();
+    params.append("nickname", this.characterName);
+    params.append("percentage", percentage.toFixed(1));
+    params.append("avatarUrl", this.characterImage);
+
+    await axios.post("http://localhost:8081/api/royal-style/save-ranking", params);
+
+    alert("랭킹이 저장되었습니다.");
+    this.fetchRanking(); // 최신 랭킹 데이터 갱신
+  } catch (error) {
+    console.error("랭킹 저장 실패:", error);
+  }
+},
+
+    async fetchRanking() {
+      try {
+        const response = await axios.get(
+          "http://localhost:8081/api/royal-style/ranking"
+        );
+        this.ranking = response.data; // 랭킹 데이터를 갱신
+      } catch (error) {
+        console.error("랭킹 조회 실패:", error);
       }
     },
     async startSimulation() {
@@ -446,34 +471,34 @@ export default {
         return [];
       }
     },
- calculateFortune() {
-  // 쿠폰이 10개 단위일 때만 계산
-  if (this.couponCount % 10 !== 0) return;
+    calculateFortune() {
+      // 쿠폰이 10개 단위일 때만 계산
+      if (this.couponCount % 10 !== 0) return;
 
-  const ratio = (this.specialLabelCount / this.couponCount) * 100;
+      const ratio = (this.specialLabelCount / this.couponCount) * 100;
 
-  // 소수점이 0으로 끝나면 정수로 표시, 아니면 소수점 첫째 자리까지 표시
-  const formattedRatio = ratio % 1 === 0 ? ratio.toFixed(0) : ratio.toFixed(1);
+      // 소수점이 0으로 끝나면 정수로 표시, 아니면 소수점 첫째 자리까지 표시
+      const formattedRatio =
+        ratio % 1 === 0 ? ratio.toFixed(0) : ratio.toFixed(1);
 
-  if (ratio <= 10) {
-    this.fortuneMessage = `${formattedRatio}%\n오늘은 쉬어가는 날~ 
+      if (ratio <= 10) {
+        this.fortuneMessage = `${formattedRatio}%\n오늘은 쉬어가는 날~ 
     조용히 게임만 즐기세요! 🎮`;
-  } else if (ratio > 10 && ratio <= 20) {
-    this.fortuneMessage = `${formattedRatio}%\n조금씩 운이 올라오고 있어요! 
+      } else if (ratio > 10 && ratio <= 20) {
+        this.fortuneMessage = `${formattedRatio}%\n조금씩 운이 올라오고 있어요! 
     다음엔 더 기대해봐요! 😊`;
-  } else if (ratio > 20 && ratio <= 30) {
-    this.fortuneMessage = `${formattedRatio}%\n운이 점점 상승 중! 
+      } else if (ratio > 20 && ratio <= 30) {
+        this.fortuneMessage = `${formattedRatio}%\n운이 점점 상승 중! 
     오늘은 기회가 보이네요! 🍀`;
-  } else if (ratio > 30 && ratio <= 40) {
-    this.fortuneMessage = `${formattedRatio}%\n운빨 대폭발 직전! 
+      } else if (ratio > 30 && ratio <= 40) {
+        this.fortuneMessage = `${formattedRatio}%\n운빨 대폭발 직전! 
     이제 한 방이 남았습니다! 🎉`;
-  } else {
-    this.fortuneMessage = `${formattedRatio}%\n지금이 기회! 
+      } else {
+        this.fortuneMessage = `${formattedRatio}%\n지금이 기회! 
     오늘의 주인공은 당신입니다! 
     로또 사세요! 💎`;
-  }
-}
-
+      }
+    }
   }
 };
 </script>
