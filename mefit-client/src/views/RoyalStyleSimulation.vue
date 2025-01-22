@@ -60,13 +60,13 @@
           </v-btn>
 
           <h3 class="font-weight-bold text-center">로얄스타일 뽑기</h3>
-   <v-img
-  :src="characterImage || require('@/assets/royalstyle/blare.png')"
-  contain
-  width="70"
-  height="70"
-  class="mb-4 mx-auto character-image"
-></v-img>
+          <v-img
+            :src="characterImage || require('@/assets/royalstyle/blare.png')"
+            contain
+            width="70"
+            height="70"
+            class="mb-4 mx-auto character-image"
+          ></v-img>
           <v-row class="align-center justify-center">
             <div class="royal-input-wrapper mr-4">
               <input
@@ -312,17 +312,16 @@ export default {
         console.error("캐릭터 정보 조회 실패:", error);
       }
     },
-
     async saveRanking() {
-      if (this.couponCount < 10) {
-        this.alertMessage = "쿠폰을 10개 이상 소모해야 저장할 수 있습니다.";
-        this.showAlert = true; // CustomAlert 표시
-        return;
-      }
       if (!this.characterName || !this.characterImage) {
         this.alertMessage = "닉네임을 검색한 후 저장하세요.";
         this.showAlert = true; // 팝업 표시
         console.log(this.showAlert, this.alertMessage); // 값 확인
+        return;
+      }
+      if (this.couponCount < 10) {
+        this.alertMessage = "쿠폰을 10개 이상 소모해야 저장할 수 있습니다.";
+        this.showAlert = true; // CustomAlert 표시
         return;
       }
 
@@ -351,7 +350,6 @@ export default {
         console.error("랭킹 저장 실패:", error);
       }
     },
-
     async fetchRanking() {
       try {
         const response = await axios.get(
@@ -665,7 +663,6 @@ input {
   position: relative;
   top: 10px; /* 아래로 20px 이동 */
 }
-
 
 /*로얄-인풋 박스*/
 .royal-input-wrapper {
