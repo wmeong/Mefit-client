@@ -1,117 +1,152 @@
 <template>
   <v-container class="main-container" fluid>
-    <!-- 캐릭터 이미지와 기본 정보 정렬 -->
-    <v-row class="align-start" dense>
-      <v-col cols="12" md="4">
-        <!-- 테두리를 포함하는 wrapper -->
-        <div class="avatar-container">
-          <!-- 캐릭터 이미지 -->
-          <v-img
-            :src="
+    <!-- 데이터가 없을 경우 -->
+    <div v-if="!characterInfo.character_name">
+      <h2>닉네임을 입력하세요</h2>
+      <div class="search-bar">
+        <button class="search-icon" @click="searchAndSaveCharacter">🔎</button>
+        <input
+          type="text"
+          placeholder="검색어를 입력하세요"
+          v-model="characterName"
+          @keydown.enter="searchAndSaveCharacter"
+        />
+      </div>
+    </div>
+
+    <!-- 데이터가 있을 경우 -->
+    <div v-else>
+      <!-- 캐릭터 이미지와 기본 정보 정렬 -->
+      <v-row class="align-start" dense>
+        <!-- 1번 : 캐릭터 이미지 영역 -->
+        <v-col cols="12" md="4">
+          <div class="avatar-container">
+            <!-- 캐릭터 이미지 -->
+            <v-img
+              :src="
               characterInfo.character_image || 'https://via.placeholder.com/150'
             "
-            alt="Character Image"
-            class="character-image"
-            :style="{
+              alt="Character Image"
+              class="character-image"
+              :style="{
               transform: `scale(${scale})`,
               transition: 'transform 0.3s ease-in-out',
             }"
-          ></v-img>
-          <!-- 버튼 그룹 -->
-          <div class="button-group">
-            <!-- 확대/축소 버튼 -->
-            <v-btn @click="toggleZoom" class="modern-btn" elevation="2">
-              <v-icon size="24">{{
-                scale === 0.7
-                  ? "mdi-magnify-plus-outline"
-                  : "mdi-magnify-minus-outline"
-              }}</v-icon>
-            </v-btn>
-
-            <!-- 다운로드 버튼 -->
-            <v-btn @click="downloadImage" class="modern-btn" elevation="2">
-              <v-icon size="24">mdi-download</v-icon>
-            </v-btn>
+            ></v-img>
+            <!-- 버튼 그룹 -->
+            <div class="button-group">
+              <!-- 확대/축소 버튼 -->
+              <v-btn
+                @click="toggleZoom"
+                class="modern-btn"
+                elevation="2"
+                style="width: 40px; padding: 0; min-width: 40px;"
+              >
+                <v-icon size="20">
+                  {{
+                  scale === 0.7 ? "mdi-magnify-plus-outline" : "mdi-magnify-minus-outline"
+                  }}
+                </v-icon>
+              </v-btn>
+              <!-- 다운로드 버튼 -->
+              <v-btn
+                @click="downloadImage"
+                class="modern-btn"
+                elevation="2"
+                style="width: 40px; padding: 0; min-width: 40px;"
+              >
+                <v-icon size="20">mdi-download</v-icon>
+              </v-btn>
+            </div>
           </div>
-        </div>
-      </v-col>
-      <v-col cols="12" md="8">
-        <!-- 기본 정보 및 퍼스널 컬러 분석 결과 -->
-        <v-card class="pa-4 elevation-2 modern-card">
-          <v-card-title class="headline text-center">{{
-            characterInfo.character_name || "캐릭터 이름"
-          }}</v-card-title>
-          <v-card-subtitle class="text-left">
-            <span>
-              {{ characterInfo.character_level || "레벨" }}
-              {{ characterInfo.character_gender || "성별" }}
-            </span>
-            <br />
-            <span>
-              <img
-                v-if="characterInfo.world_name"
-                :src="getWorldIcon(characterInfo.world_name)"
-                alt="world-icon"
-                class="world-icon"
-              />
-              {{ characterInfo.world_name || "월드명" }}
-              {{ characterInfo.character_class || "직업" }}
-              {{ characterInfo.character_guild_name || "길드명" }}
-            </span>
-          </v-card-subtitle>
-          <!-- 퍼스널 컬러 분석 결과 -->
-          <h2
-            :class="[
-              'text-center',
-              'personal-color-result',
-              personalColorGroup,
-            ]"
-          >
-            {{ personalColorAnalysis }}
-          </h2>
-          <!-- 메인 컬러 표시 -->
-          <!-- 메인컬러 -->
-          <v-row class="align-center mb-4 pt-4">
-            <v-col cols="3" class="text-left">
-              <h4 class="text-left">메인컬러</h4>
-            </v-col>
-            <v-col cols="9" class="d-flex">
-              <v-avatar
-                v-for="(color, index) in characterInfo.main_colors || [
-                  '#ccc',
-                  '#ddd',
-                ]"
-                :key="'main-color-' + index"
-                :color="color"
-                size="44"
-                class="mr-12"
-              ></v-avatar>
-            </v-col>
-          </v-row>
+        </v-col>
 
-          <!-- 서브컬러 -->
-          <v-row class="align-cente">
-            <v-col cols="3" class="text-left">
-              <h4 class="text-left">서브컬러</h4>
-            </v-col>
-            <v-col cols="9" class="d-flex">
-              <v-avatar
-                v-for="(color, index) in characterInfo.sub_colors || [
-                  '#eee',
-                  '#fff',
-                ]"
-                :key="'sub-color-' + index"
-                :color="color"
-                size="44"
-                class="mr-12"
-              ></v-avatar>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
+        <v-row dense>
+          <!-- 2번 기본 정보 영역 -->
+         <v-col cols="12" md="5">
+  <div class="modern-card">
+    <!-- 캐릭터 정보 영역 -->
+    <div class="character-info">
+      <div class="level-gender">
+        <!-- 레벨 아이콘 및 텍스트 -->
+        <img src="@/assets/level.png" alt="level-icon" class="level-icon" />
+        {{ characterInfo.character_level || "레벨" }}
+        <br />
+        <!-- 성별 아이콘 및 텍스트 -->
+        <img
+          :src="characterInfo.character_gender === '여' ? require('@/assets/woman.png') : require('@/assets/men.png')"
+          alt="gender-icon"
+          class="gender-icon"
+        />
+        {{ characterInfo.character_gender || "성별" }}
+      </div>
+      <!-- 월드, 길드 -->
+      <div class="world-guild">
+        <img
+          v-if="characterInfo.world_name"
+          :src="getWorldIcon(characterInfo.world_name)"
+          alt="world-icon"
+          class="world-icon"
+        />
+        <span class="badge">{{ characterInfo.world_name || "월드명" }}</span>
+        <span class="badge">{{ characterInfo.character_guild_name || "길드명" }}</span>
+      </div>
+    </div>
 
-    <!-- 캐시 장비 정보 -->
+    <!-- 캐릭터 직업 및 이미지 영역 -->
+    <div class="job-section">
+      <img src="@/assets/job/호영.gif" alt="job-image" class="job-image" />
+      <span class="job-badge">{{ characterInfo.character_class || "직업" }}</span>
+    </div>
+  </div>
+</v-col>
+
+
+          <!-- 3번: 퍼스널 컬러 영역 -->
+          <v-col cols="12" md="7">
+            <div class="modern-card">
+              <!-- 퍼스널 컬러 분석 결과 -->
+              <div
+                :class="[ 'text-center', 'personal-color-result', personalColorGroup, 'text-h6' ]"
+              >{{ personalColorAnalysis }}</div>
+
+              <!-- 메인 컬러 표시 -->
+              <v-row class="align-center mb-4 pt-4">
+                <v-col cols="3" class="text-left">
+                  <h4 class="text-left">메인컬러</h4>
+                </v-col>
+                <v-col cols="9" class="d-flex">
+                  <v-avatar
+                    v-for="(color, index) in characterInfo.main_colors || ['#ccc', '#ddd']"
+                    :key="'main-color-' + index"
+                    :color="color"
+                    size="44"
+                    class="mr-12"
+                  ></v-avatar>
+                </v-col>
+              </v-row>
+
+              <!-- 서브컬러 표시 -->
+              <v-row class="align-center">
+                <v-col cols="3" class="text-left">
+                  <h4 class="text-left">서브컬러</h4>
+                </v-col>
+                <v-col cols="9" class="d-flex">
+                  <v-avatar
+                    v-for="(color, index) in characterInfo.sub_colors || ['#eee', '#fff']"
+                    :key="'sub-color-' + index"
+                    :color="color"
+                    size="44"
+                    class="mr-12"
+                  ></v-avatar>
+                </v-col>
+              </v-row>
+            </div>
+          </v-col>
+        </v-row>
+      </v-row>
+    </div>
+    <!-- 4번 : 캐시 장비 정보 영역 -->
     <v-row class="mt-4" dense>
       <v-col
         v-for="item in filteredItems"
@@ -164,19 +199,19 @@ const PERSONAL_COLOR_GROUPS = [
     name: "봄웜 라이트",
     hues: [15, 45],
     saturationRange: [70, 100],
-    valueRange: [80, 100],
+    valueRange: [80, 100]
   },
   {
     name: "봄웜 브라이트",
     hues: [10, 40],
     saturationRange: [80, 100],
-    valueRange: [70, 100],
+    valueRange: [70, 100]
   },
   {
     name: "봄웜 트루",
     hues: [10, 40],
     saturationRange: [60, 90],
-    valueRange: [60, 90],
+    valueRange: [60, 90]
   },
 
   // ❄️ 여름 쿨톤 (Summer Cool Tone)
@@ -184,19 +219,19 @@ const PERSONAL_COLOR_GROUPS = [
     name: "여름쿨 라이트",
     hues: [170, 210],
     saturationRange: [30, 60],
-    valueRange: [70, 90],
+    valueRange: [70, 90]
   },
   {
     name: "여름쿨 브라이트",
     hues: [160, 200],
     saturationRange: [60, 80],
-    valueRange: [70, 90],
+    valueRange: [70, 90]
   },
   {
     name: "여름쿨 뮤트",
     hues: [150, 190],
     saturationRange: [20, 40],
-    valueRange: [50, 70],
+    valueRange: [50, 70]
   },
 
   // 🍂 가을 웜톤 (Autumn Warm Tone)
@@ -204,19 +239,19 @@ const PERSONAL_COLOR_GROUPS = [
     name: "가을웜 뮤트",
     hues: [25, 40],
     saturationRange: [30, 60],
-    valueRange: [50, 70],
+    valueRange: [50, 70]
   },
   {
     name: "가을웜 스트롱",
     hues: [10, 30],
     saturationRange: [50, 80],
-    valueRange: [40, 70],
+    valueRange: [40, 70]
   },
   {
     name: "가을웜 딥",
     hues: [0, 20],
     saturationRange: [50, 80],
-    valueRange: [30, 60],
+    valueRange: [30, 60]
   },
 
   // 🌌 겨울 쿨톤 (Winter Cool Tone)
@@ -224,20 +259,20 @@ const PERSONAL_COLOR_GROUPS = [
     name: "겨울쿨 브라이트",
     hues: [220, 260],
     saturationRange: [60, 100],
-    valueRange: [70, 100],
+    valueRange: [70, 100]
   },
   {
     name: "겨울쿨 스트롱",
     hues: [200, 240],
     saturationRange: [50, 80],
-    valueRange: [40, 70],
+    valueRange: [40, 70]
   },
   {
     name: "겨울쿨 다크",
     hues: [180, 220],
     saturationRange: [30, 60],
-    valueRange: [30, 60],
-  },
+    valueRange: [30, 60]
+  }
 ];
 
 export default {
@@ -263,8 +298,8 @@ export default {
         { type: "신발", icon: "", name: "" },
         { type: "장갑", icon: "", name: "" },
         { type: "망토", icon: "", name: "" },
-        { type: "무기", icon: "", name: "" },
-      ],
+        { type: "무기", icon: "", name: "" }
+      ]
     };
   },
   methods: {
@@ -284,7 +319,7 @@ export default {
         레드: "red",
         스카니아: "scania",
         유니온: "union",
-        제니스: "zenith",
+        제니스: "zenith"
       };
       const fileName = worldNameMap[worldName] || "default";
       return require(`@/assets/world/${fileName}.png`);
@@ -296,7 +331,7 @@ export default {
      * 확대/축소 토글
      */
     toggleZoom() {
-      this.scale = this.scale === 1.0 ? 0.7 : 1.0; 
+      this.scale = this.scale === 1.0 ? 0.7 : 1.0;
     },
     async downloadImage() {
       try {
@@ -329,6 +364,7 @@ export default {
             " 4,5,6위 : " +
             this.characterInfo.sub_colors
         );
+        console.log("성별" + this.characterInfo.character_gender);
         this.characterCashItem = ocidResponse.data.searchedCashItemDTOS;
         this.characterCashFace = ocidResponse.data.searchedCashFaceDTOS;
         console.log("item", this.characterCashItem);
@@ -377,7 +413,7 @@ export default {
       return {
         h: Math.round(h * 360),
         s: Math.round(s * 100),
-        v: Math.round(v * 100),
+        v: Math.round(v * 100)
       };
     },
     matchPersonalColor(hue, saturation, value) {
@@ -409,7 +445,7 @@ export default {
       }
 
       return closestMatch;
-    },
+    }
   },
   created() {
     // 라우터의 쿼리에서 캐릭터 이름 가져오기
@@ -421,14 +457,14 @@ export default {
   },
   computed: {
     filteredItems() {
-      return this.REQUIRED_ITEM_TYPES.map((requiredItemType) => {
+      return this.REQUIRED_ITEM_TYPES.map(requiredItemType => {
         // 캐릭터의 캐시 아이템 데이터에서 item_type이 requiredItemType.type과 일치하는 데이터를 찾는다.
         const cashItemData = this.characterCashItem.find(
-          (itemData) => itemData.item_type === requiredItemType.type
+          itemData => itemData.item_type === requiredItemType.type
         );
 
         const cashFaceData = this.characterCashFace.find(
-          (itemData) => itemData.item_type === requiredItemType.type
+          itemData => itemData.item_type === requiredItemType.type
         );
 
         // 아이템 데이터가 있으면 세부 정보를 추가
@@ -440,7 +476,7 @@ export default {
             colorRange: cashItemData.color_range || null, // null로 유지
             colorHue: cashItemData.color_hue || 0,
             colorSaturation: cashItemData.color_saturation || 0,
-            colorValue: cashItemData.color_value || 0,
+            colorValue: cashItemData.color_value || 0
           };
         }
 
@@ -456,7 +492,7 @@ export default {
             colorStyle: cashFaceData.color_style || null, // null로 유지
             skinHue: cashFaceData.skin_hue || 0,
             skinSaturation: cashFaceData.skin_saturation || 0,
-            skinBrightness: cashFaceData.skin_brightness || 0,
+            skinBrightness: cashFaceData.skin_brightness || 0
           };
         }
 
@@ -465,12 +501,12 @@ export default {
           return {
             type: requiredItemType.type,
             icon: requiredItemType.icon || "https://via.placeholder.com/50",
-            name: requiredItemType.name,
+            name: requiredItemType.name
           };
         }
 
         return null; // 아이템이 없으면 null
-      }).filter((item) => item !== null);
+      }).filter(item => item !== null);
     },
     personalColorAnalysis() {
       if (
@@ -491,7 +527,7 @@ export default {
       // 1위부터 6위까지 순회하면서 HSV 값 계산
       const colors = [
         ...(this.characterInfo.main_colors || []),
-        ...(this.characterInfo.sub_colors || []),
+        ...(this.characterInfo.sub_colors || [])
       ];
       colors.forEach((color, index) => {
         if (index >= weights.length) return; // 최대 6개까지만 처리
@@ -516,7 +552,7 @@ export default {
 
     //css와 매핑
     personalColorGroup() {
-      const group = PERSONAL_COLOR_GROUPS.find((colorGroup) =>
+      const group = PERSONAL_COLOR_GROUPS.find(colorGroup =>
         this.personalColorAnalysis.includes(colorGroup.name)
       );
       if (!group) return "";
@@ -526,8 +562,8 @@ export default {
       if (group.name.includes("가을웜")) return "Autumn";
       if (group.name.includes("겨울쿨")) return "Winter";
       return "";
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -550,13 +586,7 @@ export default {
   display: block;
   margin: 0 auto;
 }
-.modern-card {
-  background-color: #ffffff;
-  color: #2c3e50;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 12px;
-}
+
 .equipment-item {
   display: flex;
   align-items: center;
@@ -622,12 +652,7 @@ export default {
   background-color: #f0f4f7;
   color: #3a4e80;
 }
-.world-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
-  vertical-align: middle;
-}
+
 .character-image-container {
   display: flex;
   flex-direction: column;
@@ -666,28 +691,119 @@ export default {
   border-radius: 50%; /* 원형 버튼 */
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
-.character-image-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: auto;
-  overflow: visible; /* 'hidden' 대신 'visible'로 수정 */
-  position: relative;
-}
+
 .avatar-container {
   position: relative;
-  width: 240px;
-  height: 320px;
+  height: 245px;
   margin: 0 auto;
-  border: 2px solid #ddd;
-  border-radius: 12px;
+  border-radius: 8px;
   background-color: #fff;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* 불필요한 요소가 넘어가지 않도록 */
+  /* overflow: hidden; */ /* 히든버튼 */
 }
 
+.search-bar {
+  display: flex;
+  align-items: center;
+  border: 2px solid #ffccff;
+  border-radius: 20px;
+  padding: 8px 12px;
+  width: 300px;
+  margin: 0 auto;
+  box-shadow: 0 0 8px #ffccff;
+  transition: box-shadow 0.3s ease;
+  background-color: #fff5ff;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  flex: 1;
+  background: none;
+}
+
+.search-bar input::placeholder {
+  color: #ff88aa;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px; /* 텍스트 주변 여백 */
+  border: 1px solid #ccc; /* 테두리 색상 */
+  border-radius: 12px; /* 둥근 테두리 */
+  background-color: #f5f5f5; /* 배경색 */
+  font-size: 0.875rem; /* 글씨 크기 */
+  font-weight: 500; /* 글씨 굵기 */
+  color: #333; /* 텍스트 색상 */
+  margin-right: 8px; /* 요소 간 간격 */
+}
+
+.level-icon,
+.gender-icon,
+.world-icon {
+  width: 20px; /* 아이콘 크기 */
+  height: 20px;
+  margin-right: 8px; /* 텍스트와 간격 */
+  vertical-align: middle; 
+}
+
+
+
+.modern-card {
+  background-color: #ffffff;
+  color: #2c3e50;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 250px;
+}
+
+.character-info {
+  margin-bottom: 16px; /* 캐릭터 정보와 직업 이미지 간격 */
+}
+
+.level-gender img {
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+}
+
+.world-guild {
+  margin-top: 8px; /* 레벨/성별과 간격 */
+}
+
+.world-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+}
+
+.job-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.job-image {
+  width: 80px; /* 직업 이미지 크기 */
+  height: 80px;
+  border-radius: 8px;
+  margin-bottom: 8px; /* 직업 이름과 간격 */
+}
+
+.job-badge {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  background-color: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
 </style>

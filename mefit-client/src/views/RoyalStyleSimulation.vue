@@ -291,7 +291,6 @@ export default {
       return this.usedCash.toLocaleString(); // 숫자를 1,000 단위로 쉼표 추가
     }
   },
-
   methods: {
     async searchCharacter() {
       if (!this.characterName) {
