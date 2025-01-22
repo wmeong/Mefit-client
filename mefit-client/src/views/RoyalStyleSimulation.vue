@@ -1,12 +1,12 @@
 <template>
   <v-container class="pa-4">
     <!-- CustomAlert 컴포넌트 -->
-   <CustomAlert
-  v-if="showAlert"
-  :message="alertMessage"
-  :visible="showAlert"
-  @close="closeCustomAlert"
-/>
+    <CustomAlert
+      v-if="showAlert"
+      :message="alertMessage"
+      :visible="showAlert"
+      @close="closeCustomAlert"
+    />
     <!-- 첫 번째 줄: 1번, 3번, 4번 -->
     <v-row class="px-2">
       <!-- 1번: 로얄스타일 결산 영역 -->
@@ -48,9 +48,11 @@
         >
           <!-- 새로고침 버튼 -->
           <v-btn
+            class="refresh-button"
             icon
             small
             color="primary"
+            v-tooltip.bottom="'새로고침'"
             @click="resetSimulation"
             style="position: absolute; top: 10px; right: 10px;"
           >
@@ -60,10 +62,10 @@
           <!-- 기존 로얄스타일 뽑기 내용 -->
           <h3 class="font-weight-bold text-center">로얄스타일 뽑기</h3>
           <v-img
-            :src="characterImage || require('@/assets/royalstyle/royalicon.png')"
+            :src="characterImage || require('@/assets/royalstyle/blare.png')"
             contain
-            width="110"
-            height="110"
+            width="70"
+            height="70"
             class="mb-4 mx-auto"
           ></v-img>
           <v-row class="align-center justify-center">
@@ -75,7 +77,7 @@
                 class="royal-input"
                 @keyup.enter="searchCharacter"
               />
-              <span class="search-icon" @click="searchCharacter">&#128269;</span>
+              <span class="search-icon" v-tooltip.bottom="'검색'" @click="searchCharacter">&#128269;</span>
             </div>
             <v-btn size="small" class="custom-btn mr-2" color="pink" @click="startSimulation">뽑기</v-btn>
             <v-btn size="small" class="custom-btn" color="purple" outlined @click="saveRanking">저장</v-btn>
@@ -88,10 +90,15 @@
         <v-card
           outlined
           class="pa-4 d-flex flex-column justify-start align-center"
-          style="min-height: 250px;"
+          style="min-height: 250px; position: relative;"
         >
           <h3 class="text-h10 font-weight-bold text-center">로얄깡 운세</h3>
-          <p class="text-center mt-10">{{ fortuneMessage }}</p>
+          <!-- 운세 메시지가 없을 때 -->
+          <div v-if="!fortuneMessage" class="slime-container">
+            <img src="@/assets/slime.png" alt="Slime" class="slime-image" />
+          </div>
+          <!-- 운세 메시지가 있을 때 -->
+          <p v-else class="text-center mt-10">{{ fortuneMessage }}</p>
         </v-card>
       </v-col>
     </v-row>
@@ -127,6 +134,13 @@
       <v-col cols="8" class="pick-result">
         <v-card outlined class="pa-4" style="min-height: 350px; height: 550px; overflow-y: auto;">
           <h3 class="font-weight-bold">로얄스타일 결과</h3>
+
+          <!-- 데이터가 없는 경우 -->
+          <div v-if="recentResults.length === 0" class="no-results-container">
+            <img src="@/assets/maplefamily.png" alt="No Results" class="no-results-image" />
+          </div>
+
+          <!-- 데이터 있는 경우   -->
           <v-row class="d-flex flex-wrap justify-start">
             <v-col
               v-for="(result, index) in recentResults"
@@ -252,7 +266,7 @@ export default {
   },
   computed: {
     royalIcon() {
-      return require("@/assets/royalstyle/royalicon.png");
+      return require("@/assets/royalstyle/blare.png");
     },
     shupiImage() {
       return require("@/assets/shupi.png");
@@ -507,8 +521,11 @@ export default {
       }
     },
     calculateFortune() {
-      // 쿠폰이 10개 단위일 때만 계산
-      if (this.couponCount % 10 !== 0) return;
+      if (this.couponCount === 0) {
+        this.fortuneMessage = "뽑기를 시작하세요!";
+        this.formattedRatio = "0";
+        return;
+      }
       const ratio = (this.specialLabelCount / this.couponCount) * 100;
 
       // 소수점이 0으로 끝나면 정수로 표시, 아니면 소수점 첫째 자리까지 표시
@@ -533,9 +550,9 @@ export default {
     로또 사세요! 💎`;
       }
     },
-      closeCustomAlert() {
-    this.showAlert = false; // 팝업을 닫습니다.
-  },
+    closeCustomAlert() {
+      this.showAlert = false; // 팝업을 닫습니다.
+    }
   },
   mounted() {
     this.fetchRanking(); // 기존 랭킹 데이터 불러오기
@@ -666,9 +683,54 @@ input {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 클릭 시 그림자 축소 */
   transform: scale(0.95); /* 클릭 시 살짝 눌리는 효과 */
 }
+
+.refresh-button {
+  background-color: #afacacb8 !important; /* 회색 배경 */
+  width: 30px !important; /* 버튼 크기 */
+  height: 30px !important; /* 버튼 크기 */
+  border-radius: 50%; /* 동그랗게 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+  min-width: 30px !important; /* Vuetify의 기본 최소 너비를 덮어씌움 */
+}
+
+.refresh-button:hover {
+  background-color: #d6d6d6; /* 호버 시 더 어두운 회색 */
+}
+
+.refresh-button .v-icon {
+  font-size: 16px !important; /* 아이콘 크기 */
+}
+
+
 /* 4번: 운세보기 */
 .royal-fortune {
   white-space: pre-line; /* 줄바꿈 처리 */
+}
+.slime-container {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 완전 중앙 정렬 */
+}
+
+.slime-image {
+  width: 100px;
+  animation: bounce 1.5s infinite ease-in-out; /* 통통 튀는 애니메이션 */
+}
+
+/* 통통 튀는 애니메이션 */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0); /* 기본 위치 */
+  }
+  50% {
+    transform: translateY(-20px); /* 위로 튀기 */
+  }
 }
 
 /* 5번: 뽑기 결과 저장 */
@@ -722,6 +784,32 @@ input {
   100% {
     transform: scale(3);
     opacity: 0;
+  }
+}
+
+/* 데이터 없는 경우 css */
+.no-results-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.no-results-image {
+  width: 400px; /* 이미지 크기 */
+  height: auto; /* 비율 유지 */
+  margin-bottom: 100px; /* 아래쪽에 여백 추가 */
+  animation: bounce 2s infinite ease-in-out; /* 통통 튀는 애니메이션 */
+}
+
+/* 통통 튀는 애니메이션 */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
   }
 }
 
