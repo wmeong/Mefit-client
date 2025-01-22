@@ -59,15 +59,14 @@
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
 
-          <!-- 기존 로얄스타일 뽑기 내용 -->
           <h3 class="font-weight-bold text-center">로얄스타일 뽑기</h3>
-          <v-img
-            :src="characterImage || require('@/assets/royalstyle/blare.png')"
-            contain
-            width="70"
-            height="70"
-            class="mb-4 mx-auto"
-          ></v-img>
+   <v-img
+  :src="characterImage || require('@/assets/royalstyle/blare.png')"
+  contain
+  width="70"
+  height="70"
+  class="mb-4 mx-auto character-image"
+></v-img>
           <v-row class="align-center justify-center">
             <div class="royal-input-wrapper mr-4">
               <input
@@ -308,11 +307,18 @@ export default {
         );
         this.characterImage = response.data.characterInfoDTO.character_image;
       } catch (error) {
+        this.alertMessage = "존재하지 않는 캐릭터입니다";
+        this.showAlert = true;
         console.error("캐릭터 정보 조회 실패:", error);
       }
     },
 
     async saveRanking() {
+      if (this.couponCount < 10) {
+        this.alertMessage = "쿠폰을 10개 이상 소모해야 저장할 수 있습니다.";
+        this.showAlert = true; // CustomAlert 표시
+        return;
+      }
       if (!this.characterName || !this.characterImage) {
         this.alertMessage = "닉네임을 검색한 후 저장하세요.";
         this.showAlert = true; // 팝업 표시
@@ -655,6 +661,11 @@ input {
 /* 3번: 로얄스타일 뽑기 */
 .royal-style-pick {
 }
+.character-image {
+  position: relative;
+  top: 10px; /* 아래로 20px 이동 */
+}
+
 
 /*로얄-인풋 박스*/
 .royal-input-wrapper {
@@ -704,7 +715,6 @@ input {
 .refresh-button .v-icon {
   font-size: 16px !important; /* 아이콘 크기 */
 }
-
 
 /* 4번: 운세보기 */
 .royal-fortune {
