@@ -6,19 +6,30 @@
         <!-- 캐릭터 이미지 -->
         <v-img
           :src="
-                        characterInfo.character_image ||
-                        'https://via.placeholder.com/150'
-                    "
+            characterInfo.character_image || 'https://via.placeholder.com/150'
+          "
           alt="Character Image"
+          :style="{
+            transform: `scale(${scale})`,
+            transition: 'transform 0.3s',
+          }"
           max-height="300"
           width="200"
           class="character-image"
         ></v-img>
+        <!-- 확대/축소 버튼 -->
+        <div class="zoom-button-container">
+          <v-btn @click="toggleZoom" icon color="primary">
+            <v-icon>{{ scale === 1 ? "mdi-plus" : "mdi-minus" }}</v-icon>
+          </v-btn>
+        </div>
       </v-col>
       <v-col cols="12" md="8">
         <!-- 기본 정보 및 퍼스널 컬러 분석 결과 -->
         <v-card class="pa-4 elevation-2 modern-card">
-          <v-card-title class="headline text-center">{{ characterInfo.character_name || "캐릭터 이름" }}</v-card-title>
+          <v-card-title class="headline text-center">{{
+            characterInfo.character_name || "캐릭터 이름"
+          }}</v-card-title>
           <v-card-subtitle class="text-left">
             <span>
               {{ characterInfo.character_level || "레벨" }}
@@ -26,6 +37,12 @@
             </span>
             <br />
             <span>
+              <img
+                v-if="characterInfo.world_name"
+                :src="getWorldIcon(characterInfo.world_name)"
+                alt="world-icon"
+                class="world-icon"
+              />
               {{ characterInfo.world_name || "월드명" }}
               {{ characterInfo.character_class || "직업" }}
               {{ characterInfo.character_guild_name || "길드명" }}
@@ -34,11 +51,13 @@
           <!-- 퍼스널 컬러 분석 결과 -->
           <h2
             :class="[
-                            'text-center',
-                            'personal-color-result',
-                            personalColorGroup,
-                        ]"
-          >{{ personalColorAnalysis }}</h2>
+              'text-center',
+              'personal-color-result',
+              personalColorGroup,
+            ]"
+          >
+            {{ personalColorAnalysis }}
+          </h2>
           <!-- 메인 컬러 표시 -->
           <!-- 메인컬러 -->
           <v-row class="align-center mb-4 pt-4">
@@ -47,7 +66,10 @@
             </v-col>
             <v-col cols="9" class="d-flex">
               <v-avatar
-                v-for="(color, index) in characterInfo.main_colors || ['#ccc', '#ddd']"
+                v-for="(color, index) in characterInfo.main_colors || [
+                  '#ccc',
+                  '#ddd',
+                ]"
                 :key="'main-color-' + index"
                 :color="color"
                 size="44"
@@ -63,7 +85,10 @@
             </v-col>
             <v-col cols="9" class="d-flex">
               <v-avatar
-                v-for="(color, index) in characterInfo.sub_colors || ['#eee', '#fff']"
+                v-for="(color, index) in characterInfo.sub_colors || [
+                  '#eee',
+                  '#fff',
+                ]"
                 :key="'sub-color-' + index"
                 :color="color"
                 size="44"
@@ -97,12 +122,11 @@
               계열: {{ item.colorRange }}
               <br />
               색:
-              {{ item.colorHue }} 채:
-              {{ item.colorSaturation }} 명: {{ item.colorValue }}
+              {{ item.colorHue }} 채: {{ item.colorSaturation }} 명:
+              {{ item.colorValue }}
             </p>
             <p class="equipment-subdetails" v-else-if="item.mixColor">
-              {{ item.baseColor }} : {{ item.baseColorRate
-              }}
+              {{ item.baseColor }} : {{ item.baseColorRate }}
               <br />
               {{ item.mixColor }} :
               {{ item.mixColorRate }}
@@ -129,19 +153,19 @@ const PERSONAL_COLOR_GROUPS = [
     name: "봄웜 라이트",
     hues: [15, 45],
     saturationRange: [70, 100],
-    valueRange: [80, 100]
+    valueRange: [80, 100],
   },
   {
     name: "봄웜 브라이트",
     hues: [10, 40],
     saturationRange: [80, 100],
-    valueRange: [70, 100]
+    valueRange: [70, 100],
   },
   {
     name: "봄웜 트루",
     hues: [10, 40],
     saturationRange: [60, 90],
-    valueRange: [60, 90]
+    valueRange: [60, 90],
   },
 
   // ❄️ 여름 쿨톤 (Summer Cool Tone)
@@ -149,19 +173,19 @@ const PERSONAL_COLOR_GROUPS = [
     name: "여름쿨 라이트",
     hues: [170, 210],
     saturationRange: [30, 60],
-    valueRange: [70, 90]
+    valueRange: [70, 90],
   },
   {
     name: "여름쿨 브라이트",
     hues: [160, 200],
     saturationRange: [60, 80],
-    valueRange: [70, 90]
+    valueRange: [70, 90],
   },
   {
     name: "여름쿨 뮤트",
     hues: [150, 190],
     saturationRange: [20, 40],
-    valueRange: [50, 70]
+    valueRange: [50, 70],
   },
 
   // 🍂 가을 웜톤 (Autumn Warm Tone)
@@ -169,19 +193,19 @@ const PERSONAL_COLOR_GROUPS = [
     name: "가을웜 뮤트",
     hues: [25, 40],
     saturationRange: [30, 60],
-    valueRange: [50, 70]
+    valueRange: [50, 70],
   },
   {
     name: "가을웜 스트롱",
     hues: [10, 30],
     saturationRange: [50, 80],
-    valueRange: [40, 70]
+    valueRange: [40, 70],
   },
   {
     name: "가을웜 딥",
     hues: [0, 20],
     saturationRange: [50, 80],
-    valueRange: [30, 60]
+    valueRange: [30, 60],
   },
 
   // 🌌 겨울 쿨톤 (Winter Cool Tone)
@@ -189,26 +213,27 @@ const PERSONAL_COLOR_GROUPS = [
     name: "겨울쿨 브라이트",
     hues: [220, 260],
     saturationRange: [60, 100],
-    valueRange: [70, 100]
+    valueRange: [70, 100],
   },
   {
     name: "겨울쿨 스트롱",
     hues: [200, 240],
     saturationRange: [50, 80],
-    valueRange: [40, 70]
+    valueRange: [40, 70],
   },
   {
     name: "겨울쿨 다크",
     hues: [180, 220],
     saturationRange: [30, 60],
-    valueRange: [30, 60]
-  }
+    valueRange: [30, 60],
+  },
 ];
 
 export default {
   name: "CharacterInfo",
   data() {
     return {
+      scale: 1, // 초기 확대 배율
       characterName: "", // 검색어
       characterInfo: {}, // 캐릭터 정보 데이터
       message: "", // 오류 메시지
@@ -227,11 +252,41 @@ export default {
         { type: "신발", icon: "", name: "" },
         { type: "장갑", icon: "", name: "" },
         { type: "망토", icon: "", name: "" },
-        { type: "무기", icon: "", name: "" }
-      ]
+        { type: "무기", icon: "", name: "" },
+      ],
     };
   },
   methods: {
+    // 월드명 매핑 객체
+    getWorldIcon(worldName) {
+      const worldNameMap = {
+        아케인: "arcane",
+        오로라: "aurora",
+        베라: "bera",
+        크로아: "croa",
+        엘리시움: "elysium",
+        에노시스: "enosis",
+        에오스: "eos",
+        헬리오스: "helios",
+        루나: "luna",
+        노바: "nova",
+        레드: "red",
+        스카니아: "scania",
+        유니온: "union",
+        제니스: "zenith",
+      };
+      const fileName = worldNameMap[worldName] || "default";
+      return require(`@/assets/world/${fileName}.png`);
+    },
+    /**
+     * 캐릭터 이미지를 확대/축소하는 메서드
+     */
+    /**
+     * 확대/축소 토글
+     */
+    toggleZoom() {
+      this.scale = this.scale === 1 ? 1.5 : 1; // 1배 -> 1.5배 또는 1.5배 -> 1배로 토글
+    },
     /**
      * 캐릭터 정보를 API에서 검색 및 저장
      */
@@ -298,7 +353,7 @@ export default {
       return {
         h: Math.round(h * 360),
         s: Math.round(s * 100),
-        v: Math.round(v * 100)
+        v: Math.round(v * 100),
       };
     },
     matchPersonalColor(hue, saturation, value) {
@@ -330,7 +385,7 @@ export default {
       }
 
       return closestMatch;
-    }
+    },
   },
   created() {
     // 라우터의 쿼리에서 캐릭터 이름 가져오기
@@ -342,14 +397,14 @@ export default {
   },
   computed: {
     filteredItems() {
-      return this.REQUIRED_ITEM_TYPES.map(requiredItemType => {
+      return this.REQUIRED_ITEM_TYPES.map((requiredItemType) => {
         // 캐릭터의 캐시 아이템 데이터에서 item_type이 requiredItemType.type과 일치하는 데이터를 찾는다.
         const cashItemData = this.characterCashItem.find(
-          itemData => itemData.item_type === requiredItemType.type
+          (itemData) => itemData.item_type === requiredItemType.type
         );
 
         const cashFaceData = this.characterCashFace.find(
-          itemData => itemData.item_type === requiredItemType.type
+          (itemData) => itemData.item_type === requiredItemType.type
         );
 
         // 아이템 데이터가 있으면 세부 정보를 추가
@@ -361,7 +416,7 @@ export default {
             colorRange: cashItemData.color_range || null, // null로 유지
             colorHue: cashItemData.color_hue || 0,
             colorSaturation: cashItemData.color_saturation || 0,
-            colorValue: cashItemData.color_value || 0
+            colorValue: cashItemData.color_value || 0,
           };
         }
 
@@ -377,7 +432,7 @@ export default {
             colorStyle: cashFaceData.color_style || null, // null로 유지
             skinHue: cashFaceData.skin_hue || 0,
             skinSaturation: cashFaceData.skin_saturation || 0,
-            skinBrightness: cashFaceData.skin_brightness || 0
+            skinBrightness: cashFaceData.skin_brightness || 0,
           };
         }
 
@@ -386,12 +441,12 @@ export default {
           return {
             type: requiredItemType.type,
             icon: requiredItemType.icon || "https://via.placeholder.com/50",
-            name: requiredItemType.name
+            name: requiredItemType.name,
           };
         }
 
         return null; // 아이템이 없으면 null
-      }).filter(item => item !== null);
+      }).filter((item) => item !== null);
     },
     personalColorAnalysis() {
       if (
@@ -412,7 +467,7 @@ export default {
       // 1위부터 6위까지 순회하면서 HSV 값 계산
       const colors = [
         ...(this.characterInfo.main_colors || []),
-        ...(this.characterInfo.sub_colors || [])
+        ...(this.characterInfo.sub_colors || []),
       ];
       colors.forEach((color, index) => {
         if (index >= weights.length) return; // 최대 6개까지만 처리
@@ -437,7 +492,7 @@ export default {
 
     //css와 매핑
     personalColorGroup() {
-      const group = PERSONAL_COLOR_GROUPS.find(colorGroup =>
+      const group = PERSONAL_COLOR_GROUPS.find((colorGroup) =>
         this.personalColorAnalysis.includes(colorGroup.name)
       );
       if (!group) return "";
@@ -447,8 +502,8 @@ export default {
       if (group.name.includes("가을웜")) return "Autumn";
       if (group.name.includes("겨울쿨")) return "Winter";
       return "";
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -462,11 +517,13 @@ export default {
   justify-content: center;
   align-items: center;
   padding-right: 16px;
+  flex-direction: column;
 }
 .character-image {
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   background-color: #f9f9f9;
+  cursor: pointer;
 }
 .modern-card {
   background-color: #ffffff;
@@ -539,5 +596,23 @@ export default {
 .personal-color-result.Winter {
   background-color: #f0f4f7;
   color: #3a4e80;
+}
+.world-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.character-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.character-image {
+  cursor: pointer;
+}
+.zoom-button-container {
+  margin-top: 55px; /* 이미지와 버튼 사이 간격을 더 넓게 */
+  text-align: center;
 }
 </style>

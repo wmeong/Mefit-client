@@ -10,4 +10,10 @@ module.exports = defineConfig({
       },
     },
   },
+  // 소스 맵 활성화 설정
+  configureWebpack: {
+    devtool: 'source-map', // 소스 맵 생성 (로컬 크롬에서 디버깅을 하기 위함)
+  },
+  // 프로덕션에서도 소스 맵을 활성화하려면 아래 옵션 추가 (배포된 애플리케이션을 디버깅하거나 문제를 파악하려면 이 옵션이 필요)
+  productionSourceMap: true,
 });
