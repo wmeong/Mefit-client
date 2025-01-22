@@ -2,26 +2,37 @@
   <v-container class="main-container" fluid>
     <!-- 캐릭터 이미지와 기본 정보 정렬 -->
     <v-row class="align-start" dense>
-      <v-col cols="12" md="4" class="character-image-container">
-        <!-- 캐릭터 이미지 -->
-        <v-img
-          :src="
-            characterInfo.character_image || 'https://via.placeholder.com/150'
-          "
-          alt="Character Image"
-          :style="{
-            transform: `scale(${scale})`,
-            transition: 'transform 0.3s',
-          }"
-          max-height="300"
-          width="200"
-          class="character-image"
-        ></v-img>
-        <!-- 확대/축소 버튼 -->
-        <div class="zoom-button-container">
-          <v-btn @click="toggleZoom" icon color="primary">
-            <v-icon>{{ scale === 1 ? "mdi-plus" : "mdi-minus" }}</v-icon>
-          </v-btn>
+      <v-col cols="12" md="4">
+        <!-- 테두리를 포함하는 wrapper -->
+        <div class="avatar-container">
+          <!-- 캐릭터 이미지 -->
+          <v-img
+            :src="
+              characterInfo.character_image || 'https://via.placeholder.com/150'
+            "
+            alt="Character Image"
+            class="character-image"
+            :style="{
+              transform: `scale(${scale})`,
+              transition: 'transform 0.3s ease-in-out',
+            }"
+          ></v-img>
+          <!-- 버튼 그룹 -->
+          <div class="button-group">
+            <!-- 확대/축소 버튼 -->
+            <v-btn @click="toggleZoom" class="modern-btn" elevation="2">
+              <v-icon size="24">{{
+                scale === 0.7
+                  ? "mdi-magnify-plus-outline"
+                  : "mdi-magnify-minus-outline"
+              }}</v-icon>
+            </v-btn>
+
+            <!-- 다운로드 버튼 -->
+            <v-btn @click="downloadImage" class="modern-btn" elevation="2">
+              <v-icon size="24">mdi-download</v-icon>
+            </v-btn>
+          </div>
         </div>
       </v-col>
       <v-col cols="12" md="8">
@@ -233,7 +244,7 @@ export default {
   name: "CharacterInfo",
   data() {
     return {
-      scale: 1, // 초기 확대 배율
+      scale: 0.7, // 초기 확대 배율
       characterName: "", // 검색어
       characterInfo: {}, // 캐릭터 정보 데이터
       message: "", // 오류 메시지
@@ -285,7 +296,20 @@ export default {
      * 확대/축소 토글
      */
     toggleZoom() {
-      this.scale = this.scale === 1 ? 1.5 : 1; // 1배 -> 1.5배 또는 1.5배 -> 1배로 토글
+      this.scale = this.scale === 1.0 ? 0.7 : 1.0; 
+    },
+    async downloadImage() {
+      try {
+        const response = await fetch(this.characterInfo.character_image);
+        const blob = await response.blob();
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "character_image.png"; // 다운로드 파일 이름
+        link.click();
+        URL.revokeObjectURL(link.href); // 메모리 해제
+      } catch (error) {
+        console.error("이미지 다운로드 중 오류가 발생했습니다:", error);
+      }
     },
     /**
      * 캐릭터 정보를 API에서 검색 및 저장
@@ -520,10 +544,11 @@ export default {
   flex-direction: column;
 }
 .character-image {
-  border-radius: 12px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  background-color: #f9f9f9;
-  cursor: pointer;
+  max-height: 250px; /* 초기 높이를 줄임 */
+  max-width: auto; /* 너비를 높이에 비례해 자동 조정 */
+  object-fit: contain; /* 이미지 비율 유지 */
+  display: block;
+  margin: 0 auto;
 }
 .modern-card {
   background-color: #ffffff;
@@ -609,10 +634,60 @@ export default {
   align-items: center;
 }
 .character-image {
-  cursor: pointer;
+  max-height: 280px; /* 이미지 최대 높이 */
+  width: auto;
+  display: block;
+  margin: 0 auto; /* 이미지 가운데 정렬 */
+}
+.button-row {
+  margin-top: 16px; /* 버튼과 이미지 간격 */
+  display: flex;
+  justify-content: center; /* 버튼을 가운데 정렬 */
+  gap: 16px; /* 버튼 간격 */
+}
+.button-row v-btn {
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 버튼 그림자 */
 }
 .zoom-button-container {
   margin-top: 55px; /* 이미지와 버튼 사이 간격을 더 넓게 */
   text-align: center;
 }
+.button-group {
+  position: absolute;
+  bottom: 16px; /* 컨테이너 하단에서 여백 */
+  right: 16px; /* 컨테이너 오른쪽에서 여백 */
+  display: flex;
+  gap: 8px; /* 버튼 간 간격 */
+  z-index: 10; /* 이미지 위에 위치 */
+}
+.button-group v-btn {
+  width: 40px; /* 버튼 크기 */
+  height: 40px;
+  border-radius: 50%; /* 원형 버튼 */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+.character-image-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  overflow: visible; /* 'hidden' 대신 'visible'로 수정 */
+  position: relative;
+}
+.avatar-container {
+  position: relative;
+  width: 240px;
+  height: 320px;
+  margin: 0 auto;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* 불필요한 요소가 넘어가지 않도록 */
+}
+
 </style>
