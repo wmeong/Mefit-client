@@ -1,5 +1,12 @@
 <template>
   <v-container class="pa-4">
+    <!-- CustomAlert 컴포넌트 -->
+   <CustomAlert
+  v-if="showAlert"
+  :message="alertMessage"
+  :visible="showAlert"
+  @close="closeCustomAlert"
+/>
     <!-- 첫 번째 줄: 1번, 3번, 4번 -->
     <v-row class="px-2">
       <!-- 1번: 로얄스타일 결산 영역 -->
@@ -34,9 +41,24 @@
 
       <!-- 3번: 로얄스타일 뽑기 영역 -->
       <v-col cols="5" class="royal-style-pick">
-        <v-card outlined class="pa-4 d-flex flex-column" style="min-height: 250px;">
+        <v-card
+          outlined
+          class="pa-4 d-flex flex-column"
+          style="min-height: 250px; position: relative;"
+        >
+          <!-- 새로고침 버튼 -->
+          <v-btn
+            icon
+            small
+            color="primary"
+            @click="resetSimulation"
+            style="position: absolute; top: 10px; right: 10px;"
+          >
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+
+          <!-- 기존 로얄스타일 뽑기 내용 -->
           <h3 class="font-weight-bold text-center">로얄스타일 뽑기</h3>
-          <!-- 캐릭터 이미지 -->
           <v-img
             :src="characterImage || require('@/assets/royalstyle/royalicon.png')"
             contain
@@ -53,11 +75,10 @@
                 class="royal-input"
                 @keyup.enter="searchCharacter"
               />
-              <!-- 검색 아이콘 클릭 시 검색 실행 -->
               <span class="search-icon" @click="searchCharacter">&#128269;</span>
             </div>
             <v-btn size="small" class="custom-btn mr-2" color="pink" @click="startSimulation">뽑기</v-btn>
-            <v-btn size="small" class="custom-btn" color="purple" outlined  @click="saveRanking">저장</v-btn>
+            <v-btn size="small" class="custom-btn" color="purple" outlined @click="saveRanking">저장</v-btn>
           </v-row>
         </v-card>
       </v-col>
@@ -85,20 +106,16 @@
             <v-list-item v-for="(user, index) in ranking" :key="index" class="ranking-item">
               <div class="ranking-row">
                 <div class="ranking-user-info">
-                  <v-icon
-                    v-if="index === 0"
-                    color="yellow"
-                    class="mr-2 ranking-trophy-icon"
-                  >mdi-trophy</v-icon>
-                  <v-icon
-                    v-else-if="index === 1"
-                    color="grey"
-                    class="mr-2 ranking-trophy-icon"
-                  >mdi-trophy-variant</v-icon>
-                  <v-icon v-else class="mr-2 ranking-user-icon">mdi-account-circle</v-icon>
-                  <img v-if="index >= 2" :src="user.avatarUrl" alt="Avatar" class="ranking-avatar" />
-                  <span class="ranking-user-name">{{ index + 1 }} {{ user.nickname }}</span>
+                  <!-- 순위 -->
+                  <span class="ranking-user-rank">{{ index + 1 }}</span>
+                  <!-- 회색 동그라미 컨테이너 -->
+                  <div class="ranking-avatar-container">
+                    <img :src="user.avatarUrl" alt="Avatar" class="ranking-avatar" />
+                  </div>
+                  <!-- 닉네임 -->
+                  <span class="ranking-user-name">{{ user.nickname }}</span>
                 </div>
+                <!-- 유저 퍼센티지 -->
                 <div class="ranking-user-percentage">{{ user.percentage }}%</div>
               </div>
             </v-list-item>
@@ -150,7 +167,7 @@
 
     <!-- 슈피겔만 애니메이션 -->
     <transition name="shupi-animation">
-      <div v-if="showShupi" class="shupi-container">
+      <div v-if="showShupi" class="shupi-container" style="position: absolute; z-index: 20;">
         <img :src="shupiImage" alt="shupi" class="shupi-image" />
       </div>
     </transition>
@@ -171,7 +188,12 @@
     </div>
 
     <!-- 로얄스타일 뽑기 결과 팝업 -->
-    <div v-if="showPopup" class="popup-result" @click="closePopup">
+    <div
+      v-if="showPopup"
+      class="popup-result"
+      @click="closePopup"
+      style="position: absolute; z-index: 10;"
+    >
       <transition name="popup-animation">
         <div class="popup-result-content">
           <!-- 폭죽 효과 -->
@@ -202,8 +224,12 @@
 <script>
 import axios from "axios";
 import confetti from "canvas-confetti";
+import CustomAlert from "@/components/CustomAlert.vue";
 
 export default {
+  components: {
+    CustomAlert // 컴포넌트 등록
+  },
   data() {
     return {
       characterName: "", // 입력된 캐릭터 이름
@@ -218,19 +244,10 @@ export default {
       showResetPopup: false, // 초기화 팝업 표시 여부
       isSimulationDisabled: false, // 시뮬레이션 사용 불가 여부
       fortuneMessage: "",
-      ranking: [
-        { name: "쫄루", percentage: 40 },
-        { name: "김용덕", percentage: 33 },
-        { name: "commitnpush", percentage: 31 },
-        { name: "이의상", percentage: 30 },
-        { name: "Jun", percentage: 27 },
-        { name: "아이엠토르", percentage: 25 },
-        { name: "마스터 치프", percentage: 24 },
-        { name: "박소정", percentage: 18 },
-        { name: "OhWhy", percentage: 15 },
-        { name: "농냥이", percentage: 10 }
-      ],
-      drawResults: Array(20).fill(require("@/assets/royalstyle/royalicon.png"))
+      formattedRatio: "",
+      ranking: [],
+      showAlert: false, // 알림 팝업 표시 여부
+      alertMessage: "" // 알림 팝업 메시지
     };
   },
   computed: {
@@ -280,30 +297,40 @@ export default {
         console.error("캐릭터 정보 조회 실패:", error);
       }
     },
-async saveRanking() {
-  if (!this.characterName || !this.characterImage) {
-    alert("닉네임을 검색한 후 저장하세요.");
-    return;
-  }
 
-  try {
-    // 확률 계산
-    const percentage = (this.specialLabelCount / this.couponCount) * 100;
+    async saveRanking() {
+      if (!this.characterName || !this.characterImage) {
+        this.alertMessage = "닉네임을 검색한 후 저장하세요.";
+        this.showAlert = true; // 팝업 표시
+        console.log(this.showAlert, this.alertMessage); // 값 확인
+        return;
+      }
 
-    // API 호출 (Query String 형식)
-    const params = new URLSearchParams();
-    params.append("nickname", this.characterName);
-    params.append("percentage", percentage.toFixed(1));
-    params.append("avatarUrl", this.characterImage);
+      try {
+        const percentage = Number(this.formattedRatio);
+        if (isNaN(percentage)) {
+          throw new Error("Invalid formattedRatio value");
+        }
 
-    await axios.post("http://localhost:8081/api/royal-style/save-ranking", params);
+        const params = new URLSearchParams();
+        params.append("nickname", this.characterName);
+        params.append("percentage", percentage.toFixed(1));
+        params.append("avatarUrl", this.characterImage);
 
-    alert("랭킹이 저장되었습니다.");
-    this.fetchRanking(); // 최신 랭킹 데이터 갱신
-  } catch (error) {
-    console.error("랭킹 저장 실패:", error);
-  }
-},
+        await axios.post(
+          "http://localhost:8081/api/royal-style/save-ranking",
+          params
+        );
+        this.alertMessage = "랭킹이 저장되었습니다."; // 팝업 메시지 설정
+        this.showAlert = true; // 팝업 표시
+        this.fetchRanking(); // 최신 랭킹 데이터 갱신
+        this.resetSimulation();
+      } catch (error) {
+        this.alertMessage = "랭킹 저장 실패. 다시 시도해주세요."; // 실패 메시지
+        this.showAlert = true;
+        console.error("랭킹 저장 실패:", error);
+      }
+    },
 
     async fetchRanking() {
       try {
@@ -329,14 +356,17 @@ async saveRanking() {
 
       this.isAnimating = true;
       this.showShupi = true;
+      this.showPopup = false; // 팝업 표시
 
-      // 슈피겔만 애니메이션 실행
+      // 슈피겔만 애니메이션 후 팝업 표시
       this.timer = setTimeout(async () => {
-        await this.showPopupResult();
+        this.showShupi = false; // 슈피겔만 애니메이션 종료
+        this.showPopup = true; // 팝업 표시
+        await this.showPopupResult(); // 팝업 결과 표시
       }, 400);
 
-      // 엔터 키 이벤트 등록
-      window.addEventListener("keydown", this.skipAnimation);
+      // 애니메이션 스킵 이벤트
+      //window.addEventListener("keydown", this.skipAnimation);
     },
 
     async showPopupResult() {
@@ -429,6 +459,11 @@ async saveRanking() {
     closePopup() {
       this.showPopup = false;
     },
+    handleKeydown(event) {
+      if (event.key === "Escape" && this.showPopup) {
+        this.closePopup(); // Esc 키로 팝업 닫기
+      }
+    },
     fireConfetti() {
       const duration = 2 * 1000;
       const animationEnd = Date.now() + duration;
@@ -474,31 +509,40 @@ async saveRanking() {
     calculateFortune() {
       // 쿠폰이 10개 단위일 때만 계산
       if (this.couponCount % 10 !== 0) return;
-
       const ratio = (this.specialLabelCount / this.couponCount) * 100;
 
       // 소수점이 0으로 끝나면 정수로 표시, 아니면 소수점 첫째 자리까지 표시
-      const formattedRatio =
+      this.formattedRatio =
         ratio % 1 === 0 ? ratio.toFixed(0) : ratio.toFixed(1);
 
       if (ratio <= 10) {
-        this.fortuneMessage = `${formattedRatio}%\n오늘은 쉬어가는 날~ 
+        this.fortuneMessage = `${this.formattedRatio}%\n오늘은 쉬어가는 날~ 
     조용히 게임만 즐기세요! 🎮`;
       } else if (ratio > 10 && ratio <= 20) {
-        this.fortuneMessage = `${formattedRatio}%\n조금씩 운이 올라오고 있어요! 
+        this.fortuneMessage = `${this.formattedRatio}%\n조금씩 운이 올라오고 있어요! 
     다음엔 더 기대해봐요! 😊`;
       } else if (ratio > 20 && ratio <= 30) {
-        this.fortuneMessage = `${formattedRatio}%\n운이 점점 상승 중! 
+        this.fortuneMessage = `${this.formattedRatio}%\n운이 점점 상승 중! 
     오늘은 기회가 보이네요! 🍀`;
       } else if (ratio > 30 && ratio <= 40) {
-        this.fortuneMessage = `${formattedRatio}%\n운빨 대폭발 직전! 
+        this.fortuneMessage = `${this.formattedRatio}%\n운빨 대폭발 직전! 
     이제 한 방이 남았습니다! 🎉`;
       } else {
-        this.fortuneMessage = `${formattedRatio}%\n지금이 기회! 
+        this.fortuneMessage = `${this.formattedRatio}%\n지금이 기회! 
     오늘의 주인공은 당신입니다! 
     로또 사세요! 💎`;
       }
-    }
+    },
+      closeCustomAlert() {
+    this.showAlert = false; // 팝업을 닫습니다.
+  },
+  },
+  mounted() {
+    this.fetchRanking(); // 기존 랭킹 데이터 불러오기
+    window.addEventListener("keydown", this.handleKeydown); // 전역 키 이벤트 등록
+  },
+  unmounted() {
+    window.removeEventListener("keydown", this.handleKeydown); // 이벤트 리스너 제거
   }
 };
 </script>
@@ -555,6 +599,10 @@ input {
   align-items: center; /* 닉네임과 아이콘 수직 정렬 */
 }
 
+/* 순위 숫자 */
+.ranking-user-rank {
+  margin-right: 30px; /* 닉네임과 간격 조정 */
+}
 /* 닉네임 */
 .ranking-user-name {
   margin-left: 8px; /* 아이콘과 닉네임 간 여백 */
@@ -565,6 +613,26 @@ input {
   text-align: right; /* 오른쪽 정렬 */
   flex-shrink: 0; /* 줄어들지 않도록 고정 */
   width: 50px; /* 퍼센트 고정 너비 */
+}
+
+/* 아바타 컨테이너 */
+.ranking-avatar-container {
+  width: 30px; /* 컨테이너의 너비 */
+  height: 30px; /* 컨테이너의 높이 (너비와 동일) */
+  background-color: #d3d3d3; /* 회색 배경색 */
+  border-radius: 50%; /* 원형으로 만들기 */
+  display: flex; /* 내부 정렬을 위해 flex 사용 */
+  align-items: center; /* 세로 중앙 정렬 */
+  justify-content: center; /* 가로 중앙 정렬 */
+  margin-right: 8px; /* 닉네임과 간격 조정 */
+}
+
+/* 아바타 */
+.ranking-avatar {
+  width: 28px; /* 아바타 크기 */
+  height: 28px; /* 아바타 크기 */
+  border-radius: 50%; /* 아바타 자체도 원형 */
+  object-fit: cover; /* 이미지를 자르지 않고 맞춤 */
 }
 
 /* 3번: 로얄스타일 뽑기 */
