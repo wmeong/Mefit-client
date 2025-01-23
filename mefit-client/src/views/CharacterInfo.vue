@@ -16,6 +16,21 @@
 
     <!-- 데이터가 있을 경우 -->
     <div v-else>
+      <!-- 검색창 -->
+      <v-row dense class="search-bar-row">
+        <v-col cols="12" md="12">
+          <div class="search-bar-container">
+            <input
+              type="text"
+              placeholder="닉네임을 입력하세요"
+              v-model="characterName"
+              class="search-input"
+              @keydown.enter="searchAndSaveCharacter"
+            />
+            <button @click="searchAndSaveCharacter" class="search-button">🔍 검색</button>
+          </div>
+        </v-col>
+      </v-row>
       <!-- 캐릭터 이미지와 기본 정보 정렬 -->
       <v-row class="align-start" dense>
         <!-- 1번 : 캐릭터 이미지 영역 -->
@@ -63,48 +78,49 @@
 
         <v-row dense>
           <!-- 2번 기본 정보 영역 -->
-         <v-col cols="12" md="5">
-  <div class="modern-card">
-    <!-- 캐릭터 정보 영역 -->
-    <div class="character-info">
-      <div class="level-gender">
-        <!-- 레벨 아이콘 및 텍스트 -->
-        <img src="@/assets/level.png" alt="level-icon" class="level-icon" />
-        {{ characterInfo.character_level || "레벨" }}
-        <br />
-        <!-- 성별 아이콘 및 텍스트 -->
-        <img
-          :src="characterInfo.character_gender === '여' ? require('@/assets/woman.png') : require('@/assets/men.png')"
-          alt="gender-icon"
-          class="gender-icon"
-        />
-        {{ characterInfo.character_gender || "성별" }}
-      </div>
-      <!-- 월드, 길드 -->
-      <div class="world-guild">
-        <img
-          v-if="characterInfo.world_name"
-          :src="getWorldIcon(characterInfo.world_name)"
-          alt="world-icon"
-          class="world-icon"
-        />
-        <span class="badge">{{ characterInfo.world_name || "월드명" }}</span>
-        <span class="badge">{{ characterInfo.character_guild_name || "길드명" }}</span>
-      </div>
-    </div>
+          <v-col cols="12" md="5">
+            <div class="modern-card">
+                           <h3 class="font-weight-bold">캐릭터 정보</h3>
+              <!-- 캐릭터 정보 영역 -->
+              <div class="character-info">
+                <div class="level-gender">
+                  <!-- 레벨 아이콘 및 텍스트 -->
+                  <img src="@/assets/level.png" alt="level-icon" class="level-icon" />
+                  <span class="badge">{{ characterInfo.character_level || "레벨" }}</span>
+                  <br />
+                  <!-- 성별 아이콘 및 텍스트 -->
+                  <img
+                    :src="characterInfo.character_gender === '여' ? require('@/assets/woman.png') : require('@/assets/men.png')"
+                    alt="gender-icon"
+                    class="gender-icon"
+                  />
+                  <span class="badge">{{ characterInfo.character_gender || "성별" }}</span>
+                </div>
+                <!-- 월드, 길드 -->
+                <div class="world-guild">
+                  <img
+                    v-if="characterInfo.world_name"
+                    :src="getWorldIcon(characterInfo.world_name)"
+                    alt="world-icon"
+                    class="world-icon"
+                  />
+                  <span class="badge">{{ characterInfo.world_name || "월드명" }}</span>
+                  <span class="badge">{{ characterInfo.character_guild_name || "길드명" }}</span>
+                </div>
+              </div>
 
-    <!-- 캐릭터 직업 및 이미지 영역 -->
-    <div class="job-section">
-      <img src="@/assets/job/호영.gif" alt="job-image" class="job-image" />
-      <span class="job-badge">{{ characterInfo.character_class || "직업" }}</span>
-    </div>
-  </div>
-</v-col>
-
+              <!-- 캐릭터 직업 및 이미지 영역 -->
+              <div class="job-section">
+                <img src="@/assets/job/호영.gif" alt="job-image" class="job-image" />
+                <span class="job-badge">{{ characterInfo.character_class || "직업" }}</span>
+              </div>
+            </div>
+          </v-col>
 
           <!-- 3번: 퍼스널 컬러 영역 -->
           <v-col cols="12" md="7">
             <div class="modern-card">
+                           <h3 class="font-weight-bold">퍼스널컬러</h3>
               <!-- 퍼스널 컬러 분석 결과 -->
               <div
                 :class="[ 'text-center', 'personal-color-result', personalColorGroup, 'text-h6' ]"
@@ -732,7 +748,7 @@ export default {
 
 .badge {
   display: inline-block;
-  padding: 4px 8px; /* 텍스트 주변 여백 */
+  padding: 0px 8px; /* 텍스트 주변 여백 */
   border: 1px solid #ccc; /* 테두리 색상 */
   border-radius: 12px; /* 둥근 테두리 */
   background-color: #f5f5f5; /* 배경색 */
@@ -748,10 +764,8 @@ export default {
   width: 20px; /* 아이콘 크기 */
   height: 20px;
   margin-right: 8px; /* 텍스트와 간격 */
-  vertical-align: middle; 
+  vertical-align: middle;
 }
-
-
 
 .modern-card {
   background-color: #ffffff;
@@ -806,4 +820,42 @@ export default {
   padding: 4px 8px;
   border-radius: 12px;
 }
+
+/* 검색창*/
+.search-bar-container {
+  display: flex;
+  justify-content: center; /* 가운데 정렬 */
+  align-items: center;
+  width: 100%; /* 전체 길이 */
+  padding: 12px 16px; /* 여백 추가 */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+  background-color: #ffffff; /* 배경색 */
+  border-radius: 8px; /* 둥근 모서리 */
+  margin-bottom: 16px; /* 아래 컨텐츠와 간격 */
+}
+
+.search-input {
+  flex: 1; /* 검색창 너비를 버튼과 함께 조정 */
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  margin-right: 8px;
+}
+
+.search-button {
+  background-color: #d96dcb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #e58cda;
+}
+
 </style>
