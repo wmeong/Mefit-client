@@ -18,7 +18,7 @@
 export default {
   methods: {
    navigateToSeason(season) {
-  this.$router.push({ name: 'PersnalColorDetail', query: { season } });
+  this.$router.push({ name: 'PersonalColorDetail', query: { season } });
 }
   },
 };
