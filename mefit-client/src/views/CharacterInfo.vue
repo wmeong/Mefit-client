@@ -31,11 +31,90 @@
           </div>
         </v-col>
       </v-row>
-      <!-- 캐릭터 이미지와 기본 정보 정렬 -->
-      <v-row class="align-start" dense>
-        <!-- 1번 : 캐릭터 이미지 영역 -->
+      <!-- 상위 영역 -->
+      <v-row class="upper-side" dense>
+        <!-- 1번 기본 정보 영역 -->
+        <v-col cols="12" md="3">
+          <div class="modern-card">
+            <h3 class="font-weight-bold">캐릭터 정보</h3>
+            <table class="character-info-table">
+              <tbody>
+                <!-- 레벨 -->
+                <tr>
+                  <td class="icon-cell">
+                    <v-avatar class="level-icon" color="#808080" size="24">
+                      <span class="level-text">Lv</span>
+                    </v-avatar>
+                  </td>
+                  <td class="data-cell">
+                    <span class="badge">{{ characterInfo.character_level || "레벨" }}</span>
+                  </td>
+                </tr>
+                <!-- 월드 -->
+                <tr>
+                  <td class="icon-cell">
+                    <img
+                      v-if="characterInfo.world_name"
+                      :src="getWorldIcon(characterInfo.world_name)"
+                      alt="world-icon"
+                      class="world-icon"
+                    />
+                  </td>
+                  <td class="data-cell">
+                    <span class="badge">{{ characterInfo.world_name || "월드명" }}</span>
+                  </td>
+                </tr>
+                <!-- 성별 -->
+                <tr>
+                  <td class="icon-cell">
+                    <v-avatar
+                      :color="characterInfo.character_gender === '여' ? '#FFC0CB' : '#87CEEB'"
+                      size="24"
+                      class="gender-icon"
+                    >
+                      <v-icon
+                        small
+                        color="white"
+                      >{{ characterInfo.character_gender === '여' ? 'mdi-gender-female' : 'mdi-gender-male' }}</v-icon>
+                    </v-avatar>
+                  </td>
+                  <td class="data-cell">
+                    <span class="badge">{{ characterInfo.character_gender || "성별" }}</span>
+                  </td>
+                </tr>
+
+                <!-- 길드 -->
+                <tr>
+                  <td class="icon-cell">
+                    <v-avatar class="guild-icon" color="#87CEEB" size="24">
+                      <span class="guild-text">G</span>
+                    </v-avatar>
+                  </td>
+                  <td class="data-cell">
+                    <span class="badge">{{ characterInfo.character_guild_name || "길드명" }}</span>
+                  </td>
+                </tr>
+                <!-- 직업 -->
+                <tr>
+                  <td class="icon-cell">
+                    <img
+                      :src="getJobIcon(characterInfo.character_class)"
+                      alt="job-icon"
+                      class="job-icon"
+                    />
+                  </td>
+                  <td class="data-cell">
+                    <span class="badge">{{ characterInfo.character_class || "직업" }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </v-col>
+
+        <!-- 2번 : 캐릭터 이미지 영역 -->
         <v-col cols="12" md="4">
-          <div class="avatar-container">
+          <div class="character-container">
             <!-- 캐릭터 이미지 -->
             <v-img
               :src="
@@ -46,6 +125,7 @@
               :style="{
               transform: `scale(${scale})`,
               transition: 'transform 0.3s ease-in-out',
+              'margin-bottom': '40px'
             }"
             ></v-img>
             <!-- 버튼 그룹 -->
@@ -76,90 +156,50 @@
           </div>
         </v-col>
 
-        <v-row dense>
-          <!-- 2번 기본 정보 영역 -->
-          <v-col cols="12" md="5">
-            <div class="modern-card">
-                           <h3 class="font-weight-bold">캐릭터 정보</h3>
-              <!-- 캐릭터 정보 영역 -->
-              <div class="character-info">
-                <div class="level-gender">
-                  <!-- 레벨 아이콘 및 텍스트 -->
-                  <img src="@/assets/level.png" alt="level-icon" class="level-icon" />
-                  <span class="badge">{{ characterInfo.character_level || "레벨" }}</span>
-                  <br />
-                  <!-- 성별 아이콘 및 텍스트 -->
-                  <img
-                    :src="characterInfo.character_gender === '여' ? require('@/assets/woman.png') : require('@/assets/men.png')"
-                    alt="gender-icon"
-                    class="gender-icon"
-                  />
-                  <span class="badge">{{ characterInfo.character_gender || "성별" }}</span>
-                </div>
-                <!-- 월드, 길드 -->
-                <div class="world-guild">
-                  <img
-                    v-if="characterInfo.world_name"
-                    :src="getWorldIcon(characterInfo.world_name)"
-                    alt="world-icon"
-                    class="world-icon"
-                  />
-                  <span class="badge">{{ characterInfo.world_name || "월드명" }}</span>
-                  <span class="badge">{{ characterInfo.character_guild_name || "길드명" }}</span>
-                </div>
-              </div>
+        <!-- 3번: 퍼스널 컬러 영역 -->
+        <v-col cols="12" md="5">
+          <div class="modern-card">
+            <h3 class="font-weight-bold">퍼스널컬러</h3>
+            <!-- 퍼스널 컬러 분석 결과 -->
+            <div
+              :class="[ 'text-center', 'personal-color-result', personalColorGroup ]"
+            >{{ personalColorAnalysis }}</div>
 
-              <!-- 캐릭터 직업 및 이미지 영역 -->
-              <div class="job-section">
-                <img src="@/assets/job/호영.gif" alt="job-image" class="job-image" />
-                <span class="job-badge">{{ characterInfo.character_class || "직업" }}</span>
-              </div>
-            </div>
-          </v-col>
+            <!-- 메인 컬러 표시 -->
+            <v-row class="main-color mb-0 pb-0">
+              <v-col cols="3" class="text-left">
+                <h4 class="text-left color-label">메인컬러</h4>
 
-          <!-- 3번: 퍼스널 컬러 영역 -->
-          <v-col cols="12" md="7">
-            <div class="modern-card">
-                           <h3 class="font-weight-bold">퍼스널컬러</h3>
-              <!-- 퍼스널 컬러 분석 결과 -->
-              <div
-                :class="[ 'text-center', 'personal-color-result', personalColorGroup, 'text-h6' ]"
-              >{{ personalColorAnalysis }}</div>
+              </v-col>
+              <v-col cols="9" class="d-flex">
+                <v-avatar
+                  v-for="(color, index) in characterInfo.main_colors || ['#ccc', '#ddd']"
+                  :key="'main-color-' + index"
+                  :color="color"
+                  size="33"
+                  class="mr-2"
+                ></v-avatar>
+              </v-col>
+            </v-row>
 
-              <!-- 메인 컬러 표시 -->
-              <v-row class="align-center mb-4 pt-4">
-                <v-col cols="3" class="text-left">
-                  <h4 class="text-left">메인컬러</h4>
-                </v-col>
-                <v-col cols="9" class="d-flex">
-                  <v-avatar
-                    v-for="(color, index) in characterInfo.main_colors || ['#ccc', '#ddd']"
-                    :key="'main-color-' + index"
-                    :color="color"
-                    size="44"
-                    class="mr-12"
-                  ></v-avatar>
-                </v-col>
-              </v-row>
+            <!-- 서브컬러 표시 -->
+            <v-row class="sub-color mt-0 pt-0">
+              <v-col cols="3" class="text-left">
+                <h4 class="text-left color-label">서브컬러</h4>
 
-              <!-- 서브컬러 표시 -->
-              <v-row class="align-center">
-                <v-col cols="3" class="text-left">
-                  <h4 class="text-left">서브컬러</h4>
-                </v-col>
-                <v-col cols="9" class="d-flex">
-                  <v-avatar
-                    v-for="(color, index) in characterInfo.sub_colors || ['#eee', '#fff']"
-                    :key="'sub-color-' + index"
-                    :color="color"
-                    size="44"
-                    class="mr-12"
-                  ></v-avatar>
-                </v-col>
-              </v-row>
-            </div>
-          </v-col>
-        </v-row>
+              </v-col>
+              <v-col cols="9" class="d-flex">
+                <v-avatar
+                  v-for="(color, index) in characterInfo.sub_colors || ['#eee', '#fff']"
+                  :key="'sub-color-' + index"
+                  :color="color"
+                  size="33"
+                  class="mr-2"
+                ></v-avatar>
+              </v-col>
+            </v-row>
+          </div>
+        </v-col>
       </v-row>
     </div>
     <!-- 4번 : 캐시 장비 정보 영역 -->
@@ -391,6 +431,13 @@ export default {
         this.message = "캐릭터 정보를 불러오는 중 오류가 발생했습니다.";
       }
     },
+    getJobIcon(jobName) {
+      try {
+        return require(`@/assets/job/${jobName}.png`);
+      } catch (e) {
+        return null;
+      }
+    },
     hexToRgb(hex) {
       const bigint = parseInt(hex.slice(1), 16);
       const r = (bigint >> 16) & 255;
@@ -474,7 +521,6 @@ export default {
   computed: {
     filteredItems() {
       return this.REQUIRED_ITEM_TYPES.map(requiredItemType => {
-        // 캐릭터의 캐시 아이템 데이터에서 item_type이 requiredItemType.type과 일치하는 데이터를 찾는다.
         const cashItemData = this.characterCashItem.find(
           itemData => itemData.item_type === requiredItemType.type
         );
@@ -585,22 +631,35 @@ export default {
 
 <style scoped>
 .main-container {
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
+  padding: 0 16px; /* 양쪽 패딩 설정 */
 }
-.character-image-container {
+
+.character-container {
+  position: relative;
+  height: 230px;
+  margin: 0 auto;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding-right: 16px;
-  flex-direction: column;
+  justify-content: center;
+  /* overflow: hidden; */ /* 히든버튼 */
 }
 .character-image {
-  max-height: 250px; /* 초기 높이를 줄임 */
-  max-width: auto; /* 너비를 높이에 비례해 자동 조정 */
-  object-fit: contain; /* 이미지 비율 유지 */
+  height: 200px; /* 이미지 최대 높이 */
+  width: auto;
   display: block;
-  margin: 0 auto;
+  margin: 0 auto; /* 이미지 가운데 정렬 */
+}
+
+/*1,2,3, 일렬로 */
+.character-info {
+  text-align: left;
+  padding-left: 5px;
+  margin-top: 20px;
 }
 
 .equipment-item {
@@ -644,42 +703,8 @@ export default {
   color: #666;
   line-height: 1.4;
 }
-.personal-color-result {
-  font-size: 24px;
-  font-weight: bold;
-  text-transform: uppercase;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-}
-.personal-color-result.Spring {
-  background-color: #fbe7c6;
-  color: #8d5524;
-}
-.personal-color-result.Summer {
-  background-color: #e6f7ff;
-  color: #007acc;
-}
-.personal-color-result.Autumn {
-  background-color: #fdecc8;
-  color: #a64b2a;
-}
-.personal-color-result.Winter {
-  background-color: #f0f4f7;
-  color: #3a4e80;
-}
 
-.character-image-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.character-image {
-  max-height: 280px; /* 이미지 최대 높이 */
-  width: auto;
-  display: block;
-  margin: 0 auto; /* 이미지 가운데 정렬 */
-}
+
 .button-row {
   margin-top: 16px; /* 버튼과 이미지 간격 */
   display: flex;
@@ -706,19 +731,6 @@ export default {
   height: 40px;
   border-radius: 50%; /* 원형 버튼 */
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.avatar-container {
-  position: relative;
-  height: 245px;
-  margin: 0 auto;
-  border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* overflow: hidden; */ /* 히든버튼 */
 }
 
 .search-bar {
@@ -757,52 +769,66 @@ export default {
   color: #333; /* 텍스트 색상 */
   margin-right: 8px; /* 요소 간 간격 */
 }
+.character-info-table {
+  margin-top: 10px;
+  margin-left: 8px;
+  border-spacing: 0 8px; /* 위아래 갭 추가 */
+  border-collapse: separate; /* 셀 간격 유지 */
+}
 
-.level-icon,
+.icon-cell {
+  display: flex;
+  justify-content: center; /* 가로 정렬 */
+  align-items: center; /* 세로 정렬 */
+  height: 100%; /* 부모 높이에 맞춤 */
+}
+
+.data-cell {
+  text-align: left;
+  vertical-align: middle;
+  padding-left: 13px; /* 데이터 셀 왼쪽 패딩 */
+}
+
 .gender-icon,
-.world-icon {
+.guild-icon,
+.job-icon {
   width: 20px; /* 아이콘 크기 */
   height: 20px;
-  margin-right: 8px; /* 텍스트와 간격 */
-  vertical-align: middle;
+}
+.world-icon {
+  width: 27px;
+  height: 27px;
 }
 
-.modern-card {
-  background-color: #ffffff;
-  color: #2c3e50;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 250px;
+.level-icon,
+.guild-icon,
+.job-icon {
+  width: 24px;
+  height: 24px;
 }
 
-.character-info {
-  margin-bottom: 16px; /* 캐릭터 정보와 직업 이미지 간격 */
+.level-text,
+.guild-text {
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  color: white;
 }
 
-.level-gender img {
+.gender-icon {
   width: 20px;
   height: 20px;
-  margin-right: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px; /* 아이콘 크기 */
+  font-weight: bold;
+  line-height: 1;
 }
+
 
 .world-guild {
   margin-top: 8px; /* 레벨/성별과 간격 */
-}
-
-.world-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 4px;
-}
-
-.job-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .job-image {
@@ -856,6 +882,67 @@ export default {
 
 .search-button:hover {
   background-color: #e58cda;
+}
+
+
+
+/*퍼스널컬러*/
+.modern-card {
+  height: 230px;
+  background-color: #ffffff;
+  color: #2c3e50;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+
+/*퍼스널컬러 결과 */
+.personal-color-result {
+  width: 100%;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 4px 8px; /* 패딩 조정 */
+  text-align: center;
+  margin-top: 8px;
+}
+.personal-color-result.Spring {
+  background-color: #fbe7c6;
+  color: #8d5524;
+}
+.personal-color-result.Summer {
+  background-color: #e6f7ff;
+  color: #007acc;
+}
+.personal-color-result.Autumn {
+  background-color: #fdecc8;
+  color: #a64b2a;
+}
+.personal-color-result.Winter {
+  background-color: #f0f4f7;
+  color: #3a4e80;
+}
+
+.main-color {
+  margin-top: 10px;
+  margin-bottom: 0 !important; /* 하단 마진 제거 */
+  padding-bottom: 0 !important; /* 하단 패딩 제거 */
+}
+.sub-color {
+  margin-top: 0 !important; /* 하단 마진 제거 */
+  padding-top: 0 !important; /* 하단 패딩 제거 */
+}
+
+.color-label {
+  background-color: #f5f5f5; /* 회색 배경 */
+  padding: 1px 2px;
+  border-radius: 12px; 
+  font-weight: bold; 
+  color: #333; 
 }
 
 </style>
