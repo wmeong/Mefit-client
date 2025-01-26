@@ -509,11 +509,12 @@ export default {
 
       return closestMatch;
     },
-     navigateToPersonalColorPage() {
-    const color = this.personalColorAnalysis;
-    const encodedColor = encodeURIComponent(color); // URL 인코딩
-    this.$router.push(`/personal-color-twelve/${encodedColor}`);
-  },
+    //퍼스널컬러 페이지로 이동
+    navigateToPersonalColorPage() {
+      const color = this.personalColorAnalysis;
+      const encodedColor = encodeURIComponent(color); // URL 인코딩
+      this.$router.push(`/personal-color-twelve/${encodedColor}`);
+    }
   },
   created() {
     // 라우터의 쿼리에서 캐릭터 이름 가져오기
