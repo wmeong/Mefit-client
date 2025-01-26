@@ -163,13 +163,14 @@
             <!-- 퍼스널 컬러 분석 결과 -->
             <div
               :class="[ 'text-center', 'personal-color-result', personalColorGroup ]"
+              @click="navigateToPersonalColorPage"
+              style="cursor: pointer;"
             >{{ personalColorAnalysis }}</div>
 
             <!-- 메인 컬러 표시 -->
             <v-row class="main-color mb-0 pb-0">
               <v-col cols="3" class="text-left">
                 <h4 class="text-left color-label">메인컬러</h4>
-
               </v-col>
               <v-col cols="9" class="d-flex">
                 <v-avatar
@@ -186,7 +187,6 @@
             <v-row class="sub-color mt-0 pt-0">
               <v-col cols="3" class="text-left">
                 <h4 class="text-left color-label">서브컬러</h4>
-
               </v-col>
               <v-col cols="9" class="d-flex">
                 <v-avatar
@@ -508,7 +508,12 @@ export default {
       }
 
       return closestMatch;
-    }
+    },
+     navigateToPersonalColorPage() {
+    const color = this.personalColorAnalysis;
+    const encodedColor = encodeURIComponent(color); // URL 인코딩
+    this.$router.push(`/personal-color-twelve/${encodedColor}`);
+  },
   },
   created() {
     // 라우터의 쿼리에서 캐릭터 이름 가져오기
@@ -704,7 +709,6 @@ export default {
   line-height: 1.4;
 }
 
-
 .button-row {
   margin-top: 16px; /* 버튼과 이미지 간격 */
   display: flex;
@@ -826,7 +830,6 @@ export default {
   line-height: 1;
 }
 
-
 .world-guild {
   margin-top: 8px; /* 레벨/성별과 간격 */
 }
@@ -884,8 +887,6 @@ export default {
   background-color: #e58cda;
 }
 
-
-
 /*퍼스널컬러*/
 .modern-card {
   height: 230px;
@@ -897,8 +898,6 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-
-
 
 /*퍼스널컬러 결과 */
 .personal-color-result {
@@ -940,9 +939,8 @@ export default {
 .color-label {
   background-color: #f5f5f5; /* 회색 배경 */
   padding: 1px 2px;
-  border-radius: 12px; 
-  font-weight: bold; 
-  color: #333; 
+  border-radius: 12px;
+  font-weight: bold;
+  color: #333;
 }
-
 </style>

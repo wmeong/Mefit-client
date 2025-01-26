@@ -14,6 +14,7 @@
         :key="type.name"
         cols="3"
         class="text-center sub-tone-item"
+        @click="navigateToPersonalColorPage(type.name)"
       >
         <div class="tone-circle" :style="{ backgroundColor: type.color }"></div>
         <p class="tone-label">{{ type.name }}</p>
@@ -32,20 +33,14 @@
         class="text-center avatar-container"
       >
         <!-- 아바타 이미지 -->
-        <img
-          src="https://via.placeholder.com/100"
-          alt="Avatar Placeholder"
-          class="avatar-img"
-        />
+        <img src="https://via.placeholder.com/100" alt="Avatar Placeholder" class="avatar-img" />
         <!-- 하트 버튼 -->
         <div class="vote-container">
           <v-icon
             class="heart-icon"
             :style="{ color: '#FFB6C1' }"
             @click="voteForAvatar(index)"
-          >
-            mdi-heart-outline
-          </v-icon>
+          >mdi-heart-outline</v-icon>
         </div>
       </v-col>
     </v-row>
@@ -57,7 +52,7 @@ export default {
   props: ["season"],
   data() {
     return {
-      avatars: Array(12).fill({ votes: 0 }), // 아바타 리스트와 초기 투표 수
+      avatars: Array(12).fill({ votes: 0 }) // 아바타 리스트와 초기 투표 수
     };
   },
   computed: {
@@ -65,10 +60,10 @@ export default {
     seasonTitle() {
       const season = this.$route.query.season || this.season; // query 또는 props에서 가져오기
       const titles = {
-        spring: "봄웜톤",
-        summer: "여름쿨톤",
-        fall: "가을웜톤",
-        winter: "겨울쿨톤",
+        spring: "봄웜",
+        summer: "여름쿨",
+        fall: "가을웜",
+        winter: "겨울쿨"
       };
       return titles[season];
     },
@@ -78,37 +73,47 @@ export default {
         봄웜톤: [
           { name: "라이트", color: "#FFEBE8" },
           { name: "브라이트", color: "#FFC1CC" },
-          { name: "트루", color: "#FFB7A5" },
+          { name: "트루", color: "#FFB7A5" }
         ],
         여름쿨톤: [
           { name: "라이트", color: "#D4F1F9" },
           { name: "브라이트", color: "#A3D8F4" },
-          { name: "뮤트", color: "#91C7D6" },
+          { name: "뮤트", color: "#91C7D6" }
         ],
         가을웜톤: [
           { name: "뮤트", color: "#D7A97B" },
           { name: "스트롱", color: "#B97543" },
-          { name: "딥", color: "#8A5539" },
+          { name: "딥", color: "#8A5539" }
         ],
         겨울쿨톤: [
           { name: "브라이트", color: "#C5B3E7" },
           { name: "스트롱", color: "#7E57C2" },
-          { name: "다크", color: "#512DA8" },
-        ],
+          { name: "다크", color: "#512DA8" }
+        ]
       };
       // 현재 seasonTitle에 해당하는 하위 톤 반환
-      return tones[this.seasonTitle] || [];
-    },
+      const baseTones = tones[this.seasonTitle + "톤"] || []; // "봄웜톤" 등으로 찾기
+      return baseTones.map(tone => ({
+        name: `${this.seasonTitle} ${tone.name}`, // 시즌 타이틀과 톤 이름 이어 붙임
+        color: tone.color
+      }));
+    }
   },
   methods: {
     voteForAvatar(index) {
       // 투표 수 증가
       this.$set(this.avatars, index, {
         ...this.avatars[index],
-        votes: this.avatars[index].votes + 1,
+        votes: this.avatars[index].votes + 1
       });
     },
-  },
+    navigateToPersonalColorPage(toneName) {
+      // 클릭한 하위 톤으로 이동
+      this.$router.push({
+        path: `/personal-color-twelve/${encodeURIComponent(toneName)}`
+      });
+    }
+  }
 };
 </script>
 
@@ -137,6 +142,18 @@ export default {
   border-radius: 50%;
   margin-bottom: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* 하버 효과와 클릭 효과를 위한 트랜지션 */
+  cursor: pointer;
+}
+/* 하버 효과 */
+.tone-circle:hover {
+  transform: scale(1.1); /* 약간 확대 */
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2); /* 그림자 강조 */
+}
+/* 클릭 효과 */
+.tone-circle:active {
+  transform: scale(0.95); /* 약간 축소 */
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); /* 그림자 약화 */
 }
 .tone-label {
   font-size: 1.2rem;
