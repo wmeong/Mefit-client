@@ -27,26 +27,26 @@
         <h4>🌟 Character Showcase 🌟</h4>
       </v-col>
       <v-col
-        v-for="(avatar, index) in avatars"
+        v-for="(characterImage, index) in avatars"
         :key="index"
         cols="3"
         class="text-center avatar-container"
         @click="openPopup(index)"
       >
-        <!-- 아바타 이미지 -->
-        <img src="https://via.placeholder.com/100" alt="Avatar Placeholder" class="avatar-img" />
+        <!-- 캐릭터 이미지 -->
+        <img :src="characterImage" alt="Character Avatar" class="avatar-img" />
         <!-- 하트 버튼 -->
         <div class="vote-container">
           <v-icon
             class="heart-icon"
             :style="{ color: '#FFB6C1' }"
-            @click="voteForAvatar(index)"
+            @click.stop="voteForAvatar(index)"
           >mdi-heart-outline</v-icon>
         </div>
       </v-col>
     </v-row>
 
-        <!-- CharacterInfoPopup 컴포넌트 -->
+    <!-- CharacterInfoPopup 컴포넌트 -->
     <CharacterInfoPopup
       v-if="selectedCharacter"
       :model-value="popupVisible"
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-// CharacterInfoPopup 컴포넌트 가져오기
+import axios from "axios";
 import CharacterInfoPopup from "./CharacterInfoPopup.vue";
 
 export default {
@@ -65,16 +65,9 @@ export default {
   props: ["season"],
   data() {
     return {
-      avatars: Array.from({ length: 12 }, (_, index) => ({
-        name: `캐릭터${index + 1}`,
-        image: "https://via.placeholder.com/100",
-        items: [
-          { name: "아이템1", details: `상세 정보${index + 1}` },
-          { name: "아이템2", details: `상세 정보${index + 2}` },
-        ],
-      })),
+      avatars: [], //characterImage 데이터를 저장할 배열
       popupVisible: false, // 팝업 표시 상태
-      selectedCharacter: null, // 선택된 캐릭터 데이터
+      selectedCharacter: null // 선택된 캐릭터 데이터
     };
   },
   computed: {
@@ -122,12 +115,23 @@ export default {
     }
   },
   methods: {
+    async fetchSeasonData() {
+      try {
+        // 백엔드 API 호출하여 characterImage 데이터 가져오기
+        const response = await axios.get(
+          "http://localhost:8081/api/personal/season",
+          {
+            params: { season: this.seasonTitle }
+          }
+        );
+        this.avatars = response.data; // characterImage 데이터 저장
+      } catch (error) {
+        console.error("데이터 로드 중 오류 발생:", error);
+      }
+    },
     voteForAvatar(index) {
-      // 투표 수 증가
-      this.$set(this.avatars, index, {
-        ...this.avatars[index],
-        votes: this.avatars[index].votes + 1
-      });
+      // 투표 수 증가 로직
+      console.log(`캐릭터 ${index + 1}에 투표했습니다.`);
     },
     navigateToPersonalColorPage(toneName) {
       // 클릭한 하위 톤으로 이동
@@ -135,10 +139,14 @@ export default {
         path: `/personal-color-twelve/${encodeURIComponent(toneName)}`
       });
     },
-        openPopup(index) {
+    openPopup(index) {
       this.selectedCharacter = this.avatars[index];
       this.popupVisible = true;
-    },
+    }
+  },
+  mounted() {
+    // 컴포넌트가 마운트될 때 데이터 가져오기
+    this.fetchSeasonData();
   }
 };
 </script>
