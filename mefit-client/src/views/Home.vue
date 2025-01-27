@@ -45,30 +45,58 @@
         <v-btn text @click="loadMoreCharacters">더 보기</v-btn>
       </v-card-actions>
     </v-card>
+
+    <!-- 공통 알림 팝업 -->
+    <CustomAlert
+      v-if="showAlert"
+      :visible="showAlert"
+      title="알림"
+      message="존재하지 않는 캐릭터입니다."
+      @close="showAlert = false"
+    />
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import CustomAlert from "@/components/CustomAlert.vue"; // 공통 알림 컴포넌트
 
 export default {
   name: "Home",
+  components: { CustomAlert },
   data() {
     return {
       searchQuery: "", // 검색어 저장
       popularCharacters: [], // 인기 캐릭터 리스트
+      showAlert: false, // 알림 팝업 표시 여부
     };
   },
   methods: {
     /**
-     * 검색 쿼리를 기반으로 CharacterInfo 페이지로 이동
+     * 검색 쿼리를 기반으로 캐릭터 존재 여부 확인
      */
-    search() {
-      if (this.searchQuery) {
-        this.$router.push({
-          name: "CharacterInfo",
-          query: { q: this.searchQuery },
-        });
+    async search() {
+      if (!this.searchQuery) return;
+
+      try {
+        // 서버에 검색 요청
+        const response = await axios.get(
+          `http://localhost:8081/api/characters/ocid?name=${this.searchQuery}`
+        );
+
+        // 검색 성공 시 CharacterInfo 페이지로 이동
+        if (response.status === 200) {
+          this.$router.push({
+            name: "CharacterInfo",
+            query: { q: this.searchQuery },
+          });
+        } else {
+          throw new Error("Character not found");
+        }
+      } catch (error) {
+        console.error("Search failed:", error);
+        // 검색 실패 시 팝업 표시
+        this.showAlert = true;
       }
     },
 
