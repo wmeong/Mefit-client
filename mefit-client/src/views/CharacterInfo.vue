@@ -27,7 +27,9 @@
               class="search-input"
               @keydown.enter="searchAndSaveCharacter"
             />
-            <button @click="searchAndSaveCharacter" class="search-button">🔍 검색</button>
+            <button @click="searchAndSaveCharacter" class="search-button">
+              🔍 검색
+            </button>
           </div>
         </v-col>
       </v-row>
@@ -47,7 +49,9 @@
                     </v-avatar>
                   </td>
                   <td class="data-cell">
-                    <span class="badge">{{ characterInfo.character_level || "레벨" }}</span>
+                    <span class="badge">{{
+                      characterInfo.character_level || "레벨"
+                    }}</span>
                   </td>
                 </tr>
                 <!-- 월드 -->
@@ -61,25 +65,34 @@
                     />
                   </td>
                   <td class="data-cell">
-                    <span class="badge">{{ characterInfo.world_name || "월드명" }}</span>
+                    <span class="badge">{{
+                      characterInfo.world_name || "월드명"
+                    }}</span>
                   </td>
                 </tr>
                 <!-- 성별 -->
                 <tr>
                   <td class="icon-cell">
                     <v-avatar
-                      :color="characterInfo.character_gender === '여' ? '#FFC0CB' : '#87CEEB'"
+                      :color="
+                        characterInfo.character_gender === '여'
+                          ? '#FFC0CB'
+                          : '#87CEEB'
+                      "
                       size="24"
                       class="gender-icon"
                     >
-                      <v-icon
-                        small
-                        color="white"
-                      >{{ characterInfo.character_gender === '여' ? 'mdi-gender-female' : 'mdi-gender-male' }}</v-icon>
+                      <v-icon small color="white">{{
+                        characterInfo.character_gender === "여"
+                          ? "mdi-gender-female"
+                          : "mdi-gender-male"
+                      }}</v-icon>
                     </v-avatar>
                   </td>
                   <td class="data-cell">
-                    <span class="badge">{{ characterInfo.character_gender || "성별" }}</span>
+                    <span class="badge">{{
+                      characterInfo.character_gender || "성별"
+                    }}</span>
                   </td>
                 </tr>
 
@@ -91,7 +104,9 @@
                     </v-avatar>
                   </td>
                   <td class="data-cell">
-                    <span class="badge">{{ characterInfo.character_guild_name || "길드명" }}</span>
+                    <span class="badge">{{
+                      characterInfo.character_guild_name || "길드명"
+                    }}</span>
                   </td>
                 </tr>
                 <!-- 직업 -->
@@ -104,7 +119,9 @@
                     />
                   </td>
                   <td class="data-cell">
-                    <span class="badge">{{ characterInfo.character_class || "직업" }}</span>
+                    <span class="badge">{{
+                      characterInfo.character_class || "직업"
+                    }}</span>
                   </td>
                 </tr>
               </tbody>
@@ -118,15 +135,16 @@
             <!-- 캐릭터 이미지 -->
             <v-img
               :src="
-              characterInfo.character_image || 'https://via.placeholder.com/150'
-            "
+                characterInfo.character_image ||
+                'https://via.placeholder.com/150'
+              "
               alt="Character Image"
               class="character-image"
               :style="{
-              transform: `scale(${scale})`,
-              transition: 'transform 0.3s ease-in-out',
-              'margin-bottom': '40px'
-            }"
+                transform: `scale(${scale})`,
+                transition: 'transform 0.3s ease-in-out',
+                'margin-bottom': '40px',
+              }"
             ></v-img>
             <!-- 버튼 그룹 -->
             <div class="button-group">
@@ -135,11 +153,13 @@
                 @click="toggleZoom"
                 class="modern-btn"
                 elevation="2"
-                style="width: 40px; padding: 0; min-width: 40px;"
+                style="width: 40px; padding: 0; min-width: 40px"
               >
                 <v-icon size="20">
                   {{
-                  scale === 0.7 ? "mdi-magnify-plus-outline" : "mdi-magnify-minus-outline"
+                    scale === 0.7
+                      ? "mdi-magnify-plus-outline"
+                      : "mdi-magnify-minus-outline"
                   }}
                 </v-icon>
               </v-btn>
@@ -148,7 +168,7 @@
                 @click="downloadImage"
                 class="modern-btn"
                 elevation="2"
-                style="width: 40px; padding: 0; min-width: 40px;"
+                style="width: 40px; padding: 0; min-width: 40px"
               >
                 <v-icon size="20">mdi-download</v-icon>
               </v-btn>
@@ -162,10 +182,16 @@
             <h3 class="font-weight-bold">퍼스널컬러</h3>
             <!-- 퍼스널 컬러 분석 결과 -->
             <div
-              :class="[ 'text-center', 'personal-color-result', personalColorGroup ]"
+              :class="[
+                'text-center',
+                'personal-color-result',
+                personalColorGroup,
+              ]"
               @click="navigateToPersonalColorPage"
-              style="cursor: pointer;"
-            >{{ personalColorAnalysis }}</div>
+              style="cursor: pointer"
+            >
+              {{ personalColorAnalysis }}
+            </div>
 
             <!-- 메인 컬러 표시 -->
             <v-row class="main-color mb-0 pb-0">
@@ -174,7 +200,10 @@
               </v-col>
               <v-col cols="9" class="d-flex">
                 <v-avatar
-                  v-for="(color, index) in characterInfo.main_colors || ['#ccc', '#ddd']"
+                  v-for="(color, index) in characterInfo.main_colors || [
+                    '#ccc',
+                    '#ddd',
+                  ]"
                   :key="'main-color-' + index"
                   :color="color"
                   size="33"
@@ -190,7 +219,10 @@
               </v-col>
               <v-col cols="9" class="d-flex">
                 <v-avatar
-                  v-for="(color, index) in characterInfo.sub_colors || ['#eee', '#fff']"
+                  v-for="(color, index) in characterInfo.sub_colors || [
+                    '#eee',
+                    '#fff',
+                  ]"
                   :key="'sub-color-' + index"
                   :color="color"
                   size="33"
@@ -244,30 +276,40 @@
         </div>
       </v-col>
     </v-row>
+    <!-- 공통 알림 팝업 추가 -->
+    <CustomAlert
+      v-if="showAlert"
+      :visible="showAlert"
+      title="알림"
+      message="존재하지 않는 캐릭터입니다."
+      @close="showAlert = false"
+    />
   </v-container>
 </template>
 
 <script>
 import axios from "axios";
+import CustomAlert from "@/components/CustomAlert.vue"; // 공통 알림 컴포넌트
+
 const PERSONAL_COLOR_GROUPS = [
   // 🌸 봄 웜톤 (Spring Warm Tone)
   {
     name: "봄웜 라이트",
     hues: [15, 45],
     saturationRange: [70, 100],
-    valueRange: [80, 100]
+    valueRange: [80, 100],
   },
   {
     name: "봄웜 브라이트",
     hues: [10, 40],
     saturationRange: [80, 100],
-    valueRange: [70, 100]
+    valueRange: [70, 100],
   },
   {
     name: "봄웜 트루",
     hues: [10, 40],
     saturationRange: [60, 90],
-    valueRange: [60, 90]
+    valueRange: [60, 90],
   },
 
   // ❄️ 여름 쿨톤 (Summer Cool Tone)
@@ -275,19 +317,19 @@ const PERSONAL_COLOR_GROUPS = [
     name: "여름쿨 라이트",
     hues: [170, 210],
     saturationRange: [30, 60],
-    valueRange: [70, 90]
+    valueRange: [70, 90],
   },
   {
     name: "여름쿨 브라이트",
     hues: [160, 200],
     saturationRange: [60, 80],
-    valueRange: [70, 90]
+    valueRange: [70, 90],
   },
   {
     name: "여름쿨 뮤트",
     hues: [150, 190],
     saturationRange: [20, 40],
-    valueRange: [50, 70]
+    valueRange: [50, 70],
   },
 
   // 🍂 가을 웜톤 (Autumn Warm Tone)
@@ -295,19 +337,19 @@ const PERSONAL_COLOR_GROUPS = [
     name: "가을웜 뮤트",
     hues: [25, 40],
     saturationRange: [30, 60],
-    valueRange: [50, 70]
+    valueRange: [50, 70],
   },
   {
     name: "가을웜 스트롱",
     hues: [10, 30],
     saturationRange: [50, 80],
-    valueRange: [40, 70]
+    valueRange: [40, 70],
   },
   {
     name: "가을웜 딥",
     hues: [0, 20],
     saturationRange: [50, 80],
-    valueRange: [30, 60]
+    valueRange: [30, 60],
   },
 
   // 🌌 겨울 쿨톤 (Winter Cool Tone)
@@ -315,29 +357,31 @@ const PERSONAL_COLOR_GROUPS = [
     name: "겨울쿨 브라이트",
     hues: [220, 260],
     saturationRange: [60, 100],
-    valueRange: [70, 100]
+    valueRange: [70, 100],
   },
   {
     name: "겨울쿨 스트롱",
     hues: [200, 240],
     saturationRange: [50, 80],
-    valueRange: [40, 70]
+    valueRange: [40, 70],
   },
   {
     name: "겨울쿨 다크",
     hues: [180, 220],
     saturationRange: [30, 60],
-    valueRange: [30, 60]
-  }
+    valueRange: [30, 60],
+  },
 ];
 
 export default {
   name: "CharacterInfo",
+  components: { CustomAlert },
   data() {
     return {
       scale: 0.7, // 초기 확대 배율
       characterName: "", // 검색어
       characterInfo: {}, // 캐릭터 정보 데이터
+      showAlert: false, // 알림 팝업 상태 추가
       message: "", // 오류 메시지
       characterCashItem: [],
       characterCashFace: [],
@@ -354,8 +398,8 @@ export default {
         { type: "신발", icon: "", name: "" },
         { type: "장갑", icon: "", name: "" },
         { type: "망토", icon: "", name: "" },
-        { type: "무기", icon: "", name: "" }
-      ]
+        { type: "무기", icon: "", name: "" },
+      ],
     };
   },
   methods: {
@@ -375,7 +419,7 @@ export default {
         레드: "red",
         스카니아: "scania",
         유니온: "union",
-        제니스: "zenith"
+        제니스: "zenith",
       };
       const fileName = worldNameMap[worldName] || "default";
       return require(`@/assets/world/${fileName}.png`);
@@ -413,6 +457,7 @@ export default {
           { params: { name: this.characterName } }
         );
         this.characterInfo = ocidResponse.data.characterInfoDTO;
+        this.message = "";
         console.log("Character Image URL:", this.characterInfo.character_image);
         console.log(
           "1,2,3위 : " +
@@ -428,6 +473,7 @@ export default {
         this.message = "";
       } catch (error) {
         console.error("캐릭터 정보를 불러오는 중 오류가 발생했습니다:", error);
+        this.showAlert = true; // 오류 발생 시 알림 팝업 표시
         this.message = "캐릭터 정보를 불러오는 중 오류가 발생했습니다.";
       }
     },
@@ -476,7 +522,7 @@ export default {
       return {
         h: Math.round(h * 360),
         s: Math.round(s * 100),
-        v: Math.round(v * 100)
+        v: Math.round(v * 100),
       };
     },
     matchPersonalColor(hue, saturation, value) {
@@ -514,7 +560,7 @@ export default {
       const color = this.personalColorAnalysis;
       const encodedColor = encodeURIComponent(color); // URL 인코딩
       this.$router.push(`/personal-color-twelve/${encodedColor}`);
-    }
+    },
   },
   created() {
     // 라우터의 쿼리에서 캐릭터 이름 가져오기
@@ -526,13 +572,13 @@ export default {
   },
   computed: {
     filteredItems() {
-      return this.REQUIRED_ITEM_TYPES.map(requiredItemType => {
+      return this.REQUIRED_ITEM_TYPES.map((requiredItemType) => {
         const cashItemData = this.characterCashItem.find(
-          itemData => itemData.item_type === requiredItemType.type
+          (itemData) => itemData.item_type === requiredItemType.type
         );
 
         const cashFaceData = this.characterCashFace.find(
-          itemData => itemData.item_type === requiredItemType.type
+          (itemData) => itemData.item_type === requiredItemType.type
         );
 
         // 아이템 데이터가 있으면 세부 정보를 추가
@@ -544,7 +590,7 @@ export default {
             colorRange: cashItemData.color_range || null, // null로 유지
             colorHue: cashItemData.color_hue || 0,
             colorSaturation: cashItemData.color_saturation || 0,
-            colorValue: cashItemData.color_value || 0
+            colorValue: cashItemData.color_value || 0,
           };
         }
 
@@ -560,7 +606,7 @@ export default {
             colorStyle: cashFaceData.color_style || null, // null로 유지
             skinHue: cashFaceData.skin_hue || 0,
             skinSaturation: cashFaceData.skin_saturation || 0,
-            skinBrightness: cashFaceData.skin_brightness || 0
+            skinBrightness: cashFaceData.skin_brightness || 0,
           };
         }
 
@@ -569,12 +615,12 @@ export default {
           return {
             type: requiredItemType.type,
             icon: requiredItemType.icon || "https://via.placeholder.com/50",
-            name: requiredItemType.name
+            name: requiredItemType.name,
           };
         }
 
         return null; // 아이템이 없으면 null
-      }).filter(item => item !== null);
+      }).filter((item) => item !== null);
     },
     personalColorAnalysis() {
       if (
@@ -595,7 +641,7 @@ export default {
       // 1위부터 6위까지 순회하면서 HSV 값 계산
       const colors = [
         ...(this.characterInfo.main_colors || []),
-        ...(this.characterInfo.sub_colors || [])
+        ...(this.characterInfo.sub_colors || []),
       ];
       colors.forEach((color, index) => {
         if (index >= weights.length) return; // 최대 6개까지만 처리
@@ -620,7 +666,7 @@ export default {
 
     //css와 매핑
     personalColorGroup() {
-      const group = PERSONAL_COLOR_GROUPS.find(colorGroup =>
+      const group = PERSONAL_COLOR_GROUPS.find((colorGroup) =>
         this.personalColorAnalysis.includes(colorGroup.name)
       );
       if (!group) return "";
@@ -630,8 +676,8 @@ export default {
       if (group.name.includes("가을웜")) return "Autumn";
       if (group.name.includes("겨울쿨")) return "Winter";
       return "";
-    }
-  }
+    },
+  },
 };
 </script>
 

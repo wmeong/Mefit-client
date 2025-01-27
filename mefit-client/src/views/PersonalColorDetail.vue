@@ -31,6 +31,7 @@
         :key="index"
         cols="3"
         class="text-center avatar-container"
+        @click="openPopup(index)"
       >
         <!-- 아바타 이미지 -->
         <img src="https://via.placeholder.com/100" alt="Avatar Placeholder" class="avatar-img" />
@@ -44,15 +45,36 @@
         </div>
       </v-col>
     </v-row>
+
+        <!-- CharacterInfoPopup 컴포넌트 -->
+    <CharacterInfoPopup
+      v-if="selectedCharacter"
+      :model-value="popupVisible"
+      @update:model-value="popupVisible = $event"
+      :character="selectedCharacter"
+    />
   </v-container>
 </template>
 
 <script>
+// CharacterInfoPopup 컴포넌트 가져오기
+import CharacterInfoPopup from "./CharacterInfoPopup.vue";
+
 export default {
+  components: { CharacterInfoPopup },
   props: ["season"],
   data() {
     return {
-      avatars: Array(12).fill({ votes: 0 }) // 아바타 리스트와 초기 투표 수
+      avatars: Array.from({ length: 12 }, (_, index) => ({
+        name: `캐릭터${index + 1}`,
+        image: "https://via.placeholder.com/100",
+        items: [
+          { name: "아이템1", details: `상세 정보${index + 1}` },
+          { name: "아이템2", details: `상세 정보${index + 2}` },
+        ],
+      })),
+      popupVisible: false, // 팝업 표시 상태
+      selectedCharacter: null, // 선택된 캐릭터 데이터
     };
   },
   computed: {
@@ -112,7 +134,11 @@ export default {
       this.$router.push({
         path: `/personal-color-twelve/${encodeURIComponent(toneName)}`
       });
-    }
+    },
+        openPopup(index) {
+      this.selectedCharacter = this.avatars[index];
+      this.popupVisible = true;
+    },
   }
 };
 </script>
