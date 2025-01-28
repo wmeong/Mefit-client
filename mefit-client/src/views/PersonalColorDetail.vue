@@ -41,7 +41,8 @@
             class="heart-icon"
             :style="{ color: '#FFB6C1' }"
             @click.stop="voteForAvatar(index)"
-          >mdi-heart-outline</v-icon>
+            >mdi-heart-outline</v-icon
+          >
         </div>
       </v-col>
     </v-row>
@@ -67,7 +68,7 @@ export default {
     return {
       avatars: [], //characterImage 데이터를 저장할 배열
       popupVisible: false, // 팝업 표시 상태
-      selectedCharacter: null // 선택된 캐릭터 데이터
+      selectedCharacter: null, // 선택된 캐릭터 데이터
     };
   },
   computed: {
@@ -78,7 +79,7 @@ export default {
         spring: "봄웜",
         summer: "여름쿨",
         fall: "가을웜",
-        winter: "겨울쿨"
+        winter: "겨울쿨",
       };
       return titles[season];
     },
@@ -88,31 +89,31 @@ export default {
         봄웜톤: [
           { name: "라이트", color: "#FFEBE8" },
           { name: "브라이트", color: "#FFC1CC" },
-          { name: "트루", color: "#FFB7A5" }
+          { name: "트루", color: "#FFB7A5" },
         ],
         여름쿨톤: [
           { name: "라이트", color: "#D4F1F9" },
           { name: "브라이트", color: "#A3D8F4" },
-          { name: "뮤트", color: "#91C7D6" }
+          { name: "뮤트", color: "#91C7D6" },
         ],
         가을웜톤: [
           { name: "뮤트", color: "#D7A97B" },
           { name: "스트롱", color: "#B97543" },
-          { name: "딥", color: "#8A5539" }
+          { name: "딥", color: "#8A5539" },
         ],
         겨울쿨톤: [
           { name: "브라이트", color: "#C5B3E7" },
           { name: "스트롱", color: "#7E57C2" },
-          { name: "다크", color: "#512DA8" }
-        ]
+          { name: "다크", color: "#512DA8" },
+        ],
       };
       // 현재 seasonTitle에 해당하는 하위 톤 반환
       const baseTones = tones[this.seasonTitle + "톤"] || []; // "봄웜톤" 등으로 찾기
-      return baseTones.map(tone => ({
+      return baseTones.map((tone) => ({
         name: `${this.seasonTitle} ${tone.name}`, // 시즌 타이틀과 톤 이름 이어 붙임
-        color: tone.color
+        color: tone.color,
       }));
-    }
+    },
   },
   methods: {
     async fetchSeasonData() {
@@ -121,7 +122,7 @@ export default {
         const response = await axios.get(
           "http://localhost:8081/api/personal/season",
           {
-            params: { season: this.seasonTitle }
+            params: { season: this.seasonTitle },
           }
         );
         this.avatars = response.data; // characterImage 데이터 저장
@@ -131,23 +132,27 @@ export default {
     },
     voteForAvatar(index) {
       // 투표 수 증가 로직
+      this.$set(this.avatars, index, {
+        ...this.avatars[index],
+        votes: (this.avatars[index].votes || 0) + 1,
+      });
       console.log(`캐릭터 ${index + 1}에 투표했습니다.`);
     },
     navigateToPersonalColorPage(toneName) {
       // 클릭한 하위 톤으로 이동
       this.$router.push({
-        path: `/personal-color-twelve/${encodeURIComponent(toneName)}`
+        path: `/personal-color-twelve/${encodeURIComponent(toneName)}`,
       });
     },
     openPopup(index) {
       this.selectedCharacter = this.avatars[index];
       this.popupVisible = true;
-    }
+    },
   },
   mounted() {
     // 컴포넌트가 마운트될 때 데이터 가져오기
     this.fetchSeasonData();
-  }
+  },
 };
 </script>
 

@@ -39,20 +39,20 @@
       </ul>
     </div>
 
-    <!-- 아바타 그리드 -->
+    <!-- 캐릭터 아바타 그리드 -->
     <v-row justify="center" class="avatar-grid">
       <v-col cols="12" class="text-center">
         <h4>🌟 Character Showcase 🌟</h4>
       </v-col>
       <v-col
-        v-for="(avatar, index) in avatars"
+        v-for="(characterImage, index) in avatars"
         :key="index"
         cols="3"
         class="text-center avatar-container"
         @click="openPopup(index)"
       >
-        <!-- 아바타 이미지 -->
-        <img :src="avatar.image" alt="Avatar" class="avatar-img" />
+        <!-- 캐릭터 이미지 -->
+        <img :src="characterImage" alt="Character Avatar" class="avatar-img" />
         <!-- 하트 버튼 -->
         <div class="vote-container">
           <v-icon
@@ -83,15 +83,7 @@ export default {
   props: ["color"],
   data() {
     return {
-      // 캐릭터 데이터 생성
-      avatars: Array.from({ length: 12 }, (_, index) => ({
-        name: `캐릭터${index + 1}`,
-        image: "https://via.placeholder.com/100",
-        items: [
-          { name: "아이템1", details: `상세 정보${index + 1}` },
-          { name: "아이템2", details: `상세 정보${index + 2}` }
-        ]
-      })),
+      avatars: [], //characterImage 데이터를 저장할 배열
       popupVisible: false, // 팝업 표시 상태
       selectedCharacter: null, // 선택된 캐릭터 데이터
       personalColorData: {
@@ -327,16 +319,22 @@ export default {
   methods: {
     async fetchToneData() {
       try {
+        // 1. API 호출 전 로그 추가로 데이터 확인 (문제 파악)
+        console.log("Fetching tone data for:", this.color);
+
+        // 백엔드 API 호출하여 characterImage 데이터 가져오기
         const response = await axios.get(
           `http://localhost:8081/api/personal/tone`,
           {
             params: { tone: this.color }
           }
         );
-        this.avatars = response.data.map(item => ({
-          name: item.characterName,
-          image: item.characterImage
-        }));
+
+        // 2. API 응답 데이터 확인 (문제가 응답 데이터일 가능성 고려)
+        console.log("API Response Data:", response.data);
+
+        // 3. 응답 데이터를 avatars에 매핑
+        this.avatars = response.data; // characterImage 데이터 저장
       } catch (error) {
         console.error("데이터 로드 중 오류 발생:", error);
       }
@@ -351,6 +349,11 @@ export default {
       this.selectedCharacter = this.avatars[index];
       this.popupVisible = true;
     }
+  },
+    mounted() {
+    // 5. 컴포넌트 로드 시 데이터 가져오기
+    console.log("Component Mounted: Fetching tone data...");
+    this.fetchToneData();
   }
 };
 </script>
