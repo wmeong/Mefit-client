@@ -49,7 +49,7 @@
         :key="index"
         cols="3"
         class="text-center avatar-container"
-        @click="openPopup(index)"
+        @click="openPopup(characterImage)"
       >
         <!-- 캐릭터 이미지 -->
         <img :src="characterImage" alt="Character Avatar" class="avatar-img" />
@@ -339,16 +339,15 @@ export default {
         console.error("데이터 로드 중 오류 발생:", error);
       }
     },
-    voteForAvatar(index) {
-      this.$set(this.avatars, index, {
-        ...this.avatars[index],
-        votes: (this.avatars[index].votes || 0) + 1
-      });
+    voteForAvatar(characterImage) {
+      console.log(`💖 캐릭터 ${characterImage}에 투표했습니다.`);
     },
-    openPopup(index) {
-      this.selectedCharacter = this.avatars[index];
+    openPopup(characterImage) {
+      console.log("🔍 클릭한 캐릭터 이미지 URL:", characterImage);
+
+      this.selectedCharacter = { image: characterImage };
       this.popupVisible = true;
-    }
+    },
   },
     mounted() {
     // 5. 컴포넌트 로드 시 데이터 가져오기

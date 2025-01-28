@@ -31,7 +31,7 @@
         :key="index"
         cols="3"
         class="text-center avatar-container"
-        @click="openPopup(index)"
+        @click="openPopup(characterImage)"
       >
         <!-- 캐릭터 이미지 -->
         <img :src="characterImage" alt="Character Avatar" class="avatar-img" />
@@ -49,7 +49,7 @@
 
     <!-- CharacterInfoPopup 컴포넌트 -->
     <CharacterInfoPopup
-      v-if="selectedCharacter"
+      v-if="popupVisible"
       :model-value="popupVisible"
       @update:model-value="popupVisible = $event"
       :character="selectedCharacter"
@@ -132,10 +132,6 @@ export default {
     },
     voteForAvatar(index) {
       // 투표 수 증가 로직
-      this.$set(this.avatars, index, {
-        ...this.avatars[index],
-        votes: (this.avatars[index].votes || 0) + 1,
-      });
       console.log(`캐릭터 ${index + 1}에 투표했습니다.`);
     },
     navigateToPersonalColorPage(toneName) {
@@ -144,8 +140,10 @@ export default {
         path: `/personal-color-twelve/${encodeURIComponent(toneName)}`,
       });
     },
-    openPopup(index) {
-      this.selectedCharacter = this.avatars[index];
+    openPopup(characterImage) {
+      console.log("🔍 클릭한 캐릭터 이미지 URL:", characterImage); // << 클릭한 이미지 확인
+
+      this.selectedCharacter = { image: characterImage };
       this.popupVisible = true;
     },
   },
