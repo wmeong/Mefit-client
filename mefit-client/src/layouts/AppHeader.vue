@@ -1,22 +1,37 @@
 <template>
   <header>
-    <h1><a href="#" class="logo"><img alt="Vue logo" src="../assets/logo.png" width="130"></a></h1>
+    <h1>
+      <a href="#" class="logo">
+        <img alt="Vue logo" src="../assets/logo.png" width="130" />
+      </a>
+    </h1>
     <div class="menuWrap">
       <ul class="menu">
-        <li><router-link to="/">홈</router-link></li>
-        <li><router-link to="/characterinfo">캐릭터정보</router-link></li>
-        <li><router-link to="/personalcolor-select">퍼스널컬러</router-link></li>
-        <li><router-link to="/codisimulation">코디시뮬</router-link></li>
-        <li><router-link to="/royal-simulation">로얄스타일</router-link></li> <!-- 새로운 메뉴 추가 -->
+        <li>
+          <router-link to="/">홈</router-link>
+        </li>
+        <li>
+          <router-link to="/characterinfo">캐릭터정보</router-link>
+        </li>
+        <li>
+          <router-link to="/personalcolor-select">퍼스널컬러</router-link>
+        </li>
+        <li>
+          <router-link to="/codisimulation">코디시뮬</router-link>
+        </li>
+        <li>
+          <router-link to="/royal-simulation">로얄스타일</router-link>
+        </li>
+        <li>
+          <router-link to="/color-test">퍼스널테스트</router-link>
+        </li>
       </ul>
     </div>
-        <v-btn
+    <v-btn
       @click="toggleDarkMode"
       outlined
       class="theme-toggle-btn"
-    >
-      {{ isDarkMode ? '라이트 모드' : '다크 모드' }}
-    </v-btn>
+    >{{ isDarkMode ? '라이트 모드' : '다크 모드' }}</v-btn>
   </header>
 </template>
 
@@ -25,7 +40,7 @@ export default {
   name: "AppHeader",
   data() {
     return {
-      isDarkMode: false, // 초기 모드는 라이트 모드
+      isDarkMode: false // 초기 모드는 라이트 모드
     };
   },
   methods: {
@@ -41,8 +56,8 @@ export default {
         document.body.style.backgroundColor = "#ffffff"; // 라이트 모드 배경
         document.body.style.color = "#000000"; // 라이트 모드 텍스트
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -118,15 +133,14 @@ header h1 .logo img {
   }
 
   .theme-toggle-btn {
-  background-color: #f5f5f5;
-  color: #333;
-  transition: background-color 0.3s ease, color 0.3s ease;
- }
+    background-color: #f5f5f5;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
 
-.theme-toggle-btn:hover {
-  background-color: #333;
-  color: #fff;
- }
-
+  .theme-toggle-btn:hover {
+    background-color: #333;
+    color: #fff;
+  }
 }
 </style>

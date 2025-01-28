@@ -6,6 +6,7 @@ import PersonalColorDetail from "@/views/PersonalColorDetail.vue";
 import CodiSimulation from "@/views/CodiSimulation.vue";
 import RoyalStyleSimulation from "@/views/RoyalStyleSimulation.vue";
 import PersonalColorTwelve from "@/views/PersonalColorTwelve.vue";
+import Colortest from "@/views/Colortest.vue";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
@@ -14,7 +15,8 @@ const routes = [
   { path: "/personalcolor-detail", name: "PersonalColorDetail", component: PersonalColorDetail, props: true },
   { path: "/codisimulation", name: "CodiSimulation", component: CodiSimulation },
   { path: "/royal-simulation", name: "RoyalStyleSimulation", component: RoyalStyleSimulation }, // 새 경로 추가
-  { path: "/personal-color-twelve/:color", name: "PersonalColorTwelve", component: PersonalColorTwelve, props: true }
+  { path: "/personal-color-twelve/:color", name: "PersonalColorTwelve", component: PersonalColorTwelve, props: true },
+  { path: "/color-test", name: "Colortest", component: Colortest }
 ];
 
 const router = createRouter({
