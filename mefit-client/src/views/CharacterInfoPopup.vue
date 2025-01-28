@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" max-width="600px" @click:outside="closeDialog">
+  <v-dialog v-model="visible" max-width="550px" @click:outside="closeDialog">
     <v-card>
       <v-card-title>
         <span class="headline">{{ characterData.name || "로딩 중..." }}</span>
@@ -7,7 +7,8 @@
       <v-card-text>
         <v-container v-if="!loading">
           <v-row>
-            <v-col cols="4">
+            <!-- 캐릭터 이미지 -->
+            <v-col cols="4" class="character-img-container">
               <img
                 :src="characterData.image"
                 alt="Character"
@@ -15,30 +16,53 @@
                 v-if="characterData.image"
               />
             </v-col>
+
+            <!-- 착용 아이템 목록 -->
             <v-col cols="8">
-              <h4>착용 아이템</h4>
-              <v-list>
-                <v-list-item
+              <h4 class="item-title">🛍️ 착용 아이템</h4>
+              <v-row dense>
+                <v-col
                   v-for="(item, index) in characterData.items"
                   :key="index"
+                  cols="6"
                 >
-                  <v-list-item-content>
-                    <v-list-item-title>{{ item.name }}</v-list-item-title>
-                    <v-list-item-subtitle>{{
-                      item.details
-                    }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
+                  <v-card class="item-card">
+                    <v-card-text class="item-content">
+                      <!-- ✅ 아이템 아이콘 -->
+                      <img
+                        v-if="item.icon"
+                        :src="item.icon"
+                        alt="Item Icon"
+                        class="item-icon"
+                      />
+                      <div class="item-info">
+                        <div class="item-name">{{ item.name }}</div>
+                        <div class="item-type">{{ item.details }}</div>
+                        <!-- ✅ 색상 정보 (색, 채, 명) -->
+                        <div
+                          v-if="item.colorHue !== null"
+                          class="color-info"
+                        >
+                          <span class="color-label">🎨</span>
+                          (색: {{ item.colorHue }}, 채: {{ item.colorSaturation }}, 명: {{ item.colorValue }})
+                        </div>
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
         </v-container>
+
+        <!-- 로딩 상태 표시 -->
         <v-progress-circular
           v-else
           indeterminate
           color="primary"
         ></v-progress-circular>
       </v-card-text>
+
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="primary" text @click="closeDialog">닫기</v-btn>
@@ -65,9 +89,9 @@ export default {
   data() {
     return {
       characterData: {
-        image: "", // 이미지 URL 저장
-        name: "", // 캐릭터 이름
-        items: [], // 착용 아이템 리스트
+        image: "",
+        name: "",
+        items: [],
       },
       loading: false,
     };
@@ -90,7 +114,6 @@ export default {
     },
     character: {
       handler(newCharacter) {
-        console.log("🔍 팝업에서 받은 캐릭터 이미지 URL:", newCharacter.image); // << 이미지 URL 확인
         if (newCharacter.image) {
           this.characterData.image = newCharacter.image;
           this.loadCharacterData();
@@ -103,13 +126,11 @@ export default {
   methods: {
     async loadCharacterData() {
       if (!this.characterData.image) {
-        console.warn("🚨 이미지 URL이 없습니다!");
         return;
       }
 
       this.loading = true;
       try {
-        console.log("🔍 API 호출 시작:", this.characterData.image);
         const response = await axios.get(`/api/personal/character/image`, {
           params: { imageUrl: this.characterData.image },
         });
@@ -119,10 +140,11 @@ export default {
           this.characterData.items = response.data.map((item) => ({
             name: item.itemName,
             details: item.itemType,
+            icon: item.itemIcon,
+            colorHue: item.colorHue,
+            colorSaturation: item.colorSaturation,
+            colorValue: item.colorValue,
           }));
-          console.log("✅ API 응답:", response.data);
-        } else {
-          console.warn("⚠️ 해당 이미지의 캐릭터 정보를 찾을 수 없습니다.");
         }
       } catch (error) {
         console.error("❌ 캐릭터 데이터를 불러오는 중 오류 발생:", error);
@@ -137,10 +159,86 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+/* 캐릭터 이미지 스타일 */
+.character-img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .character-img {
-  max-width: 100%;
+  max-width: 80px;
   height: auto;
   border-radius: 8px;
+}
+
+/* 아이템 목록 스타일 */
+.item-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* 개별 아이템 카드 스타일 */
+.item-card {
+  padding: 5px;
+  height: 80px; /* ✅ 카드 크기 일정하게 고정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* 카드 내부 정렬 */
+.item-content {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  justify-content: center;
+}
+
+/* 아이템 아이콘 */
+.item-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+/* 아이템 정보 */
+.item-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* ✅ 가운데 정렬 */
+  text-align: center;
+}
+
+/* 아이템 이름 */
+.item-name {
+  font-size: 0.85rem;
+  font-weight: bold;
+  white-space: nowrap; /* ✅ 줄바꿈 방지 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+/* 아이템 카테고리 */
+.item-type {
+  font-size: 0.75rem;
+  color: gray;
+  white-space: nowrap; /* ✅ 줄바꿈 방지 */
+}
+
+/* 색상 정보 */
+.color-info {
+  font-size: 0.7rem;
+  color: #4c4c4c;
+  margin-top: 2px;
+  white-space: nowrap; /* ✅ 줄바꿈 방지 */
+}
+.color-label {
+  font-weight: bold;
 }
 </style>
