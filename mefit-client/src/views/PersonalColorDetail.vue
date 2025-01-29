@@ -40,10 +40,14 @@
         :key="index"
         cols="3"
         class="text-center avatar-container"
-        @click="openPopup(avatar.characterImage)"
       >
         <!-- 캐릭터 이미지 -->
-        <img :src="avatar.characterImage" alt="Character Avatar" class="avatar-img" />
+        <img
+          :src="avatar.characterImage"
+          alt="Character Avatar"
+          class="avatar-img"
+          @click="openPopup(avatar.characterImage)"
+        />
         <!-- 하트 버튼 -->
         <div class="vote-container">
           <v-icon
@@ -72,16 +76,16 @@
       @update:model-value="popupVisible = $event"
       :character="selectedCharacter"
     />
+    <CustomAlert
+      v-if="showAlert"
+      :visible="showAlert"
+      title="알림"
+      :message="alertMessage"
+      @close="showAlert = false"
+    />
   </v-container>
 
   <!-- ✅ 공통 알림 팝업 추가 (v-container 밖에서 전체 화면 적용) -->
-  <CustomAlert
-    v-if="showAlert"
-    :visible="showAlert"
-    title="알림"
-    :message="alertMessage"
-    @close="showAlert = false"
-  />
 </template>
 
 <script>
@@ -158,6 +162,7 @@ export default {
           }
         );
         this.avatars = response.data;
+                console.log("아바타들" + this.avatars)
       } catch (error) {
         console.error("데이터 로드 중 오류 발생:", error);
       }
@@ -187,7 +192,8 @@ export default {
         });
 
         this.votedCharacters.add(avatar.characterImage);
-        console.log("✅ 투표 성공:", avatar.characterImage);
+
+
       } catch (error) {
         console.error("투표 중 오류 발생:", error);
       }
@@ -239,6 +245,7 @@ export default {
 
         // ✅ 새 데이터 적용 및 카운트 초기화
         this.avatars = response.data;
+
         this.refreshCount = 0; // ✅ 정상 요청되면 카운트 초기화
         console.log("✅ 새 캐릭터 목록 갱신 완료!", this.avatars);
       } catch (error) {
