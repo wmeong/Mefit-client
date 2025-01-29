@@ -1,14 +1,16 @@
 <template>
   <v-dialog v-model="visible" max-width="750px" @click:outside="closeDialog">
     <v-card>
-      <!-- ✅ 상단 닫기 버튼 추가 -->
-      <v-card-title class="close-button">
-        <v-spacer></v-spacer>
-        <v-btn icon @click="closeDialog">
-          <v-icon>mdi-close</v-icon>
-          <!-- ✅ X 아이콘 -->
-        </v-btn>
-      </v-card-title>
+    <v-card-title class="close-button">
+      <v-col cols="12" class="text-center">
+        <h3 class="center-title">🌟 Character Info 🌟</h3>
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-btn icon @click="closeDialog">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </v-card-title>
+
 
       <v-card-text>
         <v-container class="character-popup">
@@ -183,6 +185,14 @@ export default {
 
 
 <style scoped>
+.v-dialog .v-card-text {
+  padding: 0 !important;
+}
+.center-title {
+  margin-left: 110px;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
 /* 캐릭터 이미지 스타일 */
 .character-img-container {
   display: flex;
@@ -213,7 +223,7 @@ export default {
 
 /* 개별 아이템 카드 */
 .item-card {
-  padding: 2px;
+  padding-left: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -292,7 +302,6 @@ export default {
 .close-button {
   display: flex;
   justify-content: flex-end;
-  padding: 10px;
+  padding-top: 10px;
 }
-
 </style>
