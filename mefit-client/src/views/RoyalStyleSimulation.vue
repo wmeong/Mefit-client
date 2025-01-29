@@ -91,13 +91,28 @@
           class="pa-4 d-flex flex-column justify-start align-center"
           style="min-height: 250px; position: relative;"
         >
-          <h3 class="text-h10 font-weight-bold text-center">로얄깡 운세</h3>
+          <div class="royal-fortune-header">
+            <h3>로얄깡 운세</h3>
+          </div>
+
           <!-- 운세 메시지가 없을 때 -->
           <div v-if="!fortuneMessage" class="slime-container">
             <img src="@/assets/slime.png" alt="Slime" class="slime-image" />
           </div>
-          <!-- 운세 메시지가 있을 때 -->
-          <p v-else class="text-center mt-10">{{ fortuneMessage }}</p>
+
+          <!-- 운세 퍼센트 -->
+          <p v-if="fortuneMessage" class="fortune-percentage">{{ formattedRatio }}%</p>
+
+          <!-- 운세 상태 메시지 (이모티콘 포함) -->
+          <div v-if="fortuneMessage" class="fortune-status-box">
+            <p class="fortune-status">{{ fortuneTitle }}</p>
+            <p class="fortune-icon">{{ fortuneIcon }}</p>
+          </div>
+
+          <!-- 운세 설명 메시지 -->
+          <div v-if="fortuneMessage" class="fortune-message-box">
+            <p class="text-center">{{ fortuneMessage }}</p>
+          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -169,7 +184,10 @@
               </div>
               <!-- 이름 및 확률 -->
               <div class="result-text font-size:7px">
-                <p class="text-center" v-html="result.name.replace(/,/g, '<br>').replace(/(.*)(교환권)$/, '$1<br>$2')"></p>
+                <p
+                  class="text-center"
+                  v-html="result.name.replace(/,/g, '<br>').replace(/(.*)(교환권)$/, '$1<br>$2')"
+                ></p>
                 <p class="text-center">{{ result.probability }}</p>
               </div>
             </v-col>
@@ -524,35 +542,35 @@ export default {
       }
     },
     calculateFortune() {
-      if (this.couponCount === 0) {
-        this.fortuneMessage = "뽑기를 시작하세요!";
-        this.formattedRatio = "0";
-        return;
-      }
       const ratio = (this.specialLabelCount / this.couponCount) * 100;
-
-      // 소수점이 0으로 끝나면 정수로 표시, 아니면 소수점 첫째 자리까지 표시
       this.formattedRatio =
         ratio % 1 === 0 ? ratio.toFixed(0) : ratio.toFixed(1);
 
       if (ratio <= 10) {
-        this.fortuneMessage = `${this.formattedRatio}%\n오늘은 쉬어가는 날~ 
-    조용히 게임만 즐기세요! 🎮`;
-      } else if (ratio > 10 && ratio <= 20) {
-        this.fortuneMessage = `${this.formattedRatio}%\n조금씩 운이 올라오고 있어요! 
-    다음엔 더 기대해봐요! 😊`;
-      } else if (ratio > 20 && ratio <= 30) {
-        this.fortuneMessage = `${this.formattedRatio}%\n운이 점점 상승 중! 
-    오늘은 기회가 보이네요! 🍀`;
+        this.fortuneTitle = "운이 없음";
+        this.fortuneIcon = "😭";
+        this.fortuneMessage = "오늘은 쉬어가는 날~\n조용히 게임만 즐기세요!";
+      } else if (ratio > 10 && ratio <= 30) {
+        this.fortuneTitle = "운이 조금?";
+        this.fortuneIcon = "🤔";
+        this.fortuneMessage =
+          "조금씩 운이 올라오고 있어요!\n다음엔 더 기대해봐요!";
       } else if (ratio > 30 && ratio <= 40) {
-        this.fortuneMessage = `${this.formattedRatio}%\n운빨 대폭발 직전! 
-    이제 한 방이 남았습니다! 🎉`;
+        this.fortuneTitle = "운이 꽤 좋음!";
+        this.fortuneIcon = "🍀";
+        this.fortuneMessage = "운이 점점 상승 중!\n오늘은 기회가 보이네요!";
+      } else if (ratio > 40 && ratio <= 50) {
+        this.fortuneTitle = "대박 직전!";
+        this.fortuneIcon = "🎉";
+        this.fortuneMessage = "운빨 대폭발 직전!\n이제 한 방이 남았습니다!";
       } else {
-        this.fortuneMessage = `${this.formattedRatio}%\n지금이 기회! 
-    오늘의 주인공은 당신입니다! 
-    로또 사세요! 💎`;
+        this.fortuneTitle = "초대박!!";
+        this.fortuneIcon = "💎";
+        this.fortuneMessage =
+          "지금이 기회!\n오늘의 주인공은 당신입니다!\n로또 사세요!";
       }
     },
+
     closeCustomAlert() {
       this.showAlert = false; // 팝업을 닫습니다.
     }
@@ -737,6 +755,59 @@ input {
   50% {
     transform: translateY(-20px); /* 위로 튀기 */
   }
+}
+.royal-fortune-header {
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e4e2e2; /* 회색 선 */
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+/*운세 공간*/
+.royal-fortune {
+  text-align: center;
+}
+
+/* 퍼센트 표시 */
+.fortune-percentage {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+/* 퍼센트 글씨 스타일 */
+.fortune-percentage {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #658dd6 !important; /* 주황색 */
+}
+
+/* 운세 상태 (이모티콘 포함) */
+.fortune-status {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #2a32427d !important; ; /* 파란색 */
+}
+
+.fortune-icon {
+  font-size: 40px; /* 이모티콘 크기 조절 */
+  margin-bottom: 10px;
+}
+
+/* 운세 메시지 박스 */
+.fortune-message-box {
+  background-color: #658dd6;
+  border-radius: 4px;
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+  font-size: 11px;
+}
+
+.fortune-message-box p {
+  color: white !important;
 }
 
 /* 5번: 뽑기 결과 저장 */
