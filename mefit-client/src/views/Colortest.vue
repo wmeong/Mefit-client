@@ -163,7 +163,7 @@ export default {
     }
   }
 };
-</script>f
+</script>
 
 <style>
 .image-grid {
