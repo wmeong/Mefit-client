@@ -11,7 +11,7 @@
           small
           color="primary"
           v-tooltip.bottom="'새로고침'"
-          @click="refreshCharacters"
+          @click="fetchSeasonData"
         >
           <v-icon size="15">mdi-refresh</v-icon>
         </v-btn>
@@ -104,8 +104,6 @@ export default {
       votedCharacters: new Set(), // ✅ 투표한 캐릭터 저장
       showAlert: false, // ✅ 공통 팝업 표시 여부
       alertMessage: "", // ✅ 공통 팝업 메시지
-      refreshCount: 0, // ✅ 새로고침 횟수 카운트 추가
-      maxRefreshAttempts: 5 // ✅ 최대 5번까지 재시도 가능
     };
   },
   computed: {
@@ -162,7 +160,7 @@ export default {
           }
         );
         this.avatars = response.data;
-                console.log("아바타들" + this.avatars)
+        console.log("아바타들" + JSON.stringify(this.avatars, null, 2));
       } catch (error) {
         console.error("데이터 로드 중 오류 발생:", error);
       }
@@ -192,64 +190,8 @@ export default {
         });
 
         this.votedCharacters.add(avatar.characterImage);
-
-
       } catch (error) {
         console.error("투표 중 오류 발생:", error);
-      }
-    },
-    async refreshCharacters() {
-      try {
-        console.log("🔄 새로고침 시도 중...");
-
-        // ✅ 기존 데이터를 백업
-        const previousAvatars = this.avatars.map(
-          avatar => avatar.characterImage
-        );
-
-        // ✅ 새로운 데이터 요청
-        const response = await axios.get(
-          "http://localhost:8081/api/personal/season",
-          {
-            params: { season: this.seasonTitle }
-          }
-        );
-
-        // ✅ 받은 데이터의 캐릭터 이미지 목록 추출
-        const newAvatars = response.data.map(avatar => avatar.characterImage);
-
-        // ✅ 변경된 캐릭터 개수 확인
-        const changedThreshold = 3; // ✅ 최소 3개 이상 캐릭터가 변경되면 적용
-        const differentCount = newAvatars.filter(
-          img => !previousAvatars.includes(img)
-        ).length;
-
-        if (differentCount < changedThreshold) {
-          console.warn(
-            `⚠ 변경된 캐릭터 수 ${differentCount}. 최소 ${changedThreshold}개 이상 달라야 새로고침 적용. (시도 횟수: ${this
-              .refreshCount + 1})`
-          );
-
-          // ✅ 최대 요청 횟수 초과 시 중단
-          if (this.refreshCount >= this.maxRefreshAttempts) {
-            console.error(
-              "🚨 새로고침 최대 횟수 초과. 더 이상 요청하지 않습니다."
-            );
-            return;
-          }
-
-          this.refreshCount++; // ✅ 요청 횟수 증가
-          setTimeout(() => this.refreshCharacters(), 500); // ✅ 0.5초 후 재요청
-          return;
-        }
-
-        // ✅ 새 데이터 적용 및 카운트 초기화
-        this.avatars = response.data;
-
-        this.refreshCount = 0; // ✅ 정상 요청되면 카운트 초기화
-        console.log("✅ 새 캐릭터 목록 갱신 완료!", this.avatars);
-      } catch (error) {
-        console.error("데이터 로드 중 오류 발생:", error);
       }
     },
     navigateToPersonalColorPage(toneName) {

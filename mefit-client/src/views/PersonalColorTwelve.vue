@@ -1,23 +1,43 @@
 <template>
   <v-container class="personal-color-container">
+    <!-- 동적 네비게이션 추가 -->
+    <v-row justify="center" class="navigation-menu">
+      <v-col cols="auto" class="text-center">
+        <span @click="navigateToMainSeason">{{ mainSeason }}</span>
+        <span>- {{ colorName }}</span>
+        <!-- 현재 상세 톤 표시 -->
+      </v-col>
+    </v-row>
     <!-- 제목 및 설명 -->
-    <div class="header-section">
-      <h2 class="text-center">{{ colorName }}</h2>
-    </div>
-
+    <v-row justify="center" align="center" class="title-container">
+      <v-col cols="auto" class="text-center">
+        <h2 class="page-title">{{ colorName }}</h2>
+      </v-col>
+      <v-col cols="auto" class="text-right">
+        <v-btn
+          class="refresh-button"
+          icon
+          small
+          color="primary"
+          v-tooltip.bottom="'새로고침'"
+          @click="fetchToneData"
+        >
+          <v-icon size="15">mdi-refresh</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
     <!-- 색상 팔레트 -->
-<div class="palette-section" v-if="palette.length">
-  <h3 class="text-center">🎨 색상 팔레트</h3>
-  <div class="palette-row">
-    <div v-for="(color, index) in palette" :key="index" class="color-box-wrapper">
-      <!-- 색상 네모 상자 -->
-      <div class="color-box" :style="{ backgroundColor: color.hex }"></div>
-      <!-- 하단 텍스트 표시 -->
-      <div class="color-label">{{ color.name }}</div>
+    <div class="palette-section" v-if="palette.length">
+      <h3 class="text-center">🎨 색상 팔레트</h3>
+      <div class="palette-row">
+        <div v-for="(color, index) in palette" :key="index" class="color-box-wrapper">
+          <!-- 색상 네모 상자 -->
+          <div class="color-box" :style="{ backgroundColor: color.hex }"></div>
+          <!-- 하단 텍스트 표시 -->
+          <div class="color-label">{{ color.name }}</div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
 
     <!-- 캐릭터 아바타 그리드 -->
     <v-row justify="center" class="avatar-grid">
@@ -25,21 +45,35 @@
         <h4>🌟 Character Showcase 🌟</h4>
       </v-col>
       <v-col
-        v-for="(characterImage, index) in avatars"
+        v-for="(avatar, index) in avatars"
         :key="index"
         cols="3"
         class="text-center avatar-container"
-        @click="openPopup(characterImage)"
       >
         <!-- 캐릭터 이미지 -->
-        <img :src="characterImage" alt="Character Avatar" class="avatar-img" />
+        <img
+          :src="avatar.characterImage"
+          alt="Character Avatar"
+          class="avatar-img"
+          @click="openPopup(avatar.characterImage)"
+        />
         <!-- 하트 버튼 -->
         <div class="vote-container">
           <v-icon
             class="heart-icon"
-            :style="{ color: '#FFB6C1' }"
-            @click.stop="voteForAvatar(index)"
-          >mdi-heart-outline</v-icon>
+            :style="{
+              color: votedCharacters.has(avatar.characterImage)
+                ? '#FF0000'
+                : '#FFB6C1',
+            }"
+            @click="voteForAvatar($event, avatar)"
+          >
+            {{
+            votedCharacters.has(avatar.characterImage)
+            ? "mdi-heart"
+            : "mdi-heart-outline"
+            }}
+          </v-icon>
         </div>
       </v-col>
     </v-row>
@@ -51,21 +85,32 @@
       @update:model-value="popupVisible = $event"
       :character="selectedCharacter"
     />
+    <CustomAlert
+      v-if="showAlert"
+      :visible="showAlert"
+      title="알림"
+      :message="alertMessage"
+      @close="showAlert = false"
+    />
   </v-container>
 </template>
 
 <script>
 import CharacterInfoPopup from "./CharacterInfoPopup.vue";
 import axios from "axios";
+import CustomAlert from "@/components/CustomAlert.vue";
 
 export default {
-  components: { CharacterInfoPopup },
+  components: { CharacterInfoPopup, CustomAlert },
   props: ["color"],
   data() {
     return {
       avatars: [],
       popupVisible: false,
       selectedCharacter: null,
+      votedCharacters: new Set(), // ✅ 투표한 캐릭터 저장
+      showAlert: false, // ✅ 공통 팝업 표시 여부
+      alertMessage: "", // ✅ 공통 팝업 메시지
       personalColorData: {
         // 🌸 봄 웜톤 (Spring Warm Tone)
         "봄웜 라이트": [
@@ -219,8 +264,34 @@ export default {
         console.error("데이터 로드 중 오류 발생:", error);
       }
     },
-    voteForAvatar(characterImage) {
-      console.log(`💖 캐릭터 ${characterImage}에 투표했습니다.`);
+    async voteForAvatar(event, avatar) {
+      event.stopPropagation(); // 🔹 추가: 하트 클릭 시 이벤트 버블링 방지
+
+      if (this.votedCharacters.has(avatar.characterImage)) {
+        this.alertMessage = "이미 투표한 캐릭터입니다."; // ✅ 팝업 메시지 설정
+        this.$nextTick(() => {
+          this.showAlert = true;
+        }); // ✅ Vue가 반응형으로 변경 감지하도록 보장
+        return;
+      }
+
+      if (!avatar || !avatar.characterImage || !avatar.personalColor) {
+        console.error("❌ 유효하지 않은 캐릭터 데이터:", avatar);
+        return;
+      }
+
+      try {
+        await axios.post("http://localhost:8081/api/personal/vote", null, {
+          params: {
+            characterImage: avatar.characterImage,
+            personalColor: avatar.personalColor
+          }
+        });
+
+        this.votedCharacters.add(avatar.characterImage);
+      } catch (error) {
+        console.error("투표 중 오류 발생:", error);
+      }
     },
     openPopup(characterImage) {
       this.selectedCharacter = { image: characterImage };
@@ -234,12 +305,35 @@ export default {
 </script>
 
 <style scoped>
-
-
 </style>
 
 
 <style scoped>
+.title-container {
+  position: relative; /* 상대 위치 */
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #4c4c4c;
+}
+
+.refresh-button {
+  position: absolute;
+  top: 15px;
+  right: 30px; /* 화면 우측과의 거리 */
+  background-color: #afacacb8 !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .personal-color-container {
   padding: 20px;
 }
@@ -254,7 +348,6 @@ export default {
   color: #666;
   margin-bottom: 30px;
 }
-
 
 .recommend-section,
 .style-tips {
@@ -357,5 +450,4 @@ export default {
   border-radius: 0 0 10px 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 </style>
