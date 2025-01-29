@@ -1,13 +1,5 @@
 <template>
   <v-container class="personal-color-container">
-    <!-- 동적 네비게이션 추가 -->
-    <v-row justify="center" class="navigation-menu">
-      <v-col cols="auto" class="text-center">
-        <span @click="navigateToMainSeason">{{ mainSeason }}</span>
-        <span>- {{ colorName }}</span>
-        <!-- 현재 상세 톤 표시 -->
-      </v-col>
-    </v-row>
     <!-- 제목 및 설명 -->
     <v-row justify="center" align="center" class="title-container">
       <v-col cols="auto" class="text-center">
