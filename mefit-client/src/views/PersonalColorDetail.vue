@@ -24,25 +24,43 @@
     <!-- 캐릭터 아바타 그리드 -->
     <v-row justify="center" class="avatar-grid">
       <v-col cols="12" class="text-center">
-        <h4>🌟 Character Showcase 🌟</h4>
+        <h4>
+          🌟 Character Showcase 🌟
+          <v-btn icon class="refresh-btn" @click="refreshCharacters">
+            <v-icon color="#ff88aa">mdi-refresh</v-icon>
+          </v-btn>
+        </h4>
       </v-col>
       <v-col
-        v-for="(characterImage, index) in avatars"
+        v-for="(avatar, index) in avatars"
         :key="index"
         cols="3"
         class="text-center avatar-container"
-        @click="openPopup(characterImage)"
+        @click="openPopup(avatar.characterImage)"
       >
         <!-- 캐릭터 이미지 -->
-        <img :src="characterImage" alt="Character Avatar" class="avatar-img" />
+        <img
+          :src="avatar.characterImage"
+          alt="Character Avatar"
+          class="avatar-img"
+        />
         <!-- 하트 버튼 -->
         <div class="vote-container">
           <v-icon
             class="heart-icon"
-            :style="{ color: '#FFB6C1' }"
-            @click.stop="voteForAvatar(index)"
-            >mdi-heart-outline</v-icon
+            :style="{
+              color: votedCharacters.has(avatar.characterImage)
+                ? '#FF0000'
+                : '#FFB6C1',
+            }"
+            @click="voteForAvatar($event, avatar)"
           >
+            {{
+              votedCharacters.has(avatar.characterImage)
+                ? "mdi-heart"
+                : "mdi-heart-outline"
+            }}
+          </v-icon>
         </div>
       </v-col>
     </v-row>
@@ -55,20 +73,35 @@
       :character="selectedCharacter"
     />
   </v-container>
+
+  <!-- ✅ 공통 알림 팝업 추가 (v-container 밖에서 전체 화면 적용) -->
+  <CustomAlert
+    v-if="showAlert"
+    :visible="showAlert"
+    title="알림"
+    :message="alertMessage"
+    @close="showAlert = false"
+  />
 </template>
 
 <script>
 import axios from "axios";
 import CharacterInfoPopup from "./CharacterInfoPopup.vue";
+import CustomAlert from "@/components/CustomAlert.vue";
 
 export default {
-  components: { CharacterInfoPopup },
+  components: { CharacterInfoPopup, CustomAlert },
   props: ["season"],
   data() {
     return {
       avatars: [], //characterImage 데이터를 저장할 배열
       popupVisible: false, // 팝업 표시 상태
       selectedCharacter: null, // 선택된 캐릭터 데이터
+      votedCharacters: new Set(), // ✅ 투표한 캐릭터 저장
+      showAlert: false, // ✅ 공통 팝업 표시 여부
+      alertMessage: "", // ✅ 공통 팝업 메시지
+      refreshCount: 0, // ✅ 새로고침 횟수 카운트 추가
+      maxRefreshAttempts: 5, // ✅ 최대 5번까지 재시도 가능
     };
   },
   computed: {
@@ -118,21 +151,100 @@ export default {
   methods: {
     async fetchSeasonData() {
       try {
-        // 백엔드 API 호출하여 characterImage 데이터 가져오기
+        const response = await axios.get(
+          "http://localhost:8081/api/personal/season",
+          {
+            params: { season: this.seasonTitle.trim() }, // ✅ 불필요한 공백 제거
+          }
+        );
+        this.avatars = response.data;
+      } catch (error) {
+        console.error("데이터 로드 중 오류 발생:", error);
+      }
+    },
+    async voteForAvatar(event, avatar) {
+      event.stopPropagation(); // 🔹 추가: 하트 클릭 시 이벤트 버블링 방지
+
+      if (this.votedCharacters.has(avatar.characterImage)) {
+        this.alertMessage = "이미 투표한 캐릭터입니다."; // ✅ 팝업 메시지 설정
+        this.$nextTick(() => {
+          this.showAlert = true;
+        }); // ✅ Vue가 반응형으로 변경 감지하도록 보장
+        return;
+      }
+
+      if (!avatar || !avatar.characterImage || !avatar.personalColor) {
+        console.error("❌ 유효하지 않은 캐릭터 데이터:", avatar);
+        return;
+      }
+
+      try {
+        await axios.post("http://localhost:8081/api/personal/vote", null, {
+          params: {
+            characterImage: avatar.characterImage,
+            personalColor: avatar.personalColor,
+          },
+        });
+
+        this.votedCharacters.add(avatar.characterImage);
+        console.log("✅ 투표 성공:", avatar.characterImage);
+      } catch (error) {
+        console.error("투표 중 오류 발생:", error);
+      }
+    },
+    async refreshCharacters() {
+      try {
+        console.log("🔄 새로고침 시도 중...");
+
+        // ✅ 기존 데이터를 백업
+        const previousAvatars = this.avatars.map(
+          (avatar) => avatar.characterImage
+        );
+
+        // ✅ 새로운 데이터 요청
         const response = await axios.get(
           "http://localhost:8081/api/personal/season",
           {
             params: { season: this.seasonTitle },
           }
         );
-        this.avatars = response.data; // characterImage 데이터 저장
+
+        // ✅ 받은 데이터의 캐릭터 이미지 목록 추출
+        const newAvatars = response.data.map((avatar) => avatar.characterImage);
+
+        // ✅ 변경된 캐릭터 개수 확인
+        const changedThreshold = 3; // ✅ 최소 3개 이상 캐릭터가 변경되면 적용
+        const differentCount = newAvatars.filter(
+          (img) => !previousAvatars.includes(img)
+        ).length;
+
+        if (differentCount < changedThreshold) {
+          console.warn(
+            `⚠ 변경된 캐릭터 수 ${differentCount}. 최소 ${changedThreshold}개 이상 달라야 새로고침 적용. (시도 횟수: ${
+              this.refreshCount + 1
+            })`
+          );
+
+          // ✅ 최대 요청 횟수 초과 시 중단
+          if (this.refreshCount >= this.maxRefreshAttempts) {
+            console.error(
+              "🚨 새로고침 최대 횟수 초과. 더 이상 요청하지 않습니다."
+            );
+            return;
+          }
+
+          this.refreshCount++; // ✅ 요청 횟수 증가
+          setTimeout(() => this.refreshCharacters(), 500); // ✅ 0.5초 후 재요청
+          return;
+        }
+
+        // ✅ 새 데이터 적용 및 카운트 초기화
+        this.avatars = response.data;
+        this.refreshCount = 0; // ✅ 정상 요청되면 카운트 초기화
+        console.log("✅ 새 캐릭터 목록 갱신 완료!", this.avatars);
       } catch (error) {
         console.error("데이터 로드 중 오류 발생:", error);
       }
-    },
-    voteForAvatar(index) {
-      // 투표 수 증가 로직
-      console.log(`캐릭터 ${index + 1}에 투표했습니다.`);
     },
     navigateToPersonalColorPage(toneName) {
       // 클릭한 하위 톤으로 이동
