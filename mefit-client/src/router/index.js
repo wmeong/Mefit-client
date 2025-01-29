@@ -11,10 +11,10 @@ import Colortest from "@/views/Colortest.vue";
 const routes = [
   { path: "/", name: "Home", component: Home },
   { path: "/characterinfo", name: "CharacterInfo", component: CharacterInfo },
+  { path: "/codisimulation", name: "CodiSimulation", component: CodiSimulation },
+  { path: "/royal-simulation", name: "RoyalStyleSimulation", component: RoyalStyleSimulation }, 
   { path: "/personalcolor-select", name: "PersonalColorSelect", component: PersonalColorSelect },
   { path: "/personalcolor-detail", name: "PersonalColorDetail", component: PersonalColorDetail, props: true },
-  { path: "/codisimulation", name: "CodiSimulation", component: CodiSimulation },
-  { path: "/royal-simulation", name: "RoyalStyleSimulation", component: RoyalStyleSimulation }, // 새 경로 추가
   { path: "/personal-color-twelve/:color", name: "PersonalColorTwelve", component: PersonalColorTwelve, props: true },
   { path: "/color-test", name: "Colortest", component: Colortest }
 ];

@@ -1,5 +1,12 @@
 <template>
   <v-container class="personal-color-container">
+    <!-- 상단 네비 -->
+    <v-row class="upper-navi">
+      <v-col>
+        <span @click="navigateToMainSeason">{{ mainSeason }}</span> -
+        <span>{{ colorName }}</span>
+      </v-col>
+    </v-row>
     <!-- 제목 및 설명 -->
     <v-row justify="center" align="center" class="title-container">
       <v-col cols="auto" class="text-center">
@@ -240,6 +247,23 @@ export default {
     },
     palette() {
       return this.personalColorData[this.colorName] || [];
+    },
+    mainSeason() {
+      const seasonMapping = {
+        "봄웜 라이트": "봄",
+        "봄웜 브라이트": "봄",
+        "봄웜 트루": "봄",
+        "여름쿨 라이트": "여름",
+        "여름쿨 브라이트": "여름",
+        "여름쿨 뮤트": "여름",
+        "가을웜 뮤트": "가을",
+        "가을웜 스트롱": "가을",
+        "가을웜 딥": "가을",
+        "겨울쿨 브라이트": "겨울",
+        "겨울쿨 스트롱": "겨울",
+        "겨울쿨 다크": "겨울"
+      };
+      return seasonMapping[this.colorName] || "";
     }
   },
   methods: {
@@ -288,6 +312,19 @@ export default {
     openPopup(characterImage) {
       this.selectedCharacter = { image: characterImage };
       this.popupVisible = true;
+    },
+    navigateToMainSeason() {
+      const seasonRoutes = {
+        봄: "spring",
+        여름: "summer",
+        가을: "fall",
+        겨울: "winter"
+      };
+
+      const season = seasonRoutes[this.mainSeason];
+      if (season) {
+        this.$router.push({ name: "PersonalColorDetail", query: { season } });
+      }
     }
   },
   mounted() {
@@ -327,6 +364,7 @@ export default {
 }
 
 .personal-color-container {
+  position: relative; /* 기준 위치 설정 */
   padding: 20px;
 }
 
@@ -441,5 +479,15 @@ export default {
   padding: 5px;
   border-radius: 0 0 10px 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/*네비*/
+.upper-navi {
+  position: absolute; /* 절대 위치 적용 */
+  top: 20px;
+  left: 20px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
 }
 </style>
