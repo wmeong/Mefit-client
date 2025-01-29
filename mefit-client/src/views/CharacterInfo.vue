@@ -394,17 +394,15 @@ export default {
         this.characterCashItem = ocidResponse.data.searchedCashItemDTOS;
         this.characterCashFace = ocidResponse.data.searchedCashFaceDTOS;
 
-        // 💡 이미지가 로드된 후 extractColors 실행하도록 수정
+        // 이미지가 로드된 후 extractColors 실행
         const img = new Image();
         img.crossOrigin = "Anonymous"; // 크로스 도메인 이미지 처리
         img.src = this.characterInfo.character_image;
 
-        img.onload = () => {
-          this.extractColors(img, this.characterInfo.character_image);
+        img.onload = async () => {
+          await this.extractColors(img); // ✅ 퍼스널컬러 분석을 기다린 후 실행
+          this.savePersonalColor(); // ✅ 퍼스널컬러 분석이 끝난 후 저장
         };
-
-        // 2. personalColorAnalysis가 계산된 후에 API 요청
-        await this.savePersonalColor();
 
         this.message = "";
       } catch (error) {
@@ -416,7 +414,7 @@ export default {
     async savePersonalColor() {
       const personalColor = this.personalColorAnalysis;
 
-      console.log("퍼스널컬러:", personalColor);
+      console.log("퍼스널컬러:" + personalColor);
 
       try {
         await axios.post(
@@ -450,82 +448,85 @@ export default {
       this.$router.push(`/personal-color-twelve/${encodedColor}`);
     },
     //퍼스널칼라 분석 부분
-    extractColors(img) {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
+    async extractColors(img) {
+      return new Promise(resolve => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
 
-      const imageData = ctx.getImageData(0, 0, img.width, img.height).data;
-      const colorCounts = {};
-      for (let i = 0; i < imageData.length; i += 4) {
-        const r = imageData[i],
-          g = imageData[i + 1],
-          b = imageData[i + 2],
-          a = imageData[i + 3];
-        if (
-          a === 0 ||
-          (r === 0 && g === 0 && b === 0) ||
-          (r === 255 && g === 255 && b === 255)
-        )
-          continue;
-        const hsv = this.rgbToHsv(r, g, b);
-        const key = `${Math.round(hsv.h)},${Math.round(hsv.s)},${Math.round(
-          hsv.v
-        )}`;
-        colorCounts[key] = (colorCounts[key] || 0) + 1;
-      }
+        const imageData = ctx.getImageData(0, 0, img.width, img.height).data;
+        const colorCounts = {};
+        for (let i = 0; i < imageData.length; i += 4) {
+          const r = imageData[i],
+            g = imageData[i + 1],
+            b = imageData[i + 2],
+            a = imageData[i + 3];
+          if (
+            a === 0 ||
+            (r === 0 && g === 0 && b === 0) ||
+            (r === 255 && g === 255 && b === 255)
+          )
+            continue;
+          const hsv = this.rgbToHsv(r, g, b);
+          const key = `${Math.round(hsv.h)},${Math.round(hsv.s)},${Math.round(
+            hsv.v
+          )}`;
+          colorCounts[key] = (colorCounts[key] || 0) + 1;
+        }
 
-      const sortedColors = Object.entries(colorCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 20);
-      const weights = [
-        0.2,
-        0.1,
-        0.14,
-        0.12,
-        0.1,
-        0.08,
-        0.08,
-        0.06,
-        0.06,
-        0.06,
-        0.04,
-        0.04,
-        0.02,
-        0.02,
-        0.02,
-        0.02,
-        0.02,
-        0.02,
-        0.02,
-        0.02
-      ];
-      let hSum = 0,
-        sSum = 0,
-        vSum = 0,
-        totalWeight = 0;
+        const sortedColors = Object.entries(colorCounts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 20);
+        const weights = [
+          0.2,
+          0.1,
+          0.14,
+          0.12,
+          0.1,
+          0.08,
+          0.08,
+          0.06,
+          0.06,
+          0.06,
+          0.04,
+          0.04,
+          0.02,
+          0.02,
+          0.02,
+          0.02,
+          0.02,
+          0.02,
+          0.02,
+          0.02
+        ];
+        let hSum = 0,
+          sSum = 0,
+          vSum = 0,
+          totalWeight = 0;
 
-      sortedColors.forEach(([key], index) => {
-        if (index >= weights.length) return;
-        const [h, s, v] = key.split(",").map(Number);
-        hSum += h * weights[index];
-        sSum += s * weights[index];
-        vSum += v * weights[index];
-        totalWeight += weights[index];
+        sortedColors.forEach(([key], index) => {
+          if (index >= weights.length) return;
+          const [h, s, v] = key.split(",").map(Number);
+          hSum += h * weights[index];
+          sSum += s * weights[index];
+          vSum += v * weights[index];
+          totalWeight += weights[index];
+        });
+
+        const avgH = hSum / totalWeight;
+        const avgS = sSum / totalWeight;
+        const avgV = vSum / totalWeight;
+
+        this.personalColorAnalysis = this.findClosestPersonalColor(
+          avgH,
+          avgS,
+          avgV
+        );
+
+        resolve(); // ✅ 퍼스널컬러 분석 완료 후 resolve 호출
       });
-
-      const avgH = hSum / totalWeight;
-      const avgS = sSum / totalWeight;
-      const avgV = vSum / totalWeight;
-
-      // 💡 personalColorAnalysis 값 업데이트
-      this.personalColorAnalysis = this.findClosestPersonalColor(
-        avgH,
-        avgS,
-        avgV
-      );
     },
 
     rgbToHsv(r, g, b) {
@@ -641,27 +642,27 @@ export default {
       }).filter(item => item !== null);
     },
     //퍼스널컬러 배경색 지정
-   personalColorGroup() {
-    const colorMap = {
-      "봄웜 브라이트": "Spring",
-      "봄웜 트루": "Spring",
-      "봄웜 라이트": "Spring",
+    personalColorGroup() {
+      const colorMap = {
+        "봄웜 브라이트": "Spring",
+        "봄웜 트루": "Spring",
+        "봄웜 라이트": "Spring",
 
-      "여름쿨 라이트": "Summer",
-      "여름쿨 브라이트": "Summer",
-      "여름쿨 뮤트": "Summer",
+        "여름쿨 라이트": "Summer",
+        "여름쿨 브라이트": "Summer",
+        "여름쿨 뮤트": "Summer",
 
-      "가을웜 뮤트": "Autumn",
-      "가을웜 스트롱": "Autumn",
-      "가을웜 딥": "Autumn",
+        "가을웜 뮤트": "Autumn",
+        "가을웜 스트롱": "Autumn",
+        "가을웜 딥": "Autumn",
 
-      "겨울쿨 브라이트": "Winter",
-      "겨울쿨 스트롱": "Winter",
-      "겨울쿨 다크": "Winter",
-    };
+        "겨울쿨 브라이트": "Winter",
+        "겨울쿨 스트롱": "Winter",
+        "겨울쿨 다크": "Winter"
+      };
 
-    return colorMap[this.personalColorAnalysis] || "default";
-  }
+      return colorMap[this.personalColorAnalysis] || "default";
+    }
   }
 };
 </script>

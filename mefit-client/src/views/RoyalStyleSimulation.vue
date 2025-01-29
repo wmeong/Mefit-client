@@ -140,7 +140,7 @@
           </div>
 
           <!-- 데이터 있는 경우   -->
-          <v-row class="d-flex flex-wrap justify-start">
+          <v-row class="d-flex flex-wrap justify-start mt-4">
             <v-col
               v-for="(result, index) in recentResults"
               :key="index"
@@ -169,7 +169,7 @@
               </div>
               <!-- 이름 및 확률 -->
               <div class="result-text font-size:7px">
-                <p class="text-center">{{ result.name }}</p>
+                <p class="text-center" v-html="result.name.replace(/,/g, '<br>').replace(/(.*)(교환권)$/, '$1<br>$2')"></p>
                 <p class="text-center">{{ result.probability }}</p>
               </div>
             </v-col>
