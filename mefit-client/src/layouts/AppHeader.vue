@@ -17,7 +17,7 @@
           <router-link to="/personalcolor-select">퍼스널컬러</router-link>
         </li>
         <li>
-          <router-link to="/codisimulation">코디시뮬</router-link>
+          <router-link to="/colorAwards">코디어워즈</router-link>
         </li>
         <li>
           <router-link to="/royal-simulation">로얄스타일</router-link>

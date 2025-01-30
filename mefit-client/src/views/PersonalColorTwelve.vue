@@ -29,7 +29,11 @@
     <div class="palette-section" v-if="palette.length">
       <h3 class="text-center">🎨 색상 팔레트</h3>
       <div class="palette-row">
-        <div v-for="(color, index) in palette" :key="index" class="color-box-wrapper">
+        <div
+          v-for="(color, index) in palette"
+          :key="index"
+          class="color-box-wrapper"
+        >
           <!-- 색상 네모 상자 -->
           <div class="color-box" :style="{ backgroundColor: color.hex }"></div>
           <!-- 하단 텍스트 표시 -->
@@ -68,9 +72,9 @@
             @click="voteForAvatar($event, avatar)"
           >
             {{
-            votedCharacters.has(avatar.characterImage)
-            ? "mdi-heart"
-            : "mdi-heart-outline"
+              votedCharacters.has(avatar.characterImage)
+                ? "mdi-heart"
+                : "mdi-heart-outline"
             }}
           </v-icon>
         </div>
@@ -90,6 +94,7 @@
       title="알림"
       :message="alertMessage"
       @close="showAlert = false"
+      @confirm="onPopupConfirm"
     />
   </v-container>
 </template>
@@ -120,7 +125,7 @@ export default {
           { name: "라이트 민트", hex: "#E0FFF0" },
           { name: "라일락", hex: "#E6E6FA" },
           { name: "소프트 블루", hex: "#ADD8E6" },
-          { name: "파우더 블루", hex: "#B0E0E6" }
+          { name: "파우더 블루", hex: "#B0E0E6" },
         ],
         "봄웜 브라이트": [
           { name: "라이트 오렌지", hex: "#FFA07A" },
@@ -130,7 +135,7 @@ export default {
           { name: "샴페인 핑크", hex: "#F2D4CC" },
           { name: "스칼렛 레드", hex: "#FF2400" },
           { name: "라이트 레몬", hex: "#F8E473" },
-          { name: "크림 화이트", hex: "#FFFDD0" }
+          { name: "크림 화이트", hex: "#FFFDD0" },
         ],
         "봄웜 트루": [
           { name: "살구", hex: "#FFB07C" },
@@ -140,7 +145,7 @@ export default {
           { name: "페일 골드", hex: "#E6BE8A" },
           { name: "딥 살구", hex: "#F28E63" },
           { name: "피치 골드", hex: "#F5BD47" },
-          { name: "아이보리", hex: "#FFFFF0" }
+          { name: "아이보리", hex: "#FFFFF0" },
         ],
 
         // ❄️ 여름 쿨톤 (Summer Cool Tone)
@@ -152,7 +157,7 @@ export default {
           { name: "라이트 아쿠아", hex: "#D0F0F0" },
           { name: "실버 그레이", hex: "#C0C0C0" },
           { name: "페일 블루", hex: "#AEC6CF" },
-          { name: "라이트 청록", hex: "#E0FFFF" }
+          { name: "라이트 청록", hex: "#E0FFFF" },
         ],
         "여름쿨 브라이트": [
           { name: "아쿠아 블루", hex: "#00FFFF" },
@@ -162,7 +167,7 @@ export default {
           { name: "크림 블루", hex: "#CDE7F0" },
           { name: "더스티 핑크", hex: "#DCAE96" },
           { name: "소프트 라일락", hex: "#D3BCCC" },
-          { name: "민트 블루", hex: "#8EE5EE" }
+          { name: "민트 블루", hex: "#8EE5EE" },
         ],
         "여름쿨 뮤트": [
           { name: "더스티 로즈", hex: "#DCAE96" },
@@ -172,7 +177,7 @@ export default {
           { name: "라이트 인디고", hex: "#B0A4E3" },
           { name: "라일락 그레이", hex: "#D8D3E3" },
           { name: "페일 바이올렛", hex: "#D0CCE0" },
-          { name: "실버 블루", hex: "#B0C4E3" }
+          { name: "실버 블루", hex: "#B0C4E3" },
         ],
 
         // 🍂 가을 웜톤 (Autumn Warm Tone)
@@ -184,7 +189,7 @@ export default {
           { name: "샌드 베이지", hex: "#F4A460" },
           { name: "스파이스 오렌지", hex: "#D2691E" },
           { name: "토프 브라운", hex: "#7F6A55" },
-          { name: "머스타드 옐로우", hex: "#FFDB58" }
+          { name: "머스타드 옐로우", hex: "#FFDB58" },
         ],
         "가을웜 스트롱": [
           { name: "마호가니", hex: "#C04000" },
@@ -194,7 +199,7 @@ export default {
           { name: "피넛 브라운", hex: "#DAA520" },
           { name: "타우니 브라운", hex: "#884C23" },
           { name: "레드 우드", hex: "#A45A52" },
-          { name: "골드 옐로우", hex: "#FFD700" }
+          { name: "골드 옐로우", hex: "#FFD700" },
         ],
         "가을웜 딥": [
           { name: "초콜릿 브라운", hex: "#3F1E12" },
@@ -204,7 +209,7 @@ export default {
           { name: "브론즈 브라운", hex: "#8A3324" },
           { name: "버터스카치", hex: "#E3963E" },
           { name: "딥 옐로우", hex: "#FFB84D" },
-          { name: "마룬", hex: "#800000" }
+          { name: "마룬", hex: "#800000" },
         ],
 
         // 🌌 겨울 쿨톤 (Winter Cool Tone)
@@ -216,7 +221,7 @@ export default {
           { name: "퍼시픽 블루", hex: "#009DC4" },
           { name: "사파이어", hex: "#0F52BA" },
           { name: "화이트", hex: "#FFFFFF" },
-          { name: "스칼렛 레드", hex: "#FF2400" }
+          { name: "스칼렛 레드", hex: "#FF2400" },
         ],
         "겨울쿨 스트롱": [
           { name: "딥 네이비", hex: "#001F54" },
@@ -226,7 +231,7 @@ export default {
           { name: "포레스트 그린", hex: "#228B22" },
           { name: "클래식 레드", hex: "#B22222" },
           { name: "로얄 블루", hex: "#4169E1" },
-          { name: "다크 터쿼이즈", hex: "#00CED1" }
+          { name: "다크 터쿼이즈", hex: "#00CED1" },
         ],
         "겨울쿨 다크": [
           { name: "다크 블루", hex: "#00008B" },
@@ -236,9 +241,9 @@ export default {
           { name: "미드나잇 블루", hex: "#191970" },
           { name: "디퓨즈드 블랙", hex: "#101820" },
           { name: "딥 퍼플", hex: "#4B0082" },
-          { name: "더크 브라운", hex: "#5B504F" }
-        ]
-      }
+          { name: "더크 브라운", hex: "#5B504F" },
+        ],
+      },
     };
   },
   computed: {
@@ -261,10 +266,10 @@ export default {
         "가을웜 딥": "가을",
         "겨울쿨 브라이트": "겨울",
         "겨울쿨 스트롱": "겨울",
-        "겨울쿨 다크": "겨울"
+        "겨울쿨 다크": "겨울",
       };
       return seasonMapping[this.colorName] || "";
-    }
+    },
   },
   methods: {
     async fetchToneData() {
@@ -272,7 +277,7 @@ export default {
         const response = await axios.get(
           `http://localhost:8081/api/personal/tone`,
           {
-            params: { tone: this.color }
+            params: { tone: this.color },
           }
         );
         this.avatars = response.data;
@@ -281,16 +286,33 @@ export default {
       }
     },
     async voteForAvatar(event, avatar) {
-      event.stopPropagation(); // 🔹 추가: 하트 클릭 시 이벤트 버블링 방지
+      event.stopPropagation(); // 🔹 하트 클릭 시 이벤트 버블링 방지
 
       if (this.votedCharacters.has(avatar.characterImage)) {
-        this.alertMessage = "이미 투표한 캐릭터입니다."; // ✅ 팝업 메시지 설정
-        this.$nextTick(() => {
-          this.showAlert = true;
-        }); // ✅ Vue가 반응형으로 변경 감지하도록 보장
+        // ✅ 팝업 메시지 및 상태 설정
+        this.alertMessage = "이 캐릭터의 투표를 취소하시겠습니까?";
+        this.showAlert = true;
+
+        // ✅ 팝업 확인 시 투표 취소 동작 설정
+        this.onPopupConfirm = async () => {
+          try {
+            await axios.delete("http://localhost:8081/api/personal/vote", {
+              params: { characterImage: avatar.characterImage },
+            });
+
+            this.votedCharacters.delete(avatar.characterImage); // 투표 취소 처리
+            console.log("✅ 투표 취소 성공:", avatar.characterImage);
+          } catch (error) {
+            console.error("투표 취소 중 오류 발생:", error);
+          } finally {
+            this.showAlert = false; // 팝업 닫기
+          }
+        };
+
         return;
       }
 
+      // 새로운 투표 처리
       if (!avatar || !avatar.characterImage || !avatar.personalColor) {
         console.error("❌ 유효하지 않은 캐릭터 데이터:", avatar);
         return;
@@ -300,11 +322,12 @@ export default {
         await axios.post("http://localhost:8081/api/personal/vote", null, {
           params: {
             characterImage: avatar.characterImage,
-            personalColor: avatar.personalColor
-          }
+            personalColor: avatar.personalColor,
+          },
         });
 
         this.votedCharacters.add(avatar.characterImage);
+        console.log("✅ 투표 성공:", avatar.characterImage);
       } catch (error) {
         console.error("투표 중 오류 발생:", error);
       }
@@ -318,24 +341,22 @@ export default {
         봄: "spring",
         여름: "summer",
         가을: "fall",
-        겨울: "winter"
+        겨울: "winter",
       };
 
       const season = seasonRoutes[this.mainSeason];
       if (season) {
         this.$router.push({ name: "PersonalColorDetail", query: { season } });
       }
-    }
+    },
   },
   mounted() {
     this.fetchToneData();
-  }
+  },
 };
 </script>
 
-<style scoped>
-</style>
-
+<style scoped></style>
 
 <style scoped>
 .title-container {

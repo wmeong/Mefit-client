@@ -3,7 +3,8 @@
     <div class="custom-alert-content">
       <h3 class="custom-alert-title">{{ title }}</h3>
       <p class="custom-alert-message">{{ message }}</p>
-      <v-btn @click="closeAlert" color="pink" class="custom-alert-button">확인</v-btn>
+      <!-- 확인 버튼 클릭 시 'confirm' 이벤트 발생 -->
+      <v-btn @click="confirmAlert" color="pink" class="custom-alert-button">확인</v-btn>
     </div>
   </div>
 </template>
@@ -26,7 +27,11 @@ export default {
   },
   methods: {
     closeAlert() {
-      this.$emit("close");
+      this.$emit("close"); // 팝업 닫기 이벤트 발생
+    },
+    confirmAlert() {
+      this.$emit("confirm"); // ✅ 'confirm' 이벤트 발생
+      this.closeAlert(); // 팝업 닫기
     },
   },
 };
@@ -39,11 +44,11 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* 팝업이 항상 위에 표시되도록 */
+  z-index: 1000;
 }
 
 .custom-alert-content {
