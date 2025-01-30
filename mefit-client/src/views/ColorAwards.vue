@@ -1,5 +1,5 @@
 <template>
-  <div class="ranking-container">
+  <div class="ranking-container" v-if="Object.keys(rankings).length > 0">
     <div v-for="(season, index) in seasons" :key="season" class="season-section">
       <!-- 계절 타이틀 -->
       <div class="season-header">
@@ -8,23 +8,50 @@
 
       <!-- 순위 목록 -->
       <div class="season-column" :class="`season-bg-${index}`">
-        <div v-for="rank in 5" :key="rank" class="rank-item">
-          <div class="rank-badge">{{ rank }}</div>
-          <img class="rank-image" src="@/assets/slime.png" alt="캐릭터 이미지" />
-          <span class="character-name">슬라임</span>
+        <div v-for="(rank, idx) in rankings[season] || []" :key="rank.characterImage" class="rank-item">
+          <div class="rank-badge">{{ idx + 1 }}</div>
+          <img :src="rank.characterImage" alt="캐릭터 이미지" class="rank-image" />
+          <span class="character-name">{{ rank.totalVotes }} votes</span>
         </div>
       </div>
     </div>
   </div>
 </template>
 
+
 <script>
+import axios from "axios";
+
 export default {
   name: "SeasonRanking",
   data() {
     return {
       seasons: ["봄", "여름", "가을", "겨울"],
+      rankings: {}, // 계절별 순위 데이터를 저장할 객체
     };
+  },
+  methods: {
+    async fetchRankings() {
+      for (const season of this.seasons) {
+        try {
+          const response = await axios.get("/api/personal/rank", {
+            params: { season },
+          });
+          console.log(`${season} 데이터 응답:`, response.data); // 응답 확인 로그
+          if (Array.isArray(response.data) && response.data.length > 0) {
+            // Vue 3에서는 객체를 직접 수정하면 됩니다.
+            this.rankings[season] = response.data;
+          } else {
+            console.warn(`${season} 데이터가 비어 있습니다.`);
+          }
+        } catch (error) {
+          console.error(`${season} 데이터 로드 중 오류 발생:`, error);
+        }
+      }
+    },
+  },
+  mounted() {
+    this.fetchRankings();
   },
 };
 </script>
