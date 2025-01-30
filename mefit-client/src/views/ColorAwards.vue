@@ -1,6 +1,10 @@
 <template>
   <div class="ranking-container" v-if="Object.keys(rankings).length > 0">
-    <div v-for="(season, index) in seasons" :key="season" class="season-section">
+    <div
+      v-for="(season, index) in seasons"
+      :key="season"
+      class="season-section"
+    >
       <!-- 계절 타이틀 -->
       <div class="season-header">
         <h2 class="season-title">{{ season }} 톤 Top 5</h2>
@@ -8,26 +12,47 @@
 
       <!-- 순위 목록 -->
       <div class="season-column" :class="`season-bg-${index}`">
-        <div v-for="(rank, idx) in rankings[season] || []" :key="rank.characterImage" class="rank-item">
+        <div
+          v-for="(rank, idx) in rankings[season] || []"
+          :key="rank.characterImage"
+          class="rank-item"
+        >
           <div class="rank-badge">{{ idx + 1 }}</div>
-          <img :src="rank.characterImage" alt="캐릭터 이미지" class="rank-image" />
+          <img
+            :src="rank.characterImage"
+            alt="캐릭터 이미지"
+            class="rank-image"
+            @click="openPopup(rank.characterImage)"
+          />
+
           <span class="character-name">{{ rank.totalVotes }} votes</span>
         </div>
       </div>
     </div>
   </div>
-</template>
 
+  <!-- CharacterInfoPopup 컴포넌트 -->
+  <CharacterInfoPopup
+    v-if="popupVisible"
+    :model-value="popupVisible"
+    @update:model-value="popupVisible = $event"
+    :character="selectedCharacter"
+  />
+</template>
 
 <script>
 import axios from "axios";
+import CharacterInfoPopup from "./CharacterInfoPopup.vue";
 
 export default {
+  components: { CharacterInfoPopup },
   name: "SeasonRanking",
   data() {
     return {
       seasons: ["봄", "여름", "가을", "겨울"],
       rankings: {}, // 계절별 순위 데이터를 저장할 객체
+      popupVisible: false, // 팝업 표시 여부
+      selectedCharacter: null, // 선택된 캐릭터 데이터
     };
   },
   methods: {
@@ -49,13 +74,22 @@ export default {
         }
       }
     },
+    openPopup(characterImage) {
+      if (!characterImage) {
+        console.error("❌ 이미지가 없습니다.");
+        return;
+      }
+
+      console.log("🔍 팝업을 열 이미지 URL:", characterImage); // 확인 로그
+      this.selectedCharacter = { image: characterImage }; // 이미지 설정
+      this.popupVisible = true; // 팝업 열기
+    },
   },
   mounted() {
     this.fetchRankings();
   },
 };
 </script>
-
 
 <style scoped>
 /* 컨테이너 스타일 */
