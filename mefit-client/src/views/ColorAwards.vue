@@ -1,4 +1,11 @@
 <template>
+    <!-- 최상단 타이틀 -->
+    <div class="color-awards-banner">
+        <div class="award-background">
+            <h1 class="color-awards-title">Color Awards</h1>
+        </div>
+    </div>
+    <!-- 랭킹 컨테이너 -->
     <div class="ranking-container" v-if="Object.keys(rankings).length > 0">
         <div
             v-for="(season, index) in seasons"
@@ -105,6 +112,42 @@ export default {
     gap: 40px;
     padding: 20px;
     animation: fadeIn 0.5s ease-in-out;
+}
+
+/*상단 텍스트(컬러어워즈)*/
+.color-awards-banner {
+    text-align: center;
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.award-background {
+    position: relative;
+    background: linear-gradient(135deg, #4d2600, #ffcc66, #4d2600);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: shimmer 3s infinite linear;
+}
+
+.color-awards-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #f8e71c;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(255, 223, 0, 0.8),
+        0 0 40px rgba(255, 223, 0, 0.6), 0 0 60px rgba(255, 223, 0, 0.4);
+    letter-spacing: 5px;
+}
+
+/* 별 반짝임 효과 */
+@keyframes shimmer {
+    0% {
+        background-position: -100px 0;
+    }
+    100% {
+        background-position: 100px 0;
+    }
 }
 
 /* 계절 섹션 스타일 */
@@ -251,6 +294,27 @@ export default {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* 애니메이션 효과 */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes twinkle {
+    from {
+        opacity: 0.5;
+    }
+    to {
+        opacity: 1;
     }
 }
 </style>
