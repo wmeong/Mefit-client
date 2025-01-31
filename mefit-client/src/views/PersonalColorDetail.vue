@@ -108,6 +108,7 @@ export default {
             votedCharacters: new Set(), // ✅ 투표한 캐릭터 저장
             showAlert: false, // ✅ 공통 팝업 표시 여부
             alertMessage: "", // ✅ 공통 팝업 메시지
+            processingVote: false, // ✅ 투표 요청 중인지 상태 플래그 (중복 방지)
         };
     },
     computed: {
@@ -172,12 +173,16 @@ export default {
         async voteForAvatar(event, avatar) {
             event.stopPropagation();
 
+            // ✅ 동일한 캐릭터에 대한 중복 요청 방지 플래그
+            if (this.processingVote) return;
+            this.processingVote = true;
+
             if (this.votedCharacters.has(avatar.characterImage)) {
-                // ✅ 팝업 메시지 및 상태 설정
-                this.alertMessage = "이 캐릭터의 투표를 취소하시겠습니까?";
+                // ✅ 좋아요 취소 메시지 설정
+                this.alertMessage = "좋아요를 취소하시겠습니까?";
                 this.showAlert = true;
 
-                // ✅ 팝업 확인 버튼을 눌렀을 때 실행할 로직
+                // ✅ 확인 버튼 로직 (중복 방지)
                 this.onPopupConfirm = async () => {
                     try {
                         await axios.delete(
@@ -189,9 +194,9 @@ export default {
                             }
                         );
 
-                        // ✅ 투표 취소 처리 및 상태 저장
+                        // ✅ 투표 취소 상태 처리
                         this.votedCharacters.delete(avatar.characterImage);
-                        this.saveHeartState(); // 상태 저장
+                        this.saveHeartState();
                         console.log(
                             "✅ 투표 취소 성공:",
                             avatar.characterImage
@@ -199,7 +204,8 @@ export default {
                     } catch (error) {
                         console.error("투표 취소 중 오류 발생:", error);
                     } finally {
-                        this.showAlert = false; // 팝업 닫기
+                        this.showAlert = false;
+                        this.processingVote = false; // ✅ 처리 완료 후 플래그 해제
                     }
                 };
 
@@ -209,29 +215,41 @@ export default {
             // 새로운 투표 처리
             if (!avatar || !avatar.characterImage || !avatar.personalColor) {
                 console.error("❌ 유효하지 않은 캐릭터 데이터:", avatar);
+                this.processingVote = false;
                 return;
             }
 
-            try {
-                await axios.post(
-                    "http://localhost:8081/api/personal/vote",
-                    null,
-                    {
-                        params: {
-                            characterImage: avatar.characterImage,
-                            personalColor: avatar.personalColor,
-                        },
-                    }
-                );
+            // ✅ 새로운 투표 메시지 설정
+            this.alertMessage = "이 캐릭터에 투표 하시겠습니까?";
+            this.showAlert = true;
 
-                // ✅ 새로운 투표 상태 저장
-                this.votedCharacters.add(avatar.characterImage);
-                this.saveHeartState(); // 상태 저장
-                console.log("✅ 투표 성공:", avatar.characterImage);
-            } catch (error) {
-                console.error("투표 중 오류 발생:", error);
-            }
+            // ✅ 확인 버튼 로직
+            this.onPopupConfirm = async () => {
+                try {
+                    await axios.post(
+                        "http://localhost:8081/api/personal/vote",
+                        null,
+                        {
+                            params: {
+                                characterImage: avatar.characterImage,
+                                personalColor: avatar.personalColor,
+                            },
+                        }
+                    );
+
+                    // ✅ 새로운 투표 상태 저장
+                    this.votedCharacters.add(avatar.characterImage);
+                    this.saveHeartState();
+                    console.log("✅ 투표 성공:", avatar.characterImage);
+                } catch (error) {
+                    console.error("투표 중 오류 발생:", error);
+                } finally {
+                    this.showAlert = false;
+                    this.processingVote = false; // ✅ 처리 완료 후 플래그 해제
+                }
+            };
         },
+
         //로컬스토리지 이용해 하트 상태 저장
         saveHeartState() {
             const state = {
@@ -289,7 +307,7 @@ export default {
 .refresh-button {
     position: absolute;
     top: 15px;
-    right: 30px; /* 화면 우측과의 거리 */
+    right: 80px; /* 화면 우측과의 거리 */
     background-color: #afacacb8 !important;
     width: 30px !important;
     height: 30px !important;
@@ -309,6 +327,8 @@ export default {
     margin-bottom: 10px;
     padding: 10px;
     border-bottom: 1px solid #d3d3d381; /* 연한 회색 구분선 */
+    width: 90%; /* 구분선의 길이를 80%로 설정 */
+    margin: 0 auto 10px auto; /* 가운데 정렬을 위한 margin */
 }
 
 .sub-tone-item {

@@ -19,7 +19,7 @@
                     >
                 </li>
                 <li>
-                    <router-link to="/colorAwards">코디어워즈</router-link>
+                    <router-link to="/colorAwards">컬러어워즈</router-link>
                 </li>
                 <li>
                     <router-link to="/royal-simulation">로얄스타일</router-link>
@@ -48,25 +48,28 @@ export default {
 header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    background-color: #ffffff; /* 배경을 흰색으로 변경 */
+    justify-content: center; /* 로고와 메뉴를 전체 가운데 정렬 */
+    background-color: #ffffff;
     padding: 15px 40px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
     margin: 0;
+    display: flex;
+    align-items: center;
 }
-
+/*로고*/
 header h1 .logo img {
     width: 130px;
+    margin-right: 130px;
 }
 
 .menuWrap {
     display: flex;
     align-items: center;
+    gap: 30px; /* 로고와 메뉴 사이 간격 */
 }
-
 .menu {
     display: flex;
     gap: 20px;

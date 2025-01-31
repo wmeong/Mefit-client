@@ -288,9 +288,10 @@
                 md="4"
                 class="equipment-item"
             >
-                <div class="d-flex align-start">
+                <!-- 중앙 정렬을 위한 flex 컨테이너 -->
+                <div class="equipment-content">
                     <!-- 아이콘 -->
-                    <div>
+                    <div class="equipment-icon-container">
                         <img
                             :src="item.icon"
                             :alt="item.type"
@@ -300,13 +301,13 @@
                     <!-- 캐시 장비 정보 -->
                     <div class="equipment-details">
                         <span class="equipment-name">{{ item.name }}</span>
+                        <br />
+                        <span class="equipment-type">{{ item.type }}</span>
                         <p class="equipment-subdetails" v-if="item.colorRange">
                             계열: {{ item.colorRange }}
                             <br />
-                            색:
-                            {{ item.colorHue }} 채:
-                            {{ item.colorSaturation }} 명:
-                            {{ item.colorValue }}
+                            색: {{ item.colorHue }} 채:
+                            {{ item.colorSaturation }} 명: {{ item.colorValue }}
                         </p>
                         <p
                             class="equipment-subdetails"
@@ -314,8 +315,7 @@
                         >
                             {{ item.baseColor }} : {{ item.baseColorRate }}
                             <br />
-                            {{ item.mixColor }} :
-                            {{ item.mixColorRate }}
+                            {{ item.mixColor }} : {{ item.mixColorRate }}
                         </p>
                         <p
                             class="equipment-subdetails"
@@ -323,8 +323,8 @@
                         >
                             계열: {{ item.colorStyle }}
                             <br />
-                            색:
-                            {{ item.skinHue }} 채: {{ item.skinSaturation }} 명:
+                            색: {{ item.skinHue }} 채:
+                            {{ item.skinSaturation }} 명:
                             {{ item.skinBrightness }}
                         </p>
                     </div>
@@ -502,6 +502,7 @@ export default {
         //퍼스널칼라 분석 부분
         async extractColors(img) {
             return new Promise((resolve) => {
+                // ✅ 동적으로 Canvas 생성
                 const canvas = document.createElement("canvas");
                 const ctx = canvas.getContext("2d");
                 canvas.width = img.width;
@@ -515,56 +516,73 @@ export default {
                     img.height
                 ).data;
                 const colorCounts = {};
+
+                // ✅ 이미지 데이터를 순회하여 색상 정보를 수집
                 for (let i = 0; i < imageData.length; i += 4) {
-                    const r = imageData[i],
-                        g = imageData[i + 1],
-                        b = imageData[i + 2],
-                        a = imageData[i + 3];
+                    const r = imageData[i];
+                    const g = imageData[i + 1];
+                    const b = imageData[i + 2];
+                    const a = imageData[i + 3];
+
+                    // ✅ 투명도 및 완전 검정/흰색 제외
                     if (
                         a === 0 ||
                         (r === 0 && g === 0 && b === 0) ||
                         (r === 255 && g === 255 && b === 255)
                     )
                         continue;
+
                     const hsv = this.rgbToHsv(r, g, b);
-                    const key = `${Math.round(hsv.h)},${Math.round(
-                        hsv.s
-                    )},${Math.round(hsv.v)}`;
+
+                    // ✅ 너무 어둡거나 밝은 색상, 채도가 낮은 색상 제외
+                    if (hsv.v < 5 || hsv.v > 90 || hsv.s < 3) continue;
+
+                    // **HSV 근처 색상 통합**
+                    const roundedH = Math.round(hsv.h / 5) * 5;
+                    const roundedS = Math.round(hsv.s / 5) * 5;
+                    const roundedV = Math.round(hsv.v / 5) * 5;
+                    const key = `${roundedH},${roundedS},${roundedV}`;
+
                     colorCounts[key] = (colorCounts[key] || 0) + 1;
                 }
 
+                // ✅ 상위 30개 색상 추출 및 가중치 계산
                 const sortedColors = Object.entries(colorCounts)
                     .sort((a, b) => b[1] - a[1])
-                    .slice(0, 20);
-                const weights = [
-                    0.2, 0.1, 0.14, 0.12, 0.1, 0.08, 0.08, 0.06, 0.06, 0.06,
-                    0.04, 0.04, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,
-                ];
+                    .slice(0, 30);
+
                 let hSum = 0,
                     sSum = 0,
                     vSum = 0,
                     totalWeight = 0;
+                const weights = sortedColors.map((_, index) =>
+                    index < 20 ? 0.1 : 0.02
+                );
 
                 sortedColors.forEach(([key], index) => {
-                    if (index >= weights.length) return;
                     const [h, s, v] = key.split(",").map(Number);
-                    hSum += h * weights[index];
-                    sSum += s * weights[index];
-                    vSum += v * weights[index];
-                    totalWeight += weights[index];
+                    const weight = weights[index];
+                    hSum += h * weight;
+                    sSum += s * weight;
+                    vSum += v * weight;
+                    totalWeight += weight;
                 });
 
                 const avgH = hSum / totalWeight;
                 const avgS = sSum / totalWeight;
                 const avgV = vSum / totalWeight;
 
+                // ✅ 최종 퍼스널컬러 분석
                 this.personalColorAnalysis = this.findClosestPersonalColor(
                     avgH,
                     avgS,
                     avgV
                 );
 
-                resolve(); // ✅ 퍼스널컬러 분석 완료 후 resolve 호출
+                // ✅ Canvas 제거
+                canvas.remove();
+
+                resolve();
             });
         },
 
@@ -744,42 +762,61 @@ export default {
     padding-left: 5px;
     margin-top: 20px;
 }
-
 .equipment-item {
     display: flex;
     align-items: center;
+    justify-content: flex-start; /* 가로 정렬을 왼쪽으로 고정 */
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 12px;
     background-color: #ffffff;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    min-height: 100px;
+    min-height: 120px; /* 적절한 최소 높이 설정 */
     transition: border 0.3s ease, box-shadow 0.3s ease;
 }
+
+.equipment-content {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    width: 100%; /* 가로 정렬 문제 해결 */
+}
+
+.equipment-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.equipment-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border: 2px solid #f0f0f0;
+    border-radius: 8px;
+    margin-left: 10px;
+    padding: 6px;
+    background-color: #f9f9f9;
+}
+
 .equipment-item:hover {
     border: 1px solid #ff88aa;
     box-shadow: 0px 4px 10px rgba(255, 136, 170, 0.3);
 }
-.equipment-icon {
-    flex-shrink: 0;
-    width: 50px;
-    height: 50px;
-    margin-right: 12px;
-    object-fit: contain;
-    border: 2px solid #f0f0f0;
-    border-radius: 8px;
-    padding: 6px;
-    background-color: #f9f9f9;
-}
+
 .equipment-details {
     flex-grow: 1;
     text-align: left;
     line-height: 1.5;
+    margin-left: 13px;
 }
 .equipment-name {
     font-weight: bold;
     font-size: 14px;
     margin-bottom: 5px;
+}
+.equipment-type {
+    font-size: 12px;
+    color: #335cc4ad;
 }
 .equipment-subdetails {
     font-size: 12px;

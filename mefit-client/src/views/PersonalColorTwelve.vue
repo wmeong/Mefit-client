@@ -433,7 +433,7 @@ export default {
 .refresh-button {
     position: absolute;
     top: 15px;
-    right: 30px; /* 화면 우측과의 거리 */
+    right: 70px; /* 화면 우측과의 거리 */
     background-color: #afacacb8 !important;
     width: 30px !important;
     height: 30px !important;
