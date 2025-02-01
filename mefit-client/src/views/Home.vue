@@ -3,12 +3,8 @@
         <h2>닉네임을 입력하세요</h2>
         <div class="search-bar">
             <button class="search-icon" @click="search">🔎</button>
-            <input
-                type="text"
-                placeholder="검색어를 입력하세요"
-                v-model="searchQuery"
-                @keydown.enter="search"
-            />
+            <input type="text" placeholder="검색어를 입력하세요" :value="searchQuery" @input="updateQuery"
+                @keydown.enter.prevent="search" />
         </div>
 
         <!-- 인기 캐릭터 리스트 -->
@@ -16,25 +12,15 @@
             <v-card-title class="text-center">🌟 인기 캐릭터 🌟</v-card-title>
             <v-divider></v-divider>
             <v-list dense class="character-list">
-                <v-list-item
-                    v-for="(character, index) in popularCharacters"
-                    :key="index"
-                    class="character-item"
-                    @click="selectCharacter(character.characterName)"
-                >
+                <v-list-item v-for="(character, index) in popularCharacters" :key="index" class="character-item"
+                    @click="selectCharacter(character.characterName)">
                     <v-list-item-avatar class="avatar-container">
-                        <v-img
-                            :src="character.characterImage"
-                            alt="character avatar"
-                            max-width="90"
-                            max-height="90"
-                        ></v-img>
+                        <v-img :src="character.characterImage" alt="character avatar" max-width="90"
+                            max-height="90"></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                        <v-list-item-title
-                            >{{ index + 1 }}.
-                            {{ character.characterName }}</v-list-item-title
-                        >
+                        <v-list-item-title>{{ index + 1 }}.
+                            {{ character.characterName }}</v-list-item-title>
                         <v-list-item-subtitle>
                             Lv.{{ character.characterLevel }}
                             {{ character.characterClass }} -
@@ -46,13 +32,8 @@
         </v-card>
 
         <!-- 공통 알림 팝업 -->
-        <CustomAlert
-            v-if="showAlert"
-            :visible="showAlert"
-            title="알림"
-            message="존재하지 않는 캐릭터입니다."
-            @close="showAlert = false"
-        />
+        <CustomAlert v-if="showAlert" :visible="showAlert" title="알림" message="존재하지 않는 캐릭터입니다."
+            @close="showAlert = false" />
     </div>
 </template>
 
@@ -68,36 +49,36 @@ export default {
             searchQuery: "", // 검색어 저장
             popularCharacters: [], // 인기 캐릭터 리스트
             showAlert: false, // 알림 팝업 표시 여부
+            isSearching: false, // 검색 중 상태 플래그
         };
     },
     methods: {
-        /**
-         * 검색 쿼리를 기반으로 캐릭터 존재 여부 확인
-         */
+        updateQuery(event) {
+            // 입력값 수동 동기화
+            this.searchQuery = event.target.value;
+        },
+
         async search() {
-            if (!this.searchQuery) return;
+            const trimmedQuery = this.searchQuery.trim();
+            if (!trimmedQuery) return;
 
+            this.isSearching = true;
             try {
-                // 서버에 검색 요청
                 const response = await axios.get(
-                    `http://localhost:8081/api/characters/ocid?name=${this.searchQuery}`
+                    `http://localhost:8081/api/characters/ocid?name=${encodeURIComponent(trimmedQuery)}`
                 );
-
-                // 검색 성공 시 CharacterInfo 페이지로 이동
                 if (response.status === 200) {
-                    this.$router.push({
-                        name: "CharacterInfo",
-                        query: { q: this.searchQuery },
-                    });
+                    this.$router.push({ name: "CharacterInfo", query: { q: trimmedQuery } });
                 } else {
                     throw new Error("Character not found");
                 }
             } catch (error) {
                 console.error("Search failed:", error);
-                // 검색 실패 시 팝업 표시
                 this.showAlert = true;
+            } finally {
+                this.isSearching = false;
             }
-        },
+        },     
 
         /**
          * 인기 캐릭터 목록 가져오기
@@ -217,12 +198,15 @@ h2 {
 
 .avatar-container {
     display: flex;
-    justify-content: center; /* 수평 중앙 정렬 */
-    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center;
+    /* 수평 중앙 정렬 */
+    align-items: center;
+    /* 수직 중앙 정렬 */
 }
 
 .avatar-image {
-    border-radius: 50%; /* 둥근 모양으로 표시 */
+    border-radius: 50%;
+    /* 둥근 모양으로 표시 */
 }
 
 .v-list-item-avatar img {

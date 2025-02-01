@@ -7,12 +7,9 @@
                 <button class="search-icon" @click="searchAndSaveCharacter">
                     🔎
                 </button>
-                <input
-                    type="text"
-                    placeholder="검색어를 입력하세요"
-                    v-model="characterName"
-                    @keydown.enter="searchAndSaveCharacter"
-                />
+                <input type="text" placeholder="검색어를 입력하세요" :value="characterName" @input="updateCharacterName"
+                    @keydown.enter.prevent="searchAndSaveCharacter" />
+
             </div>
         </div>
 
@@ -22,17 +19,10 @@
             <v-row dense class="search-bar-row">
                 <v-col cols="12" md="12">
                     <div class="search-bar-container">
-                        <input
-                            type="text"
-                            placeholder="닉네임을 입력하세요"
-                            v-model="characterName"
-                            class="search-input"
-                            @keydown.enter="searchAndSaveCharacter"
-                        />
-                        <button
-                            @click="searchAndSaveCharacter"
-                            class="search-button"
-                        >
+                        <input type="text" placeholder="닉네임을 입력하세요" :value="characterName" class="search-input"
+                            @input="updateCharacterName" @keydown.enter.prevent="searchAndSaveCharacter" />
+
+                        <button @click="searchAndSaveCharacter" class="search-button">
                             🔍 검색
                         </button>
                     </div>
@@ -49,11 +39,7 @@
                                 <!-- 레벨 -->
                                 <tr>
                                     <td class="icon-cell">
-                                        <v-avatar
-                                            class="level-icon"
-                                            color="#808080"
-                                            size="24"
-                                        >
+                                        <v-avatar class="level-icon" color="#808080" size="24">
                                             <span class="level-text">Lv</span>
                                         </v-avatar>
                                     </td>
@@ -69,16 +55,10 @@
                                 <!-- 월드 -->
                                 <tr>
                                     <td class="icon-cell">
-                                        <img
-                                            v-if="characterInfo.world_name"
-                                            :src="
-                                                getWorldIcon(
-                                                    characterInfo.world_name
-                                                )
-                                            "
-                                            alt="world-icon"
-                                            class="world-icon"
-                                        />
+                                        <img v-if="characterInfo.world_name" :src="getWorldIcon(
+                                            characterInfo.world_name
+                                        )
+                                            " alt="world-icon" class="world-icon" />
                                     </td>
                                     <td class="data-cell">
                                         <span class="badge">
@@ -92,20 +72,15 @@
                                 <!-- 성별 -->
                                 <tr>
                                     <td class="icon-cell">
-                                        <v-avatar
-                                            :color="
-                                                characterInfo.character_gender ===
-                                                '여'
-                                                    ? '#FFC0CB'
-                                                    : '#87CEEB'
-                                            "
-                                            size="24"
-                                            class="gender-icon"
-                                        >
+                                        <v-avatar :color="characterInfo.character_gender ===
+                                            '여'
+                                            ? '#FFC0CB'
+                                            : '#87CEEB'
+                                            " size="24" class="gender-icon">
                                             <v-icon small color="white">
                                                 {{
                                                     characterInfo.character_gender ===
-                                                    "여"
+                                                        "여"
                                                         ? "mdi-gender-female"
                                                         : "mdi-gender-male"
                                                 }}
@@ -125,11 +100,7 @@
                                 <!-- 길드 -->
                                 <tr>
                                     <td class="icon-cell">
-                                        <v-avatar
-                                            class="guild-icon"
-                                            color="#87CEEB"
-                                            size="24"
-                                        >
+                                        <v-avatar class="guild-icon" color="#87CEEB" size="24">
                                             <span class="guild-text">G</span>
                                         </v-avatar>
                                     </td>
@@ -145,15 +116,10 @@
                                 <!-- 직업 -->
                                 <tr>
                                     <td class="icon-cell">
-                                        <img
-                                            :src="
-                                                getJobIcon(
-                                                    characterInfo.character_class
-                                                )
-                                            "
-                                            alt="job-icon"
-                                            class="job-icon"
-                                        />
+                                        <img :src="getJobIcon(
+                                            characterInfo.character_class
+                                        )
+                                            " alt="job-icon" class="job-icon" />
                                     </td>
                                     <td class="data-cell">
                                         <span class="badge">
@@ -173,28 +139,18 @@
                 <v-col cols="12" md="4">
                     <div class="character-container">
                         <!-- 캐릭터 이미지 -->
-                        <v-img
-                            :src="
-                                characterInfo.character_image ||
-                                'https://via.placeholder.com/150'
-                            "
-                            alt="Character Image"
-                            class="character-image"
-                            :style="{
+                        <v-img :src="characterInfo.character_image ||
+                            'https://via.placeholder.com/150'
+                            " alt="Character Image" class="character-image" :style="{
                                 transform: `scale(${scale})`,
                                 transition: 'transform 0.3s ease-in-out',
                                 'margin-bottom': '40px',
-                            }"
-                        ></v-img>
+                            }"></v-img>
                         <!-- 버튼 그룹 -->
                         <div class="button-group">
                             <!-- 확대/축소 버튼 -->
-                            <v-btn
-                                @click="toggleZoom"
-                                class="modern-btn"
-                                elevation="2"
-                                style="width: 40px; padding: 0; min-width: 40px"
-                            >
+                            <v-btn @click="toggleZoom" class="modern-btn" elevation="2"
+                                style="width: 40px; padding: 0; min-width: 40px">
                                 <v-icon size="20">
                                     {{
                                         scale === 0.7
@@ -204,12 +160,8 @@
                                 </v-icon>
                             </v-btn>
                             <!-- 다운로드 버튼 -->
-                            <v-btn
-                                @click="downloadImage"
-                                class="modern-btn"
-                                elevation="2"
-                                style="width: 40px; padding: 0; min-width: 40px"
-                            >
+                            <v-btn @click="downloadImage" class="modern-btn" elevation="2"
+                                style="width: 40px; padding: 0; min-width: 40px">
                                 <v-icon size="20">mdi-download</v-icon>
                             </v-btn>
                         </div>
@@ -221,15 +173,11 @@
                     <div class="modern-card">
                         <h3 class="font-weight-bold">퍼스널컬러</h3>
                         <!-- 퍼스널 컬러 분석 결과 -->
-                        <div
-                            :class="[
-                                'text-center',
-                                'personal-color-result',
-                                personalColorGroup,
-                            ]"
-                            @click="navigateToPersonalColorPage"
-                            style="cursor: pointer"
-                        >
+                        <div :class="[
+                            'text-center',
+                            'personal-color-result',
+                            personalColorGroup,
+                        ]" @click="navigateToPersonalColorPage" style="cursor: pointer">
                             {{ personalColorAnalysis }}
                         </div>
 
@@ -239,18 +187,13 @@
                                 <h4 class="text-left color-label">메인컬러</h4>
                             </v-col>
                             <v-col cols="9" class="d-flex">
-                                <v-avatar
-                                    v-for="(
+                                <v-avatar v-for="(
                                         color, index
                                     ) in characterInfo.main_colors || [
-                                        '#ccc',
-                                        '#ddd',
-                                    ]"
-                                    :key="'main-color-' + index"
-                                    :color="color"
-                                    size="33"
-                                    class="mr-2"
-                                ></v-avatar>
+                                                '#ccc',
+                                                '#ddd',
+                                            ]" :key="'main-color-' + index" :color="color" size="33"
+                                    class="mr-2"></v-avatar>
                             </v-col>
                         </v-row>
 
@@ -260,18 +203,13 @@
                                 <h4 class="text-left color-label">서브컬러</h4>
                             </v-col>
                             <v-col cols="9" class="d-flex">
-                                <v-avatar
-                                    v-for="(
+                                <v-avatar v-for="(
                                         color, index
                                     ) in characterInfo.sub_colors || [
-                                        '#eee',
-                                        '#fff',
-                                    ]"
-                                    :key="'sub-color-' + index"
-                                    :color="color"
-                                    size="33"
-                                    class="mr-2"
-                                ></v-avatar>
+                                                '#eee',
+                                                '#fff',
+                                            ]" :key="'sub-color-' + index" :color="color" size="33"
+                                    class="mr-2"></v-avatar>
                             </v-col>
                         </v-row>
                     </div>
@@ -280,23 +218,12 @@
         </div>
         <!-- 4번 : 캐시 장비 정보 영역 -->
         <v-row class="mt-4" dense>
-            <v-col
-                v-for="item in filteredItems"
-                :key="item.type"
-                cols="12"
-                sm="6"
-                md="4"
-                class="equipment-item"
-            >
+            <v-col v-for="item in filteredItems" :key="item.type" cols="12" sm="6" md="4" class="equipment-item">
                 <!-- 중앙 정렬을 위한 flex 컨테이너 -->
                 <div class="equipment-content">
                     <!-- 아이콘 -->
                     <div class="equipment-icon-container">
-                        <img
-                            :src="item.icon"
-                            :alt="item.type"
-                            class="equipment-icon"
-                        />
+                        <img :src="item.icon" :alt="item.type" class="equipment-icon" />
                     </div>
                     <!-- 캐시 장비 정보 -->
                     <div class="equipment-details">
@@ -309,18 +236,12 @@
                             색: {{ item.colorHue }} 채:
                             {{ item.colorSaturation }} 명: {{ item.colorValue }}
                         </p>
-                        <p
-                            class="equipment-subdetails"
-                            v-else-if="item.mixColor"
-                        >
+                        <p class="equipment-subdetails" v-else-if="item.mixColor">
                             {{ item.baseColor }} : {{ item.baseColorRate }}
                             <br />
                             {{ item.mixColor }} : {{ item.mixColorRate }}
                         </p>
-                        <p
-                            class="equipment-subdetails"
-                            v-else-if="item.colorStyle"
-                        >
+                        <p class="equipment-subdetails" v-else-if="item.colorStyle">
                             계열: {{ item.colorStyle }}
                             <br />
                             색: {{ item.skinHue }} 채:
@@ -332,13 +253,8 @@
             </v-col>
         </v-row>
         <!-- 공통 알림 팝업 추가 -->
-        <CustomAlert
-            v-if="showAlert"
-            :visible="showAlert"
-            title="알림"
-            message="존재하지 않는 캐릭터입니다."
-            @close="showAlert = false"
-        />
+        <CustomAlert v-if="showAlert" :visible="showAlert" title="알림" message="존재하지 않는 캐릭터입니다."
+            @close="showAlert = false" />
     </v-container>
 </template>
 
@@ -421,6 +337,9 @@ export default {
             } catch (error) {
                 console.error("이미지 다운로드 중 오류가 발생했습니다:", error);
             }
+        },
+        updateCharacterName(event) {
+            this.characterName = event.target.value; // 입력값 명시적 동기화
         },
         /**
          * 캐릭터 정보를 API에서 검색 및 저장
@@ -601,8 +520,8 @@ export default {
                     max === r
                         ? (g - b) / d + (g < b ? 6 : 0)
                         : max === g
-                        ? (b - r) / d + 2
-                        : (r - g) / d + 4;
+                            ? (b - r) / d + 2
+                            : (r - g) / d + 4;
             h /= 6;
             return { h: h * 360, s: s * 100, v: v * 100 };
         },
@@ -734,7 +653,8 @@ export default {
 .main-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 0 16px; /* 양쪽 패딩 설정 */
+    padding: 0 16px;
+    /* 양쪽 패딩 설정 */
 }
 
 .character-container {
@@ -747,13 +667,17 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* overflow: hidden; */ /* 히든버튼 */
+    /* overflow: hidden; */
+    /* 히든버튼 */
 }
+
 .character-image {
-    height: 200px; /* 이미지 최대 높이 */
+    height: 200px;
+    /* 이미지 최대 높이 */
     width: auto;
     display: block;
-    margin: 0 auto; /* 이미지 가운데 정렬 */
+    margin: 0 auto;
+    /* 이미지 가운데 정렬 */
 }
 
 /*1,2,3, 일렬로 */
@@ -762,23 +686,28 @@ export default {
     padding-left: 5px;
     margin-top: 20px;
 }
+
 .equipment-item {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* 가로 정렬을 왼쪽으로 고정 */
+    justify-content: flex-start;
+    /* 가로 정렬을 왼쪽으로 고정 */
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 12px;
     background-color: #ffffff;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    min-height: 120px; /* 적절한 최소 높이 설정 */
+    min-height: 120px;
+    /* 적절한 최소 높이 설정 */
     transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
 .equipment-content {
     display: flex;
-    align-items: center; /* 수직 가운데 정렬 */
-    width: 100%; /* 가로 정렬 문제 해결 */
+    align-items: center;
+    /* 수직 가운데 정렬 */
+    width: 100%;
+    /* 가로 정렬 문제 해결 */
 }
 
 .equipment-icon-container {
@@ -809,15 +738,18 @@ export default {
     line-height: 1.5;
     margin-left: 13px;
 }
+
 .equipment-name {
     font-weight: bold;
     font-size: 14px;
     margin-bottom: 5px;
 }
+
 .equipment-type {
     font-size: 12px;
     color: #335cc4ad;
 }
+
 .equipment-subdetails {
     font-size: 12px;
     color: #666;
@@ -825,30 +757,45 @@ export default {
 }
 
 .button-row {
-    margin-top: 16px; /* 버튼과 이미지 간격 */
+    margin-top: 16px;
+    /* 버튼과 이미지 간격 */
     display: flex;
-    justify-content: center; /* 버튼을 가운데 정렬 */
-    gap: 16px; /* 버튼 간격 */
+    justify-content: center;
+    /* 버튼을 가운데 정렬 */
+    gap: 16px;
+    /* 버튼 간격 */
 }
+
 .button-row v-btn {
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 버튼 그림자 */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    /* 버튼 그림자 */
 }
+
 .zoom-button-container {
-    margin-top: 55px; /* 이미지와 버튼 사이 간격을 더 넓게 */
+    margin-top: 55px;
+    /* 이미지와 버튼 사이 간격을 더 넓게 */
     text-align: center;
 }
+
 .button-group {
     position: absolute;
-    bottom: 16px; /* 컨테이너 하단에서 여백 */
-    right: 16px; /* 컨테이너 오른쪽에서 여백 */
+    bottom: 16px;
+    /* 컨테이너 하단에서 여백 */
+    right: 16px;
+    /* 컨테이너 오른쪽에서 여백 */
     display: flex;
-    gap: 8px; /* 버튼 간 간격 */
-    z-index: 10; /* 이미지 위에 위치 */
+    gap: 8px;
+    /* 버튼 간 간격 */
+    z-index: 10;
+    /* 이미지 위에 위치 */
 }
+
 .button-group v-btn {
-    width: 40px; /* 버튼 크기 */
+    width: 40px;
+    /* 버튼 크기 */
     height: 40px;
-    border-radius: 50%; /* 원형 버튼 */
+    border-radius: 50%;
+    /* 원형 버튼 */
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -879,41 +826,58 @@ export default {
 
 .badge {
     display: inline-block;
-    padding: 0px 8px; /* 텍스트 주변 여백 */
-    border: 1px solid #ccc; /* 테두리 색상 */
-    border-radius: 12px; /* 둥근 테두리 */
-    background-color: #f5f5f5; /* 배경색 */
-    font-size: 0.875rem; /* 글씨 크기 */
-    font-weight: 500; /* 글씨 굵기 */
-    color: #333; /* 텍스트 색상 */
-    margin-right: 8px; /* 요소 간 간격 */
+    padding: 0px 8px;
+    /* 텍스트 주변 여백 */
+    border: 1px solid #ccc;
+    /* 테두리 색상 */
+    border-radius: 12px;
+    /* 둥근 테두리 */
+    background-color: #f5f5f5;
+    /* 배경색 */
+    font-size: 0.875rem;
+    /* 글씨 크기 */
+    font-weight: 500;
+    /* 글씨 굵기 */
+    color: #333;
+    /* 텍스트 색상 */
+    margin-right: 8px;
+    /* 요소 간 간격 */
 }
+
 .character-info-table {
     margin-top: 10px;
     margin-left: 8px;
-    border-spacing: 0 8px; /* 위아래 갭 추가 */
-    border-collapse: separate; /* 셀 간격 유지 */
+    border-spacing: 0 8px;
+    /* 위아래 갭 추가 */
+    border-collapse: separate;
+    /* 셀 간격 유지 */
 }
 
 .icon-cell {
     display: flex;
-    justify-content: center; /* 가로 정렬 */
-    align-items: center; /* 세로 정렬 */
-    height: 100%; /* 부모 높이에 맞춤 */
+    justify-content: center;
+    /* 가로 정렬 */
+    align-items: center;
+    /* 세로 정렬 */
+    height: 100%;
+    /* 부모 높이에 맞춤 */
 }
 
 .data-cell {
     text-align: left;
     vertical-align: middle;
-    padding-left: 13px; /* 데이터 셀 왼쪽 패딩 */
+    padding-left: 13px;
+    /* 데이터 셀 왼쪽 패딩 */
 }
 
 .gender-icon,
 .guild-icon,
 .job-icon {
-    width: 20px; /* 아이콘 크기 */
+    width: 20px;
+    /* 아이콘 크기 */
     height: 20px;
 }
+
 .world-icon {
     width: 27px;
     height: 27px;
@@ -940,20 +904,24 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 14px; /* 아이콘 크기 */
+    font-size: 14px;
+    /* 아이콘 크기 */
     font-weight: bold;
     line-height: 1;
 }
 
 .world-guild {
-    margin-top: 8px; /* 레벨/성별과 간격 */
+    margin-top: 8px;
+    /* 레벨/성별과 간격 */
 }
 
 .job-image {
-    width: 80px; /* 직업 이미지 크기 */
+    width: 80px;
+    /* 직업 이미지 크기 */
     height: 80px;
     border-radius: 8px;
-    margin-bottom: 8px; /* 직업 이름과 간격 */
+    margin-bottom: 8px;
+    /* 직업 이름과 간격 */
 }
 
 .job-badge {
@@ -968,18 +936,26 @@ export default {
 /* 검색창*/
 .search-bar-container {
     display: flex;
-    justify-content: center; /* 가운데 정렬 */
+    justify-content: center;
+    /* 가운데 정렬 */
     align-items: center;
-    width: 100%; /* 전체 길이 */
-    padding: 12px 16px; /* 여백 추가 */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
-    background-color: #ffffff; /* 배경색 */
-    border-radius: 8px; /* 둥근 모서리 */
-    margin-bottom: 16px; /* 아래 컨텐츠와 간격 */
+    width: 100%;
+    /* 전체 길이 */
+    padding: 12px 16px;
+    /* 여백 추가 */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    /* 부드러운 그림자 */
+    background-color: #ffffff;
+    /* 배경색 */
+    border-radius: 8px;
+    /* 둥근 모서리 */
+    margin-bottom: 16px;
+    /* 아래 컨텐츠와 간격 */
 }
 
 .search-input {
-    flex: 1; /* 검색창 너비를 버튼과 함께 조정 */
+    flex: 1;
+    /* 검색창 너비를 버튼과 함께 조정 */
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -1020,22 +996,27 @@ export default {
     font-size: 16px;
     font-weight: bold;
     text-transform: uppercase;
-    padding: 4px 8px; /* 패딩 조정 */
+    padding: 4px 8px;
+    /* 패딩 조정 */
     text-align: center;
     margin-top: 8px;
 }
+
 .personal-color-result.Spring {
     background-color: #fbe7c6;
     color: #8d5524;
 }
+
 .personal-color-result.Summer {
     background-color: #e6f7ff;
     color: #007acc;
 }
+
 .personal-color-result.Autumn {
     background-color: #fdecc8;
     color: #a64b2a;
 }
+
 .personal-color-result.Winter {
     background-color: #f0f4f7;
     color: #3a4e80;
@@ -1043,16 +1024,22 @@ export default {
 
 .main-color {
     margin-top: 10px;
-    margin-bottom: 0 !important; /* 하단 마진 제거 */
-    padding-bottom: 0 !important; /* 하단 패딩 제거 */
+    margin-bottom: 0 !important;
+    /* 하단 마진 제거 */
+    padding-bottom: 0 !important;
+    /* 하단 패딩 제거 */
 }
+
 .sub-color {
-    margin-top: 0 !important; /* 하단 마진 제거 */
-    padding-top: 0 !important; /* 하단 패딩 제거 */
+    margin-top: 0 !important;
+    /* 하단 마진 제거 */
+    padding-top: 0 !important;
+    /* 하단 패딩 제거 */
 }
 
 .color-label {
-    background-color: #f5f5f5; /* 회색 배경 */
+    background-color: #f5f5f5;
+    /* 회색 배경 */
     padding: 1px 2px;
     border-radius: 12px;
     font-weight: bold;
