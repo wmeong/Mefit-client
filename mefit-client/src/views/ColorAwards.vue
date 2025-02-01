@@ -118,37 +118,61 @@ export default {
 .color-awards-banner {
     text-align: center;
     position: relative;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+    margin-top:20px;
 }
 
 .award-background {
-    position: relative;
-    background: linear-gradient(135deg, #4d2600, #ffcc66, #4d2600);
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    animation: shimmer 3s infinite linear;
+  position: relative;
+  background: #FFC0CB; /* 베이비핑크 기본 배경 색상 */
+  overflow: hidden; /* 자식 요소의 오버플로우 감추기 */
+  padding: 15px;
+  border-radius: 20px;
+  box-shadow: none;
 }
 
+/* shimmer 효과를 위한 ::before 가상요소 */
+.award-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 150%;
+  height: 100%;
+  /* 빛나는 효과를 위한 투명 그라데이션 */
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -150%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+
+
 .color-awards-title {
-    font-size: 3rem;
+    font-size: 1.5rem;
     font-weight: bold;
-    color: #f8e71c;
+    color: #ffffff;
     text-transform: uppercase;
-    text-shadow: 0 0 20px rgba(255, 223, 0, 0.8),
+    text-shadow: 0 0 20px rgba(193, 101, 255, 0.8),
         0 0 40px rgba(255, 223, 0, 0.6), 0 0 60px rgba(255, 223, 0, 0.4);
     letter-spacing: 5px;
 }
 
-/* 별 반짝임 효과 */
-@keyframes shimmer {
-    0% {
-        background-position: -100px 0;
-    }
-    100% {
-        background-position: 100px 0;
-    }
-}
+
+
 
 /* 계절 섹션 스타일 */
 .season-section {
