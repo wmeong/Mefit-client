@@ -158,22 +158,32 @@
         <v-col cols="12" md="4">
           <div class="character-container">
             <!-- 동작(action)과 감정(emotion) 선택 셀렉트 박스 -->
+            <!-- 동작 선택 셀렉트 박스 -->
             <v-select
               label="동작 선택"
               :items="actionOptions"
-              item-text="codeKorean"
+              item-title="codeKorean"
               item-value="code"
               v-model="selectedAction"
+              dense
+              outlined
               @change="updateCharacterImage"
             />
+
+            <!-- 감정 선택 셀렉트 박스 -->
             <v-select
               label="감정 선택"
               :items="emotionOptions"
-              item-text="codeKorean"
+              item-title="codeKorean"
               item-value="code"
               v-model="selectedEmotion"
+              dense
+              outlined
               @change="updateCharacterImage"
             />
+
+            <!-- 무기제외 버튼 -->
+            <v-btn @click="applyWeaponMotion" color="primary" outlined>무기제외</v-btn>
 
             <!-- 캐릭터 이미지 -->
             <v-img
@@ -463,10 +473,17 @@ export default {
       const baseImageUrl = this.characterInfo.character_image.split("?")[0]; // 기본 이미지 URL
       const params = new URLSearchParams();
 
+      // 선택된 동작(action)과 감정(emotion)을 URL 파라미터로 추가
       if (this.selectedAction) params.append("action", this.selectedAction);
       if (this.selectedEmotion) params.append("emotion", this.selectedEmotion);
 
+      // 무기제외(wmotion) 파라미터 추가
+      if (this.selectedWeaponMotion) params.append("wmotion", "W04");
+
+      // 새로운 이미지 URL 생성
       this.characterImage = `${baseImageUrl}?${params.toString()}`;
+
+      console.log("Updated Image URL:", this.characterImage); // 콘솔에서 확인
     },
 
     /**
@@ -482,6 +499,7 @@ export default {
         // 데이터가 있는지 확인
         console.log("응답 데이터:", motions);
 
+        // 동작과 감정 옵션을 분리하여 필터링
         this.actionOptions = motions.filter(m => m.category === "action");
         this.emotionOptions = motions.filter(m => m.category === "emotion");
 
@@ -491,6 +509,15 @@ export default {
       } catch (error) {
         console.error("동작 및 감정 데이터를 불러오는 중 오류 발생:", error);
       }
+    },
+
+    /**
+     * 무기제외 버튼 클릭 시 wmotion 추가
+     */
+    applyWeaponMotion() {
+      // 무기제외를 선택했을 때 updateCharacterImage를 호출하여 wmotion 파라미터 추가
+      this.selectedWeaponMotion = "W04";
+      this.updateCharacterImage();
     },
 
     async savePersonalColor() {
