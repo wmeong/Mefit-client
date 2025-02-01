@@ -247,8 +247,8 @@ export default {
     },
     //하트 만료 시간 체크(10분)
     isExpired(timestamp) {
-      const tenMinutes = 10 * 60 * 1000; // 10분(밀리초)
-      return Date.now() - timestamp > tenMinutes;
+      const thirtyMinutes = 30 * 60 * 1000; // 30분 (밀리초 단위)
+      return Date.now() - timestamp > thirtyMinutes;
     },
     navigateToPersonalColorPage(toneName) {
       // 클릭한 하위 톤으로 이동
