@@ -5,7 +5,7 @@
 
     <!-- 콘텐츠 영역 -->
     <AppContent />
-	
+
     <!-- 풋터 -->
     <AppFooter />
   </div>
@@ -39,5 +39,13 @@ html, body {
   color: #2c3e50;
   margin: 0;
   padding: 0;
+}
+
+/* 전역 스타일: 활성 메뉴 스타일 */
+.menu a.router-link-active {
+  background-color: #007bff51;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
 }
 </style>
