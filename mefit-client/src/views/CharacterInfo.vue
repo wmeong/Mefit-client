@@ -33,10 +33,10 @@
             <button @click="searchAndSaveCharacter" class="search-button">🔍 검색</button>
           </div>
 
-          <div class="compact-select-button-group">
+          <div class="motion-select-button-group">
             <!-- 동작 선택 -->
-            <div class="custom-select-wrapper">
-              <select v-model="selectedAction" class="custom-select" @change="updateCharacterImage">
+            <div class="motion-select-wrapper">
+              <select v-model="selectedAction" class="motion-select" @change="updateCharacterImage">
                 <!-- 기본 옵션 추가 (빈 값으로 설정) -->
                 <option value>기본 모션</option>
                 <option
@@ -47,10 +47,10 @@
               </select>
             </div>
 
-            <div class="custom-select-wrapper">
+            <div class="motion-select-wrapper">
               <select
                 v-model="selectedEmotion"
-                class="custom-select"
+                class="motion-select"
                 @change="updateCharacterImage"
               >
                 <!-- 기본 옵션 추가 (빈 값으로 설정) -->
@@ -64,7 +64,7 @@
             </div>
 
             <!-- 무기 제외 버튼 -->
-            <button class="custom-button" @click="applyWeaponMotion">무기제외</button>
+            <button class="motion-button" @click="applyWeaponMotion">무기제외</button>
           </div>
         </v-col>
       </v-row>
@@ -830,20 +830,20 @@ export default {
   display: block;
   margin: 0 auto;
 }
-.compact-select-button-group {
+.motion-select-button-group {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-top: 8px;
 }
 
-.custom-select-wrapper {
+.motion-select-wrapper {
   position: relative;
   display: inline-block;
   width: 100px;
 }
 
-.custom-select {
+.motion-select {
   width: 100%;
   height: 28px;
   font-size: 10px;
@@ -858,7 +858,7 @@ export default {
 }
 
 /* 커스텀 화살표 */
-.custom-select-wrapper::after {
+.motion-select-wrapper::after {
   content: "▼";
   position: absolute;
   top: 50%;
@@ -870,18 +870,17 @@ export default {
   z-index: 2;
 }
 
-.custom-button {
+.motion-button {
   height: 28px;
   font-size: 10px;
   padding: 0 12px;
-  border: 1px solid #ccc;
   border-radius: 4px;
-  background-color: #007bff;
+  background-color: #67a9f0;
   color: white;
   cursor: pointer;
 }
 
-.custom-button:hover {
+.motion-button:hover {
   background-color: #0056b3;
 }
 
