@@ -5,13 +5,8 @@
       <h2>닉네임을 입력하세요</h2>
       <div class="search-bar">
         <button class="search-icon" @click="searchAndSaveCharacter">🔎</button>
-        <input
-          type="text"
-          placeholder="검색어를 입력하세요"
-          :value="characterName"
-          @input="updateCharacterName"
-          @keydown.enter.prevent="searchAndSaveCharacter"
-        />
+        <input type="text" placeholder="검색어를 입력하세요" :value="characterName" @input="updateCharacterName"
+          @keydown.enter.prevent="searchAndSaveCharacter" />
       </div>
     </div>
 
@@ -22,14 +17,8 @@
         <v-col cols="12" md="12">
           <div class="search-bar-container">
             <!-- 검색창 -->
-            <input
-              type="text"
-              placeholder="닉네임을 입력하세요"
-              :value="characterName"
-              class="search-input"
-              @input="updateCharacterName"
-              @keydown.enter.prevent="searchAndSaveCharacter"
-            />
+            <input type="text" placeholder="닉네임을 입력하세요" :value="characterName" class="search-input"
+              @input="updateCharacterName" @keydown.enter.prevent="searchAndSaveCharacter" />
             <button @click="searchAndSaveCharacter" class="search-button">🔍 검색</button>
           </div>
 
@@ -39,27 +28,17 @@
               <select v-model="selectedAction" class="motion-select" @change="updateCharacterImage">
                 <!-- 기본 옵션 추가 (빈 값으로 설정) -->
                 <option value>기본 모션</option>
-                <option
-                  v-for="action in actionOptions"
-                  :key="action.code"
-                  :value="action.code"
-                >{{ action.codeKorean }}</option>
+                <option v-for="action in actionOptions" :key="action.code" :value="action.code">{{ action.codeKorean }}
+                </option>
               </select>
             </div>
 
             <div class="motion-select-wrapper">
-              <select
-                v-model="selectedEmotion"
-                class="motion-select"
-                @change="updateCharacterImage"
-              >
+              <select v-model="selectedEmotion" class="motion-select" @change="updateCharacterImage">
                 <!-- 기본 옵션 추가 (빈 값으로 설정) -->
                 <option value>기본 감정</option>
-                <option
-                  v-for="emotion in emotionOptions"
-                  :key="emotion.code"
-                  :value="emotion.code"
-                >{{ emotion.codeKorean }}</option>
+                <option v-for="emotion in emotionOptions" :key="emotion.code" :value="emotion.code">{{
+                  emotion.codeKorean }}</option>
               </select>
             </div>
 
@@ -86,8 +65,8 @@
                   <td class="data-cell">
                     <span class="badge">
                       {{
-                      characterInfo.character_level ||
-                      "레벨"
+                        characterInfo.character_level ||
+                        "레벨"
                       }}
                     </span>
                   </td>
@@ -95,21 +74,16 @@
                 <!-- 월드 -->
                 <tr>
                   <td class="icon-cell">
-                    <img
-                      v-if="characterInfo.world_name"
-                      :src="getWorldIcon(
-                                            characterInfo.world_name
-                                        )
-                                            "
-                      alt="world-icon"
-                      class="world-icon"
-                    />
+                    <img v-if="characterInfo.world_name" :src="getWorldIcon(
+                      characterInfo.world_name
+                    )
+                      " alt="world-icon" class="world-icon" />
                   </td>
                   <td class="data-cell">
                     <span class="badge">
                       {{
-                      characterInfo.world_name ||
-                      "월드명"
+                        characterInfo.world_name ||
+                        "월드명"
                       }}
                     </span>
                   </td>
@@ -117,21 +91,17 @@
                 <!-- 성별 -->
                 <tr>
                   <td class="icon-cell">
-                    <v-avatar
-                      :color="characterInfo.character_gender ===
-                                            '여'
-                                            ? '#FFC0CB'
-                                            : '#87CEEB'
-                                            "
-                      size="24"
-                      class="gender-icon"
-                    >
+                    <v-avatar :color="characterInfo.character_gender ===
+                      '여'
+                      ? '#FFC0CB'
+                      : '#87CEEB'
+                      " size="24" class="gender-icon">
                       <v-icon small color="white">
                         {{
-                        characterInfo.character_gender ===
-                        "여"
-                        ? "mdi-gender-female"
-                        : "mdi-gender-male"
+                          characterInfo.character_gender ===
+                            "여"
+                            ? "mdi-gender-female"
+                            : "mdi-gender-male"
                         }}
                       </v-icon>
                     </v-avatar>
@@ -139,8 +109,8 @@
                   <td class="data-cell">
                     <span class="badge">
                       {{
-                      characterInfo.character_gender ||
-                      "성별"
+                        characterInfo.character_gender ||
+                        "성별"
                       }}
                     </span>
                   </td>
@@ -156,8 +126,8 @@
                   <td class="data-cell">
                     <span class="badge">
                       {{
-                      characterInfo.character_guild_name ||
-                      "길드명"
+                        characterInfo.character_guild_name ||
+                        "길드명"
                       }}
                     </span>
                   </td>
@@ -165,20 +135,16 @@
                 <!-- 직업 -->
                 <tr>
                   <td class="icon-cell">
-                    <img
-                      :src="getJobIcon(
-                                            characterInfo.character_class
-                                        )
-                                            "
-                      alt="job-icon"
-                      class="job-icon"
-                    />
+                    <img :src="getJobIcon(
+                      characterInfo.character_class
+                    )
+                      " alt="job-icon" class="job-icon" />
                   </td>
                   <td class="data-cell">
                     <span class="badge">
                       {{
-                      characterInfo.character_class ||
-                      "직업"
+                        characterInfo.character_class ||
+                        "직업"
                       }}
                     </span>
                   </td>
@@ -193,42 +159,29 @@
           <div class="character-container">
             <!-- 동작(action)과 감정(emotion) 선택 셀렉트 박스 -->
             <!-- 캐릭터 이미지 -->
-            <v-img
-              :src="characterImage ||
-                            'https://via.placeholder.com/150'
-                            "
-              alt="Character Image"
-              class="character-image"
-              :style="{
-                                transform: `scale(${scale})`,
-                                transition: 'transform 0.3s ease-in-out',
-                                'margin-bottom': '40px',
-                            }"
-            ></v-img>
+            <v-img :src="characterImage ||
+              'https://via.placeholder.com/150'
+              " alt="Character Image" class="character-image" :style="{
+                transform: `scale(${scale})`,
+                transition: 'transform 0.3s ease-in-out',
+                'margin-bottom': '40px',
+              }"></v-img>
             <!-- 버튼 그룹 -->
             <div class="button-group">
               <!-- 확대/축소 버튼 -->
-              <v-btn
-                @click="toggleZoom"
-                class="modern-btn"
-                elevation="2"
-                style="width: 40px; padding: 0; min-width: 40px"
-              >
+              <v-btn @click="toggleZoom" class="modern-btn" elevation="2"
+                style="width: 40px; padding: 0; min-width: 40px">
                 <v-icon size="20">
                   {{
-                  scale === 0.7
-                  ? "mdi-magnify-plus-outline"
-                  : "mdi-magnify-minus-outline"
+                    scale === 0.7
+                      ? "mdi-magnify-plus-outline"
+                      : "mdi-magnify-minus-outline"
                   }}
                 </v-icon>
               </v-btn>
               <!-- 다운로드 버튼 -->
-              <v-btn
-                @click="downloadImage"
-                class="modern-btn"
-                elevation="2"
-                style="width: 40px; padding: 0; min-width: 40px"
-              >
+              <v-btn @click="downloadImage" class="modern-btn" elevation="2"
+                style="width: 40px; padding: 0; min-width: 40px">
                 <v-icon size="20">mdi-download</v-icon>
               </v-btn>
             </div>
@@ -240,15 +193,12 @@
           <div class="modern-card">
             <h3 class="font-weight-bold">퍼스널컬러</h3>
             <!-- 퍼스널 컬러 분석 결과 -->
-            <div
-              :class="[
-                            'text-center',
-                            'personal-color-result',
-                            personalColorGroup,
-                        ]"
-              @click="navigateToPersonalColorPage"
-              style="cursor: pointer"
-            >{{ personalColorAnalysis }}</div>
+            <div :class="[
+              'text-center',
+              'personal-color-result',
+              personalColorGroup,
+            ]" @click="navigateToPersonalColorPage" style="cursor: pointer">{{ personalColorAnalysis }}
+            </div>
 
             <!-- 메인 컬러 표시 -->
             <v-row class="main-color mb-0 pb-0">
@@ -256,18 +206,8 @@
                 <h4 class="text-left color-label">메인컬러</h4>
               </v-col>
               <v-col cols="9" class="d-flex">
-                <v-avatar
-                  v-for="(
-                                        color, index
-                                    ) in characterInfo.main_colors || [
-                                                '#ccc',
-                                                '#ddd',
-                                            ]"
-                  :key="'main-color-' + index"
-                  :color="color"
-                  size="33"
-                  class="mr-2"
-                ></v-avatar>
+                <v-avatar v-for="(color, index) in characterInfo.main_colors || ['#ccc', '#ddd']"
+                  :key="'main-color-' + index" :color="color" size="33" class="mr-2"></v-avatar>
               </v-col>
             </v-row>
 
@@ -277,18 +217,8 @@
                 <h4 class="text-left color-label">서브컬러</h4>
               </v-col>
               <v-col cols="9" class="d-flex">
-                <v-avatar
-                  v-for="(
-                                        color, index
-                                    ) in characterInfo.sub_colors || [
-                                                '#eee',
-                                                '#fff',
-                                            ]"
-                  :key="'sub-color-' + index"
-                  :color="color"
-                  size="33"
-                  class="mr-2"
-                ></v-avatar>
+                <v-avatar v-for="(color, index) in characterInfo.sub_colors || ['#eee', '#fff']"
+                  :key="'sub-color-' + index" :color="color" size="33" class="mr-2"></v-avatar>
               </v-col>
             </v-row>
           </div>
@@ -297,14 +227,7 @@
     </div>
     <!-- 4번 : 캐시 장비 정보 영역 -->
     <v-row class="mt-4" dense>
-      <v-col
-        v-for="item in filteredItems"
-        :key="item.type"
-        cols="12"
-        sm="6"
-        md="4"
-        class="equipment-item"
-      >
+      <v-col v-for="item in filteredItems" :key="item.type" cols="12" sm="6" md="4" class="equipment-item">
         <!-- 중앙 정렬을 위한 flex 컨테이너 -->
         <div class="equipment-content">
           <!-- 아이콘 -->
@@ -339,13 +262,8 @@
       </v-col>
     </v-row>
     <!-- 공통 알림 팝업 추가 -->
-    <CustomAlert
-      v-if="showAlert"
-      :visible="showAlert"
-      title="알림"
-      message="존재하지 않는 캐릭터입니다."
-      @close="showAlert = false"
-    />
+    <CustomAlert v-if="showAlert" :visible="showAlert" title="알림" message="존재하지 않는 캐릭터입니다."
+      @close="showAlert = false" />
   </v-container>
 </template>
 
@@ -626,7 +544,12 @@ export default {
         // ✅ 상위 30개 색상 추출 및 가중치 계산
         const sortedColors = Object.entries(colorCounts)
           .sort((a, b) => b[1] - a[1])
+          .map(([color]) => color)
           .slice(0, 30);
+
+        // ✅ 메인컬러와 서브컬러 분리 (6개 추출)
+        this.characterInfo.main_colors = sortedColors.slice(0, 3);  // 메인 컬러 3개
+        this.characterInfo.sub_colors = sortedColors.slice(3, 6);   // 서브 컬러 3개
 
         let hSum = 0,
           sSum = 0,
@@ -678,8 +601,8 @@ export default {
           max === r
             ? (g - b) / d + (g < b ? 6 : 0)
             : max === g
-            ? (b - r) / d + 2
-            : (r - g) / d + 4;
+              ? (b - r) / d + 2
+              : (r - g) / d + 4;
       h /= 6;
       return { h: h * 360, s: s * 100, v: v * 100 };
     },
