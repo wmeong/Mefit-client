@@ -291,7 +291,6 @@ export default {
             });
             this.votedCharacters.delete(avatar.characterImage);
             this.saveHeartState();
-            console.log("✅ 투표 취소 성공:", avatar.characterImage);
           } catch (error) {
             console.error("투표 취소 중 오류 발생:", error);
           } finally {
@@ -316,7 +315,6 @@ export default {
         });
         this.votedCharacters.add(avatar.characterImage);
         this.saveHeartState();
-        console.log("✅ 투표 성공:", avatar.characterImage);
       } catch (error) {
         console.error("투표 중 오류 발생:", error);
       }

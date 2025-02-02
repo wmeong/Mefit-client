@@ -114,13 +114,6 @@ export default {
                 query: { q: name },
             });
         },
-
-        /**
-         * 더보기 버튼 클릭 시 추가 캐릭터 불러오기 (페이징 처리 가능)
-         */
-        loadMoreCharacters() {
-            console.log("Load more characters... (페이징 로직 구현)");
-        },
     },
     created() {
         // 컴포넌트 생성 시 인기 캐릭터 목록 가져오기

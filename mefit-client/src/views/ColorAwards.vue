@@ -71,7 +71,6 @@ export default {
                     const response = await axios.get("/api/personal/rank", {
                         params: { season },
                     });
-                    console.log(`${season} 데이터 응답:`, response.data); // 응답 확인 로그
                     if (
                         Array.isArray(response.data) &&
                         response.data.length > 0
@@ -92,7 +91,6 @@ export default {
                 return;
             }
 
-            console.log("🔍 팝업을 열 이미지 URL:", characterImage); // 확인 로그
             this.selectedCharacter = { image: characterImage }; // 이미지 설정
             this.popupVisible = true; // 팝업 열기
         },

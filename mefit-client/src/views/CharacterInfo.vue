@@ -591,8 +591,6 @@ export default {
             this.characterImage = params.toString()
                 ? `${baseImageUrl}?${params.toString()}`
                 : baseImageUrl;
-
-            console.log("Updated Image URL:", this.characterImage);
         },
 
         /**
@@ -604,8 +602,7 @@ export default {
                     `http://localhost:8081/api/characters/motions`
                 );
                 const motions = response.data;
-                console.log("가져오는 모션들");
-                console.log(motions);
+
                 // 동작과 감정 옵션을 분리하여 필터링
                 this.actionOptions = motions.filter(
                     (m) => m.category === "action"
@@ -773,10 +770,6 @@ export default {
             // 메인/서브 컬러 저장
             this.characterInfo.main_colors = mainColors;
             this.characterInfo.sub_colors = subColors;
-            console.log("메인");
-            console.log(mainColors);
-            console.log("서브");
-            console.log(subColors);
         },
 
         // 메인, 서브컬러 분석을 위한 hsv -> rgb 변환 메서드

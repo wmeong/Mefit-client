@@ -138,8 +138,6 @@ export default {
           params: { imageUrl: this.characterData.image }
         });
 
-        console.log("가져온 데이터:", response.data);
-
         const itemData = response.data || {};
         const searchedCashItemDTOS = itemData.searchedCashItemDTOS || [];
         const searchedCashFaceDTOS = itemData.searchedCashFaceDTOS || [];

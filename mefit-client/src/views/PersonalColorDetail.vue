@@ -162,7 +162,6 @@ export default {
           }
         );
         this.avatars = response.data;
-        console.log("아바타들" + JSON.stringify(this.avatars, null, 2));
       } catch (error) {
         console.error("데이터 로드 중 오류 발생:", error);
       }
@@ -220,7 +219,6 @@ export default {
         // ✅ 새로운 투표 상태 저장
         this.votedCharacters.add(avatar.characterImage);
         this.saveHeartState();
-        console.log("✅ 투표 성공:", avatar.characterImage);
       } catch (error) {
         console.error("투표 중 오류 발생:", error);
       } finally {
@@ -257,8 +255,6 @@ export default {
       });
     },
     openPopup(characterImage) {
-      console.log("🔍 클릭한 캐릭터 이미지 URL:", characterImage); // << 클릭한 이미지 확인
-
       this.selectedCharacter = { image: characterImage };
       this.popupVisible = true;
     }
