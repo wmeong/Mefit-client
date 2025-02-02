@@ -17,10 +17,11 @@
 
     <!-- 데이터가 있을 경우 -->
     <div v-else>
-      <!-- 검색창 -->
+      <!-- 검색창과 선택박스 영역 -->
       <v-row dense class="search-bar-row">
         <v-col cols="12" md="12">
           <div class="search-bar-container">
+            <!-- 검색창 -->
             <input
               type="text"
               placeholder="닉네임을 입력하세요"
@@ -29,8 +30,41 @@
               @input="updateCharacterName"
               @keydown.enter.prevent="searchAndSaveCharacter"
             />
-
             <button @click="searchAndSaveCharacter" class="search-button">🔍 검색</button>
+          </div>
+
+          <div class="compact-select-button-group">
+            <!-- 동작 선택 -->
+            <div class="custom-select-wrapper">
+              <select v-model="selectedAction" class="custom-select" @change="updateCharacterImage">
+                <!-- 기본 옵션 추가 (빈 값으로 설정) -->
+                <option value>기본 모션</option>
+                <option
+                  v-for="action in actionOptions"
+                  :key="action.code"
+                  :value="action.code"
+                >{{ action.codeKorean }}</option>
+              </select>
+            </div>
+
+            <div class="custom-select-wrapper">
+              <select
+                v-model="selectedEmotion"
+                class="custom-select"
+                @change="updateCharacterImage"
+              >
+                <!-- 기본 옵션 추가 (빈 값으로 설정) -->
+                <option value>기본 감정</option>
+                <option
+                  v-for="emotion in emotionOptions"
+                  :key="emotion.code"
+                  :value="emotion.code"
+                >{{ emotion.codeKorean }}</option>
+              </select>
+            </div>
+
+            <!-- 무기 제외 버튼 -->
+            <button class="custom-button" @click="applyWeaponMotion">무기제외</button>
           </div>
         </v-col>
       </v-row>
@@ -158,36 +192,9 @@
         <v-col cols="12" md="4">
           <div class="character-container">
             <!-- 동작(action)과 감정(emotion) 선택 셀렉트 박스 -->
-            <!-- 동작 선택 셀렉트 박스 -->
-            <v-select
-              label="동작 선택"
-              :items="actionOptions"
-              item-title="codeKorean"
-              item-value="code"
-              v-model="selectedAction"
-              dense
-              outlined
-              @change="updateCharacterImage"
-            />
-
-            <!-- 감정 선택 셀렉트 박스 -->
-            <v-select
-              label="감정 선택"
-              :items="emotionOptions"
-              item-title="codeKorean"
-              item-value="code"
-              v-model="selectedEmotion"
-              dense
-              outlined
-              @change="updateCharacterImage"
-            />
-
-            <!-- 무기제외 버튼 -->
-            <v-btn @click="applyWeaponMotion" color="primary" outlined>무기제외</v-btn>
-
             <!-- 캐릭터 이미지 -->
             <v-img
-              :src="characterInfo.character_image ||
+              :src="characterImage ||
                             'https://via.placeholder.com/150'
                             "
               alt="Character Image"
@@ -354,6 +361,7 @@ export default {
       scale: 0.7, // 초기 확대 배율
       characterName: "", // 검색어
       characterInfo: {}, // 캐릭터 정보 데이터
+      characterImage: "",
       showAlert: false, // 알림 팝업 상태 추가
       message: "", // 오류 메시지
       characterCashItem: [],
@@ -376,11 +384,21 @@ export default {
       ],
       actionOptions: [], // 초기 빈 배열
       emotionOptions: [], // 초기 빈 배열
-      selectedAction: null,
-      selectedEmotion: null
+      selectedAction: "", // 초기값을 빈 문자열로 설정
+      selectedEmotion: ""
     };
   },
   methods: {
+    resetValues() {
+      this.characterName = ""; // 검색어 초기화
+      this.characterInfo = {}; // 캐릭터 정보 초기화
+      this.characterImage = ""; // 캐릭터 이미지 초기화
+      this.selectedAction = ""; // 동작 선택 초기화
+      this.selectedEmotion = ""; // 감정 선택 초기화
+      this.selectedWeaponMotion = ""; // 무기 제외 초기화
+      this.actionOptions = []; // 동작 옵션 초기화
+      this.emotionOptions = []; // 감정 옵션 초기화
+    },
     // 월드명 매핑 객체
     getWorldIcon(worldName) {
       const worldNameMap = {
@@ -413,7 +431,7 @@ export default {
     },
     async downloadImage() {
       try {
-        const response = await fetch(this.characterInfo.character_image);
+        const response = await fetch(this.characterImage);
         const blob = await response.blob();
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
@@ -432,6 +450,9 @@ export default {
      */
     async searchAndSaveCharacter() {
       if (!this.characterName) return; // 캐릭터 이름이 없으면 중단
+      this.selectedAction = "";
+      this.selectedEmotion = "";
+
       try {
         const ocidResponse = await axios.get(
           `http://localhost:8081/api/characters/ocid`,
@@ -443,6 +464,7 @@ export default {
           }
         );
         this.characterInfo = ocidResponse.data.characterInfoDTO;
+        this.characterImage = this.characterInfo.character_image;
         this.message = "";
 
         this.characterCashItem = ocidResponse.data.searchedCashItemDTOS;
@@ -452,7 +474,7 @@ export default {
         // 이미지가 로드된 후 extractColors 실행
         const img = new Image();
         img.crossOrigin = "Anonymous"; // 크로스 도메인 이미지 처리
-        img.src = this.characterInfo.character_image;
+        img.src = this.characterImage;
 
         img.onload = async () => {
           await this.extractColors(img); // ✅ 퍼스널컬러 분석을 기다린 후 실행
@@ -470,20 +492,23 @@ export default {
      * 캐릭터 이미지 URL을 업데이트하는 메서드
      */
     updateCharacterImage() {
-      const baseImageUrl = this.characterInfo.character_image.split("?")[0]; // 기본 이미지 URL
+      console.log("updateCharacterImage 호출됨?");
+      const baseImageUrl = this.characterImage.split("?")[0]; // 기본 이미지 URL
       const params = new URLSearchParams();
 
-      // 선택된 동작(action)과 감정(emotion)을 URL 파라미터로 추가
+      // 선택된 동작(action)과 감정(emotion)이 있을 경우만 URL 파라미터에 추가
       if (this.selectedAction) params.append("action", this.selectedAction);
       if (this.selectedEmotion) params.append("emotion", this.selectedEmotion);
 
       // 무기제외(wmotion) 파라미터 추가
       if (this.selectedWeaponMotion) params.append("wmotion", "W04");
 
-      // 새로운 이미지 URL 생성
-      this.characterImage = `${baseImageUrl}?${params.toString()}`;
+      // 파라미터가 없는 경우 기본 이미지를 유지
+      this.characterImage = params.toString()
+        ? `${baseImageUrl}?${params.toString()}`
+        : baseImageUrl;
 
-      console.log("Updated Image URL:", this.characterImage); // 콘솔에서 확인
+      console.log("Updated Image URL:", this.characterImage);
     },
 
     /**
@@ -691,6 +716,7 @@ export default {
     }
   },
   created() {
+    this.resetValues(); // 재검색 시 값 초기화
     // 라우터의 쿼리에서 캐릭터 이름 가져오기
     this.characterName = this.$route.query.q || "";
     if (this.characterName) {
@@ -784,6 +810,7 @@ export default {
   /* 양쪽 패딩 설정 */
 }
 
+/* 2번 영역*/
 .character-container {
   position: relative;
   height: 230px;
@@ -794,8 +821,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* overflow: hidden; */
-  /* 히든버튼 */
 }
 
 .character-image {
@@ -804,7 +829,103 @@ export default {
   width: auto;
   display: block;
   margin: 0 auto;
-  /* 이미지 가운데 정렬 */
+}
+.compact-select-button-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.custom-select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100px;
+}
+
+.custom-select {
+  width: 100%;
+  height: 28px;
+  font-size: 10px;
+  padding: 4px;
+  padding-right: 24px; /* 화살표 공간 확보 */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  appearance: none;
+  background: white;
+  position: relative;
+  z-index: 1;
+}
+
+/* 커스텀 화살표 */
+.custom-select-wrapper::after {
+  content: "▼";
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: #333;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.custom-button {
+  height: 28px;
+  font-size: 10px;
+  padding: 0 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.custom-button:hover {
+  background-color: #0056b3;
+}
+
+/** */
+.button-group {
+  position: absolute;
+  bottom: 16px;
+  /* 컨테이너 하단에서 여백 */
+  right: 16px;
+  /* 컨테이너 오른쪽에서 여백 */
+  display: flex;
+  gap: 8px;
+  /* 버튼 간 간격 */
+  z-index: 10;
+  /* 이미지 위에 위치 */
+}
+
+.button-group v-btn {
+  width: 40px;
+  /* 버튼 크기 */
+  height: 40px;
+  border-radius: 50%;
+  /* 원형 버튼 */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.button-row {
+  margin-top: 16px;
+  /* 버튼과 이미지 간격 */
+  display: flex;
+  justify-content: center;
+  /* 버튼을 가운데 정렬 */
+  gap: 16px;
+  /* 버튼 간격 */
+}
+
+.button-row v-btn {
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  /* 버튼 그림자 */
+}
+
+.zoom-button-container {
+  margin-top: 55px;
+  text-align: center;
 }
 
 /*1,2,3, 일렬로 */
@@ -881,49 +1002,6 @@ export default {
   font-size: 12px;
   color: #666;
   line-height: 1.4;
-}
-
-.button-row {
-  margin-top: 16px;
-  /* 버튼과 이미지 간격 */
-  display: flex;
-  justify-content: center;
-  /* 버튼을 가운데 정렬 */
-  gap: 16px;
-  /* 버튼 간격 */
-}
-
-.button-row v-btn {
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  /* 버튼 그림자 */
-}
-
-.zoom-button-container {
-  margin-top: 55px;
-  /* 이미지와 버튼 사이 간격을 더 넓게 */
-  text-align: center;
-}
-
-.button-group {
-  position: absolute;
-  bottom: 16px;
-  /* 컨테이너 하단에서 여백 */
-  right: 16px;
-  /* 컨테이너 오른쪽에서 여백 */
-  display: flex;
-  gap: 8px;
-  /* 버튼 간 간격 */
-  z-index: 10;
-  /* 이미지 위에 위치 */
-}
-
-.button-group v-btn {
-  width: 40px;
-  /* 버튼 크기 */
-  height: 40px;
-  border-radius: 50%;
-  /* 원형 버튼 */
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .search-bar {
