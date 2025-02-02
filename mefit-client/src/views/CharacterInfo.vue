@@ -317,7 +317,7 @@
                                 <v-avatar
                                     v-for="(
                                         color, index
-                                    ) in characterInfo.main_colors || [
+                                    ) in characterInfo.mainColors || [
                                         '#ccc',
                                         '#ddd',
                                     ]"
@@ -344,7 +344,7 @@
                                 <v-avatar
                                     v-for="(
                                         color, index
-                                    ) in characterInfo.sub_colors || [
+                                    ) in characterInfo.subColors || [
                                         '#eee',
                                         '#fff',
                                     ]"
@@ -463,6 +463,8 @@ export default {
             selectedAction: "", // 초기값을 빈 문자열로 설정
             selectedEmotion: "",
             selectedWmotion: "",
+            mainColorsForSave: [],
+            subColorsForSave: [],
         };
     },
     methods: {
@@ -562,7 +564,7 @@ export default {
                     this.analyzeMainAndSubColors(sortedColors);
                     this.analyzePersonalColor(sortedColors);
 
-                    this.savePersonalColor(); // 퍼스널컬러 저장
+                    this.saveColors(); // 퍼스널컬러 저장
                 };
 
                 this.message = "";
@@ -624,14 +626,18 @@ export default {
                 );
             }
         },
-
-        async savePersonalColor() {
+        async saveColors() {
             try {
+                const mainColorString = this.mainColorsForSave.join(",");
+                const subColorString = this.subColorsForSave.join(",");
+
                 await axios.post(
-                    `http://localhost:8081/api/characters/personal-color`,
+                    `http://localhost:8081/api/characters/colors`,
                     new URLSearchParams({
                         characterImage: this.characterInfo.character_image,
                         personalColor: this.personalColorAnalysis,
+                        mainColor: mainColorString,
+                        subColor: subColorString,
                     }),
                     {
                         headers: {
@@ -643,6 +649,7 @@ export default {
                 console.error("퍼스널컬러 전송 중 오류가 발생했습니다:", error);
             }
         },
+
         getJobIcon(jobName) {
             try {
                 return require(`@/assets/job/${jobName}.png`);
@@ -735,33 +742,8 @@ export default {
                 avgV
             );
         },
-        // analyzeMainAndSubColors(sortedColors) {
-        //     // 필요한 인덱스를 배열로 정의
-        //     const selectedIndices = [0, 2, 5, 7, 10, 13];
-
-        //     // 해당 인덱스의 색상들만 선택
-        //     const selectedColors = selectedIndices
-        //         .map((index) => sortedColors[index])
-        //         .filter(Boolean);
-
-        //     // 메인 컬러 추출
-        //     const mainColors = selectedColors.slice(0, 3).map((colorKey) => {
-        //         const [h, s, v] = colorKey.split(",").map(Number);
-        //         return this.hsvToRgb(h, s, v); // HSV → RGB 변환
-        //     });
-
-        //     // 서브 컬러 추출
-        //     const subColors = selectedColors.slice(3, 6).map((colorKey) => {
-        //         const [h, s, v] = colorKey.split(",").map(Number);
-        //         return this.hsvToRgb(h, s, v); // HSV → RGB 변환
-        //     });
-
-        //     // 메인/서브 컬러 저장
-        //     this.characterInfo.main_colors = mainColors;
-        //     this.characterInfo.sub_colors = subColors;
-        // },
+        // 메인, 서브컬러 분석 메서드
         analyzeMainAndSubColors(sortedColors) {
-            // 주어진 색상 그룹을 20 단위로 반올림하여 통합
             const groupColorsByRange = (colors) => {
                 const groupedColors = {};
 
@@ -778,37 +760,35 @@ export default {
                         (groupedColors[groupedKey] || 0) + 1;
                 });
 
-                // 그룹화된 색상들을 정렬하여 반환
                 return Object.entries(groupedColors)
-                    .sort((a, b) => b[1] - a[1]) // 빈도 순 정렬
+                    .sort((a, b) => b[1] - a[1])
                     .map(([key]) => key);
             };
 
-            // 색상을 그룹화하고 상위 8개 색상 추출
             const groupedSortedColors = groupColorsByRange(sortedColors).slice(
                 0,
                 8
             );
 
-            // 메인 컬러: 상위 4개
-            const mainColors = groupedSortedColors
+            // 메인 컬러: 상위 4개 (HEX로 변환 후 저장)
+            this.mainColorsForSave = groupedSortedColors
                 .slice(0, 4)
                 .map((colorKey) => {
                     const [h, s, v] = colorKey.split(",").map(Number);
-                    return this.hsvToRgb(h, s, v); // HSV → RGB 변환
+                    return this.hsvToHex(h, s, v); // HEX 변환 후 저장
                 });
 
-            // 서브 컬러: 다음 4개
-            const subColors = groupedSortedColors
+            // 서브 컬러: 다음 4개 (HEX로 변환 후 저장)
+            this.subColorsForSave = groupedSortedColors
                 .slice(4, 8)
                 .map((colorKey) => {
                     const [h, s, v] = colorKey.split(",").map(Number);
-                    return this.hsvToRgb(h, s, v); // HSV → RGB 변환
+                    return this.hsvToHex(h, s, v); // HEX 변환 후 저장
                 });
 
-            // 메인/서브 컬러 저장
-            this.characterInfo.main_colors = mainColors;
-            this.characterInfo.sub_colors = subColors;
+            // 화면 표시용
+            this.characterInfo.mainColors = this.mainColorsForSave;
+            this.characterInfo.subColors = this.subColorsForSave;
         },
 
         // 메인, 서브컬러 분석을 위한 hsv -> rgb 변환 메서드
@@ -874,6 +854,55 @@ export default {
             h /= 6;
             return { h: h * 360, s: s * 100, v: v * 100 };
         },
+
+        // 메인/서브 컬러 분석을 위한 hsv -> hex 메서드
+        hsvToHex(h, s, v) {
+            s /= 100;
+            v /= 100;
+
+            const c = v * s;
+            const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+            const m = v - c;
+
+            let r = 0,
+                g = 0,
+                b = 0;
+            if (h >= 0 && h < 60) {
+                r = c;
+                g = x;
+                b = 0;
+            } else if (h >= 60 && h < 120) {
+                r = x;
+                g = c;
+                b = 0;
+            } else if (h >= 120 && h < 180) {
+                r = 0;
+                g = c;
+                b = x;
+            } else if (h >= 180 && h < 240) {
+                r = 0;
+                g = x;
+                b = c;
+            } else if (h >= 240 && h < 300) {
+                r = x;
+                g = 0;
+                b = c;
+            } else {
+                r = c;
+                g = 0;
+                b = x;
+            }
+
+            r = Math.round((r + m) * 255);
+            g = Math.round((g + m) * 255);
+            b = Math.round((b + m) * 255);
+
+            // HEX 값으로 반환
+            return `#${((1 << 24) + (r << 16) + (g << 8) + b)
+                .toString(16)
+                .slice(1)}`;
+        },
+
         findClosestPersonalColor(h, s, v) {
             const personalColors = [
                 { tone: "봄웜 브라이트", h: [0, 30], s: 60, v: 55 }, // 채도(S) 기준 상향
@@ -1354,6 +1383,7 @@ export default {
     flex-direction: column;
     align-items: center;
 }
+
 /*퍼스널컬러*/
 .personal-color-card {
     height: 230px;
