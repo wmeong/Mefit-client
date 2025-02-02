@@ -944,17 +944,14 @@ export default {
   padding: 12px;
   background-color: #ffffff;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  min-height: 120px;
-  /* 적절한 최소 높이 설정 */
+  min-height: 90px;
   transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
 .equipment-content {
   display: flex;
   align-items: center;
-  /* 수직 가운데 정렬 */
   width: 100%;
-  /* 가로 정렬 문제 해결 */
 }
 
 .equipment-icon-container {
@@ -988,7 +985,7 @@ export default {
 
 .equipment-name {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
   margin-bottom: 5px;
 }
 
@@ -1031,21 +1028,13 @@ export default {
 .badge {
   display: inline-block;
   padding: 0px 8px;
-  /* 텍스트 주변 여백 */
   border: 1px solid #ccc;
-  /* 테두리 색상 */
   border-radius: 12px;
-  /* 둥근 테두리 */
   background-color: #f5f5f5;
-  /* 배경색 */
   font-size: 0.875rem;
-  /* 글씨 크기 */
   font-weight: 500;
-  /* 글씨 굵기 */
   color: #333;
-  /* 텍스트 색상 */
   margin-right: 8px;
-  /* 요소 간 간격 */
 }
 
 .character-info-table {
@@ -1141,20 +1130,13 @@ export default {
 .search-bar-container {
   display: flex;
   justify-content: center;
-  /* 가운데 정렬 */
   align-items: center;
   width: 100%;
-  /* 전체 길이 */
   padding: 12px 16px;
-  /* 여백 추가 */
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  /* 부드러운 그림자 */
   background-color: #ffffff;
-  /* 배경색 */
   border-radius: 8px;
-  /* 둥근 모서리 */
   margin-bottom: 16px;
-  /* 아래 컨텐츠와 간격 */
 }
 
 .search-input {
