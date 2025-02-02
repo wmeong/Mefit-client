@@ -96,20 +96,12 @@
                             </select>
                         </div>
 
-                        <!-- 무기 제외 버튼 -->
+                        <!-- 컬러픽 버튼 -->
                         <button
-                            v-if="!exceptWeapon"
-                            class="except-motion-button"
+                            class="motion-button"
                             @click="applyWeaponMotion"
                         >
-                            무기제외
-                        </button>
-                        <button
-                            v-else
-                            class="add-motion-button"
-                            @click="applyWeaponMotion"
-                        >
-                            무기추가
+                            컬러픽
                         </button>
                     </div>
                 </v-col>
@@ -118,7 +110,7 @@
             <v-row class="upper-side" dense>
                 <!-- 1번 기본 정보 영역 -->
                 <v-col cols="12" md="3">
-                    <div class="modern-card">
+                    <div class="character-info-card">
                         <h3 class="font-weight-bold">캐릭터 정보</h3>
                         <table class="character-info-table">
                             <tbody>
@@ -295,7 +287,7 @@
 
                 <!-- 3번: 퍼스널 컬러 영역 -->
                 <v-col cols="12" md="5">
-                    <div class="modern-card">
+                    <div class="personal-color-card">
                         <h3 class="font-weight-bold">퍼스널컬러</h3>
                         <!-- 퍼스널 컬러 분석 결과 -->
                         <div
@@ -311,11 +303,17 @@
                         </div>
 
                         <!-- 메인 컬러 표시 -->
-                        <v-row class="main-color mb-0 pb-0">
-                            <v-col cols="3" class="text-left">
-                                <h4 class="text-left color-label">메인컬러</h4>
+                        <v-row class="main-color mb-0 pb-0 align-items-center">
+                            <v-col
+                                cols="3"
+                                class="d-flex align-items-center justify-content-end pr-1"
+                            >
+                                <h4 class="color-label">메인컬러</h4>
                             </v-col>
-                            <v-col cols="9" class="d-flex">
+                            <v-col
+                                cols="9"
+                                class="d-flex align-items-center justify-content-start"
+                            >
                                 <v-avatar
                                     v-for="(
                                         color, index
@@ -331,12 +329,18 @@
                             </v-col>
                         </v-row>
 
-                        <!-- 서브컬러 표시 -->
-                        <v-row class="sub-color mt-0 pt-0">
-                            <v-col cols="3" class="text-left">
-                                <h4 class="text-left color-label">서브컬러</h4>
+                        <!-- 서브 컬러 표시 -->
+                        <v-row class="sub-color mt-0 pt-0 align-items-center">
+                            <v-col
+                                cols="3"
+                                class="d-flex align-items-center justify-content-end pr-1"
+                            >
+                                <h4 class="color-label">서브컬러</h4>
                             </v-col>
-                            <v-col cols="9" class="d-flex">
+                            <v-col
+                                cols="9"
+                                class="d-flex align-items-center justify-content-start"
+                            >
                                 <v-avatar
                                     v-for="(
                                         color, index
@@ -621,21 +625,6 @@ export default {
             }
         },
 
-        /**
-         * 무기제외 버튼 클릭 시 wmotion 추가
-         */
-        applyWeaponMotion() {
-            if (!this.exceptWeapon) {
-                this.selectedWeaponMotion = "W04";
-                this.updateCharacterImage();
-                this.exceptWeapon = true;
-            } else {
-                this.selectedWeaponMotion = "W00";
-                this.updateCharacterImage();
-                this.exceptWeapon = false;
-            }
-        },
-
         async savePersonalColor() {
             try {
                 await axios.post(
@@ -746,26 +735,76 @@ export default {
                 avgV
             );
         },
+        // analyzeMainAndSubColors(sortedColors) {
+        //     // 필요한 인덱스를 배열로 정의
+        //     const selectedIndices = [0, 2, 5, 7, 10, 13];
+
+        //     // 해당 인덱스의 색상들만 선택
+        //     const selectedColors = selectedIndices
+        //         .map((index) => sortedColors[index])
+        //         .filter(Boolean);
+
+        //     // 메인 컬러 추출
+        //     const mainColors = selectedColors.slice(0, 3).map((colorKey) => {
+        //         const [h, s, v] = colorKey.split(",").map(Number);
+        //         return this.hsvToRgb(h, s, v); // HSV → RGB 변환
+        //     });
+
+        //     // 서브 컬러 추출
+        //     const subColors = selectedColors.slice(3, 6).map((colorKey) => {
+        //         const [h, s, v] = colorKey.split(",").map(Number);
+        //         return this.hsvToRgb(h, s, v); // HSV → RGB 변환
+        //     });
+
+        //     // 메인/서브 컬러 저장
+        //     this.characterInfo.main_colors = mainColors;
+        //     this.characterInfo.sub_colors = subColors;
+        // },
         analyzeMainAndSubColors(sortedColors) {
-            // 필요한 인덱스를 배열로 정의
-            const selectedIndices = [0, 2, 5, 8, 10, 12];
+            // 주어진 색상 그룹을 20 단위로 반올림하여 통합
+            const groupColorsByRange = (colors) => {
+                const groupedColors = {};
 
-            // 해당 인덱스의 색상들만 선택
-            const selectedColors = selectedIndices
-                .map((index) => sortedColors[index])
-                .filter(Boolean);
+                colors.forEach((colorKey) => {
+                    const [h, s, v] = colorKey.split(",").map(Number);
 
-            // 메인 컬러 추출
-            const mainColors = selectedColors.slice(0, 3).map((colorKey) => {
-                const [h, s, v] = colorKey.split(",").map(Number);
-                return this.hsvToRgb(h, s, v); // HSV → RGB 변환
-            });
+                    // HSV 값들을 20 단위로 반올림하여 통합
+                    const roundedH = Math.round(h / 20) * 20;
+                    const roundedS = Math.round(s / 20) * 20;
+                    const roundedV = Math.round(v / 20) * 20;
 
-            // 서브 컬러 추출
-            const subColors = selectedColors.slice(3, 6).map((colorKey) => {
-                const [h, s, v] = colorKey.split(",").map(Number);
-                return this.hsvToRgb(h, s, v); // HSV → RGB 변환
-            });
+                    const groupedKey = `${roundedH},${roundedS},${roundedV}`;
+                    groupedColors[groupedKey] =
+                        (groupedColors[groupedKey] || 0) + 1;
+                });
+
+                // 그룹화된 색상들을 정렬하여 반환
+                return Object.entries(groupedColors)
+                    .sort((a, b) => b[1] - a[1]) // 빈도 순 정렬
+                    .map(([key]) => key);
+            };
+
+            // 색상을 그룹화하고 상위 8개 색상 추출
+            const groupedSortedColors = groupColorsByRange(sortedColors).slice(
+                0,
+                8
+            );
+
+            // 메인 컬러: 상위 4개
+            const mainColors = groupedSortedColors
+                .slice(0, 4)
+                .map((colorKey) => {
+                    const [h, s, v] = colorKey.split(",").map(Number);
+                    return this.hsvToRgb(h, s, v); // HSV → RGB 변환
+                });
+
+            // 서브 컬러: 다음 4개
+            const subColors = groupedSortedColors
+                .slice(4, 8)
+                .map((colorKey) => {
+                    const [h, s, v] = colorKey.split(",").map(Number);
+                    return this.hsvToRgb(h, s, v); // HSV → RGB 변환
+                });
 
             // 메인/서브 컬러 저장
             this.characterInfo.main_colors = mainColors;
@@ -965,7 +1004,6 @@ export default {
     max-width: 800px;
     margin: 0 auto;
     padding: 0 16px;
-    /* 양쪽 패딩 설정 */
 }
 
 /* 2번 영역*/
@@ -1029,7 +1067,7 @@ export default {
     z-index: 2;
 }
 
-.except-motion-button {
+.motion-button {
     height: 28px;
     font-size: 10px;
     padding: 0 12px;
@@ -1037,16 +1075,7 @@ export default {
     background-color: #67a9f0;
     color: white;
     cursor: pointer;
-}
-.add-motion-button {
-    height: 28px;
-    font-size: 10px;
-    padding: 0 12px;
-    border-radius: 4px;
-    background-color: #c9a5c6;
-    color: rgb(255, 255, 255);
-    cursor: pointer;
-    font-weight: bold;
+    right: 10px;
 }
 
 .motion-button:hover {
@@ -1057,33 +1086,24 @@ export default {
 .button-group {
     position: absolute;
     bottom: 16px;
-    /* 컨테이너 하단에서 여백 */
     right: 16px;
-    /* 컨테이너 오른쪽에서 여백 */
     display: flex;
     gap: 8px;
-    /* 버튼 간 간격 */
-    z-index: 10;
-    /* 이미지 위에 위치 */
+    z-index: 10; /* 이미지 위에 위치 */
 }
 
 .button-group v-btn {
     width: 40px;
-    /* 버튼 크기 */
     height: 40px;
     border-radius: 50%;
-    /* 원형 버튼 */
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .button-row {
     margin-top: 16px;
-    /* 버튼과 이미지 간격 */
     display: flex;
     justify-content: center;
-    /* 버튼을 가운데 정렬 */
     gap: 16px;
-    /* 버튼 간격 */
 }
 
 .button-row v-btn {
@@ -1107,7 +1127,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    /* 가로 정렬을 왼쪽으로 고정 */
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 12px;
@@ -1216,25 +1235,20 @@ export default {
 .icon-cell {
     display: flex;
     justify-content: center;
-    /* 가로 정렬 */
     align-items: center;
-    /* 세로 정렬 */
     height: 100%;
-    /* 부모 높이에 맞춤 */
 }
 
 .data-cell {
     text-align: left;
     vertical-align: middle;
     padding-left: 13px;
-    /* 데이터 셀 왼쪽 패딩 */
 }
 
 .gender-icon,
 .guild-icon,
 .job-icon {
     width: 20px;
-    /* 아이콘 크기 */
     height: 20px;
 }
 
@@ -1271,7 +1285,6 @@ export default {
 
 .world-guild {
     margin-top: 8px;
-    /* 레벨/성별과 간격 */
 }
 
 .job-image {
@@ -1330,8 +1343,8 @@ export default {
     background-color: #e58cda;
 }
 
-/*퍼스널컬러*/
-.modern-card {
+/*캐릭터 정보 영역*/
+.character-info-card {
     height: 230px;
     background-color: #ffffff;
     color: #2c3e50;
@@ -1341,7 +1354,17 @@ export default {
     flex-direction: column;
     align-items: center;
 }
-
+/*퍼스널컬러*/
+.personal-color-card {
+    height: 230px;
+    background-color: #ffffff;
+    color: #2c3e50;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 /*퍼스널컬러 결과 */
 .personal-color-result {
     width: 100%;
@@ -1349,7 +1372,6 @@ export default {
     font-weight: bold;
     text-transform: uppercase;
     padding: 4px 8px;
-    /* 패딩 조정 */
     text-align: center;
     margin-top: 8px;
 }
@@ -1377,24 +1399,24 @@ export default {
 .main-color {
     margin-top: 10px;
     margin-bottom: 0 !important;
-    /* 하단 마진 제거 */
     padding-bottom: 0 !important;
-    /* 하단 패딩 제거 */
 }
 
 .sub-color {
     margin-top: 0 !important;
-    /* 하단 마진 제거 */
     padding-top: 0 !important;
-    /* 하단 패딩 제거 */
 }
 
 .color-label {
-    background-color: #f5f5f5;
-    /* 회색 배경 */
-    padding: 1px 2px;
-    border-radius: 12px;
-    font-weight: bold;
-    color: #333;
+    margin: 0;
+    padding-top: 8px;
+    font-size: 11px;
+    color: #636364;
+    white-space: nowrap; /* 개행 방지 */
+}
+
+.no-gutters {
+    margin: 0 !important;
+    padding: 0 !important;
 }
 </style>
