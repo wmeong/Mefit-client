@@ -680,23 +680,20 @@ export default {
                 ).data;
                 const colorCounts = {};
 
-                // 이미지 데이터 순회 및 색상 정보 수집
                 for (let i = 0; i < imageData.length; i += 4) {
                     const r = imageData[i];
                     const g = imageData[i + 1];
                     const b = imageData[i + 2];
-                    const a = imageData[i + 3];
 
+                    // 완전 흰색과 완전 검은색 제외
                     if (
-                        a === 0 ||
-                        (r === 0 && g === 0 && b === 0) ||
-                        (r === 255 && g === 255 && b === 255)
-                    )
+                        (r === 255 && g === 255 && b === 255) ||
+                        (r === 0 && g === 0 && b === 0)
+                    ) {
                         continue;
+                    }
 
                     const hsv = this.rgbToHsv(r, g, b);
-                    if (hsv.v < 5 || hsv.v > 90 || hsv.s < 3) continue;
-
                     const roundedH = Math.round(hsv.h / 5) * 5;
                     const roundedS = Math.round(hsv.s / 5) * 5;
                     const roundedV = Math.round(hsv.v / 5) * 5;
@@ -743,6 +740,7 @@ export default {
             );
         },
         // 메인, 서브컬러 분석 메서드
+        // 메인, 서브컬러 분석 메서드
         analyzeMainAndSubColors(sortedColors) {
             const groupColorsByRange = (colors) => {
                 const groupedColors = {};
@@ -750,10 +748,10 @@ export default {
                 colors.forEach((colorKey) => {
                     const [h, s, v] = colorKey.split(",").map(Number);
 
-                    // HSV 값들을 20 단위로 반올림하여 통합
-                    const roundedH = Math.round(h / 20) * 20;
-                    const roundedS = Math.round(s / 20) * 20;
-                    const roundedV = Math.round(v / 20) * 20;
+                    // HSV 값들을 10 단위로 반올림하여 통합
+                    const roundedH = Math.round(h / 10) * 10;
+                    const roundedS = Math.round(s / 10) * 10;
+                    const roundedV = Math.round(v / 10) * 10;
 
                     const groupedKey = `${roundedH},${roundedS},${roundedV}`;
                     groupedColors[groupedKey] =
@@ -765,10 +763,19 @@ export default {
                     .map(([key]) => key);
             };
 
-            const groupedSortedColors = groupColorsByRange(sortedColors).slice(
-                0,
-                8
-            );
+            let groupedSortedColors = groupColorsByRange(sortedColors);
+
+            // HEX 변환 후 완전 흰색(#ffffff)과 검은색(#000000) 필터링
+            groupedSortedColors = groupedSortedColors.filter((colorKey) => {
+                const [h, s, v] = colorKey.split(",").map(Number);
+                const hexColor = this.hsvToHex(h, s, v);
+                return (
+                    hexColor.toLowerCase() !== "#ffffff" &&
+                    hexColor.toLowerCase() !== "#000000"
+                );
+            });
+
+            groupedSortedColors = groupedSortedColors.slice(0, 8);
 
             // 메인 컬러: 상위 4개 (HEX로 변환 후 저장)
             this.mainColorsForSave = groupedSortedColors
@@ -786,53 +793,14 @@ export default {
                     return this.hsvToHex(h, s, v); // HEX 변환 후 저장
                 });
 
+            // 콘솔 로그 추가 (확인용)
+            console.log("Final Main Colors:", this.mainColorsForSave);
+            console.log("Final Sub Colors:", this.subColorsForSave);
+
             // 화면 표시용
             this.characterInfo.mainColors = this.mainColorsForSave;
             this.characterInfo.subColors = this.subColorsForSave;
         },
-
-        // 메인, 서브컬러 분석을 위한 hsv -> rgb 변환 메서드
-        hsvToRgb(h, s, v) {
-            s /= 100;
-            v /= 100;
-            let c = v * s;
-            let x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-            let m = v - c;
-            let r, g, b;
-
-            if (h >= 0 && h < 60) {
-                r = c;
-                g = x;
-                b = 0;
-            } else if (h >= 60 && h < 120) {
-                r = x;
-                g = c;
-                b = 0;
-            } else if (h >= 120 && h < 180) {
-                r = 0;
-                g = c;
-                b = x;
-            } else if (h >= 180 && h < 240) {
-                r = 0;
-                g = x;
-                b = c;
-            } else if (h >= 240 && h < 300) {
-                r = x;
-                g = 0;
-                b = c;
-            } else {
-                r = c;
-                g = 0;
-                b = x;
-            }
-
-            r = Math.round((r + m) * 255);
-            g = Math.round((g + m) * 255);
-            b = Math.round((b + m) * 255);
-
-            return `rgb(${r},${g},${b})`;
-        },
-
         //퍼스널컬러 분석을 위한 rgb -> hsv 메서드
         rgbToHsv(r, g, b) {
             (r /= 255), (g /= 255), (b /= 255);
@@ -852,6 +820,7 @@ export default {
                         ? (b - r) / d + 2
                         : (r - g) / d + 4;
             h /= 6;
+
             return { h: h * 360, s: s * 100, v: v * 100 };
         },
 
