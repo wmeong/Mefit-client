@@ -449,7 +449,7 @@ export default {
             }
             try {
                 const response = await axios.get(
-                    "http://localhost:8081/api/characters/ocid",
+                    "http://localhost:8081/api/characters/info",
                     {
                         params: { name: this.characterName },
                     }

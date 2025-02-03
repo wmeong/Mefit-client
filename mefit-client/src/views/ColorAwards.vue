@@ -122,12 +122,24 @@ export default {
 
 .award-background {
   position: relative;
-  background: #FFC0CB; /* 베이비핑크 기본 배경 색상 */
-  overflow: hidden; /* 자식 요소의 오버플로우 감추기 */
+  background: #FFC0CB; 
+  overflow: hidden; 
   padding: 15px;
   border-radius: 20px;
   box-shadow: none;
 }
+
+.color-awards-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(193, 101, 255, 0.8),
+        0 0 40px rgba(255, 223, 0, 0.6), 0 0 60px rgba(255, 223, 0, 0.4);
+    letter-spacing: 5px;
+}
+
+
 
 /* shimmer 효과를 위한 ::before 가상요소 */
 .award-background::before {
@@ -157,17 +169,6 @@ export default {
   }
 }
 
-
-
-.color-awards-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffffff;
-    text-transform: uppercase;
-    text-shadow: 0 0 20px rgba(193, 101, 255, 0.8),
-        0 0 40px rgba(255, 223, 0, 0.6), 0 0 60px rgba(255, 223, 0, 0.4);
-    letter-spacing: 5px;
-}
 
 
 

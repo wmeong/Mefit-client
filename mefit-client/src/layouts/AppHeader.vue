@@ -93,7 +93,7 @@ header h1 .logo img {
 }
 
 .menu a:hover {
-    background-color: #f0f0f0; /* 호버 시 밝은 회색 배경 */
+    background-color: #f0f0f0;
     color: #333;
 }
 

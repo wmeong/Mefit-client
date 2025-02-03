@@ -1,16 +1,33 @@
 <template>
-    <v-container class="py-10 powder-room-container">
+    <v-container class="py-10 main-container">
         <!-- 0번: 컬러픽 타이틀 영역 -->
         <v-row justify="center" class="mb-6">
             <div class="color-pick-banner">
                 <div class="color-pick-background">
-                    <h1 class="color-picks-title">Color Pick</h1>
+                    <h1 class="color-pick-title">Color Pick</h1>
                 </div>
             </div>
         </v-row>
 
+        <!-- 검색 영역 -->
+        <div class="search-bar-container">
+            <!-- 검색창 -->
+            <input
+                type="text"
+                placeholder="닉네임을 입력하세요"
+                :value="characterName"
+                class="search-input"
+                @input="updateCharacterName"
+                @keydown.enter.prevent="searchCharacter"
+            />
+            <button @click="searchCharacter" class="search-button">
+                🔍 검색
+            </button>
+        </div>
+
         <!-- 1번: 퍼스널컬러 정보 영역 -->
-        <v-card class="personal-card mb-6" elevation="4">
+
+        <v-card v-if="characterInfo.characterImage" class="personal-card mb-6">
             <div class="personal-color-result" :class="personalColorGroup">
                 {{ characterInfo.personalColor }}
             </div>
@@ -55,12 +72,16 @@
         <v-row>
             <!-- 2번: 캐릭터 이미지 영역 -->
             <v-col cols="10" md="8" class="d-flex flex-column">
-                <v-card class="character-card mb-4" elevation="4">
+                <v-card class="character-card mb-4">
                     <img
                         v-if="characterInfo.characterImage"
                         :src="characterInfo.characterImage"
                         alt="Character Image"
                         class="character-image"
+                        :style="{
+                            transform: `scale(${scale})`,
+                            transition: 'transform 0.3s ease-in-out',
+                        }"
                     />
                     <v-btn
                         @click="toggleZoom"
@@ -70,7 +91,7 @@
                     >
                         <v-icon size="20">
                             {{
-                                scale === 0.7
+                                scale < 1.8
                                     ? "mdi-magnify-plus-outline"
                                     : "mdi-magnify-minus-outline"
                             }}
@@ -81,7 +102,7 @@
 
             <!-- 3번: 컬러피커 영역 -->
             <v-col cols="10" md="4" class="d-flex flex-column">
-                <v-card class="picker-card mb-4" elevation="4">
+                <v-card class="picker-card mb-4">
                     <v-color-picker
                         v-model="selectedColor"
                         flat
@@ -100,7 +121,7 @@
             💖 색상 추가 💖
         </v-btn>
 
-        <v-card class="picker-saved-colors-box" elevation="4">
+        <v-card class="picker-saved-colors-box">
             <v-row dense justify="center" class="mt-4 picker-saved-color-grid">
                 <v-col
                     v-for="(color, index) in savedColors"
@@ -118,11 +139,25 @@
                 </v-col>
             </v-row>
         </v-card>
+        <!-- 공통 알림 팝업 추가 -->
+        <CustomAlert
+            v-if="showAlert"
+            :visible="showAlert"
+            title="알림"
+            message="존재하지 않는 캐릭터입니다."
+            @close="showAlert = false"
+        />
     </v-container>
 </template>
 
 <script>
+import axios from "axios";
+import CustomAlert from "@/components/CustomAlert.vue"; // 공통 알림 컴포넌트
+import colorAnalysisMixin from "@/mixins/colorAnalysisMixin"; //컬러 분석 믹스인
+
 export default {
+    components: { CustomAlert },
+    mixins: [colorAnalysisMixin],
     data() {
         return {
             characterInfo: {
@@ -133,7 +168,10 @@ export default {
             },
             selectedColor: "#ffffff",
             savedColors: [],
-            scale: 0.7,
+            characterName: "", // 검색어
+            scale: 0.8,
+            showAlert: false, // 알림 팝업 상태 추가
+            message: "", // 오류 메시지
         };
     },
     created() {
@@ -156,6 +194,48 @@ export default {
             : [];
     },
     methods: {
+        /**
+         * 캐릭터 정보를 API에서 검색 및 저장
+         */
+        async searchCharacter() {
+            if (!this.characterName) return; // 캐릭터 이름이 없으면 중단
+            try {
+                const response = await axios.get(
+                    `http://localhost:8081/api/characters/info`,
+                    {
+                        params: { name: this.characterName },
+                    }
+                );
+
+                this.characterInfo.characterImage =
+                    response.data.characterInfoDTO.character_image;
+                console.log(this.characterInfo.characterImage);
+                // 이미지 로드 후 색상 분석 실행
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.src = this.characterInfo.characterImage;
+
+                img.onload = async () => {
+                    const sortedColors = await this.extractColors(img);
+
+                    // 메인, 서브컬러 및 퍼스널컬러 분석
+                    const { mainColors, subColors } =
+                        this.analyzeMainAndSubColors(sortedColors);
+                    this.characterInfo.mainColors = mainColors;
+                    this.characterInfo.subColors = subColors;
+                    this.characterInfo.personalColor =
+                        this.analyzePersonalColor(sortedColors);
+                };
+            } catch (error) {
+                this.alertMessage = "존재하지 않는 캐릭터입니다";
+                this.showAlert = true;
+                console.error("캐릭터 정보 조회 실패:", error);
+            }
+        },
+        updateCharacterName(event) {
+            this.characterName = event.target.value; // 입력값 명시적 동기화
+        },
+
         addColor() {
             if (
                 this.savedColors.length < 30 && // 최대 저장 개수
@@ -166,7 +246,9 @@ export default {
             }
         },
         toggleZoom() {
-            this.scale = this.scale === 1 ? 0.7 : 1;
+            const zoomLevels = [0.8, 1.1, 1.8];
+            const currentIndex = zoomLevels.indexOf(this.scale);
+            this.scale = zoomLevels[(currentIndex + 1) % zoomLevels.length];
         },
     },
     computed: {
@@ -210,16 +292,19 @@ export default {
 </script>
 
 <style scoped>
-.color-pick-banner {
-    text-align: center;
-    margin-bottom: 20px;
+.main-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 16px;
 }
 
-.color-picks-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffffff;
-    text-shadow: 0 0 20px rgba(193, 101, 255, 0.8);
+.color-pick-banner {
+    position: relative;
+    background: #ffc0cb;
+    overflow: hidden;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: none;
 }
 
 .color-pick-background {
@@ -227,13 +312,90 @@ export default {
     padding: 15px;
     border-radius: 20px;
 }
+
+.color-pick-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(193, 101, 255, 0.8),
+        0 0 40px rgba(255, 223, 0, 0.6), 0 0 60px rgba(255, 223, 0, 0.4);
+    letter-spacing: 5px;
+}
+
+/* shimmer 효과를 위한 ::before 가상요소 */
+.color-pick-background::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    /* 빛나는 효과를 위한 투명 그라데이션 */
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transform: skewX(-25deg);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -150%;
+    }
+    100% {
+        left: 150%;
+    }
+}
+
+/* 검색 영역 */
+
+/* 검색창*/
+.search-bar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 12px 16px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    margin-right: 8px;
+}
+
+.search-button {
+    background-color: #007bff51;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #7ab5f4;
+}
+
 /* 1번 퍼스널컬러 영역 */
 .personal-card {
     padding: 24px;
-    border-radius: 12px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    border: 1px solid #dcdcdc; /* 회색 테두리 추가 */
+    background-color: #ffffff;
+    border-radius: 8px;
 }
 
 .personal-color-result {
@@ -267,7 +429,7 @@ export default {
 }
 
 .main-sub-color-row {
-    align-items: center; /* 라벨과 컬러가 수직 가운데 정렬 */
+    align-items: center;
     padding: 8px 0;
 }
 
@@ -297,9 +459,11 @@ export default {
 /* 2번 캐릭터이미지 영역 */
 .character-card {
     padding: 16px;
-    display: flex;
     height: 400px;
-    flex-direction: column;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 8px;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -307,6 +471,7 @@ export default {
 .character-image {
     height: 200px;
     border-radius: 12px;
+    transition: transform 0.3s ease-in-out;
 }
 .toggle-btn {
     position: absolute;
@@ -324,20 +489,23 @@ export default {
 }
 /* 3번 피커영역 */
 .custom-picker {
-    max-width: 100% !important; /* 최대 너비를 100%로 */
-    width: 100% !important; /* 고정 너비를 100%로 */
+    max-width: 100% !important;
+    width: 100% !important;
     height: 367px;
-    box-sizing: border-box; /* 테두리와 패딩 포함 */
+    box-sizing: border-box;
 }
 
 .picker-card {
     padding: 16px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 8px;
 }
 
 /* 4번 컬러 저장 영역 */
 .fixed-add-btn {
-    background-color: #ffc0cb; /* 원하는 배경색 */
-    color: white; /* 텍스트 색 */
+    background-color: #ffc0cb;
+    color: white;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 9px;
@@ -354,8 +522,11 @@ export default {
 
 .picker-saved-colors-box {
     padding: 24px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 8px;
     height: 420px;
-    overflow-y: auto; /* 필요 시 스크롤*/
+    overflow-y: auto;
 }
 
 /*  */

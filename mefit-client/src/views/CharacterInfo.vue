@@ -59,7 +59,7 @@
                                 </option>
                             </select>
                         </div>
-
+                        <!-- 감정 선택 -->
                         <div class="motion-select-wrapper">
                             <select
                                 v-model="selectedEmotion"
@@ -426,10 +426,12 @@
 <script>
 import axios from "axios";
 import CustomAlert from "@/components/CustomAlert.vue"; // 공통 알림 컴포넌트
+import colorAnalysisMixin from "@/mixins/colorAnalysisMixin"; //컬러 분석 믹스인
 
 export default {
     name: "CharacterInfo",
     components: { CustomAlert },
+    mixins: [colorAnalysisMixin],
     data() {
         return {
             scale: 0.7, // 초기 확대 배율
@@ -546,7 +548,7 @@ export default {
                 );
                 this.characterInfo = ocidResponse.data.characterInfoDTO;
                 this.characterImage = this.characterInfo.character_image;
-                console.log("캐릭 원본이미지" + this.characterImage);
+                console.log(ocidResponse.data.characterInfoDTO);
                 this.message = "";
 
                 this.characterCashItem = ocidResponse.data.searchedCashItemDTOS;
@@ -659,7 +661,7 @@ export default {
             }
         },
 
-        //퍼스널칼라 분석 부분
+        //색 추출 부분
         async extractColors(img) {
             return new Promise((resolve) => {
                 const canvas = document.createElement("canvas");
@@ -735,7 +737,7 @@ export default {
                 avgV
             );
         },
-        // 메인, 서브컬러 분석 메서드
+
         // 메인, 서브컬러 분석 메서드
         analyzeMainAndSubColors(sortedColors) {
             const groupColorsByRange = (colors) => {
@@ -1020,7 +1022,7 @@ export default {
 
 <style scoped>
 .main-container {
-    max-width: 800px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 0 16px;
 }
@@ -1088,18 +1090,20 @@ export default {
 
 /*컬러픽 버튼 */
 .color-pick-button {
-    height: 28px;
-    font-size: 10px;
-    padding: 0 12px;
+    width: 70px;
+    height: 30px;
+    font-size: 12px;
+    padding: 0 8px;
     border-radius: 4px;
-    background-color: #67a9f0;
+    background-color: #f89cab;
     color: white;
     cursor: pointer;
     right: 10px;
+    margin-left: auto; /* 버튼 오른쪽으로 이동 */
 }
 
 .color-pick-button:hover {
-    background-color: #0056b3;
+    background-color: #ffc0cb;
 }
 
 /** */
@@ -1349,18 +1353,18 @@ export default {
 }
 
 .search-button {
-    background-color: #d96dcb;
+    background-color: #007bff51;
     color: white;
+    font-weight: bold;
     border: none;
     border-radius: 8px;
     padding: 8px 16px;
-
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 .search-button:hover {
-    background-color: #e58cda;
+    background-color: #7ab5f4;
 }
 
 /*캐릭터 정보 영역*/
