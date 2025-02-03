@@ -98,8 +98,8 @@
 
                         <!-- 컬러픽 버튼 -->
                         <button
-                            class="motion-button"
-                            @click="applyWeaponMotion"
+                            class="color-pick-button"
+                            @click="navigateToColorPickPage"
                         >
                             컬러픽
                         </button>
@@ -546,6 +546,7 @@ export default {
                 );
                 this.characterInfo = ocidResponse.data.characterInfoDTO;
                 this.characterImage = this.characterInfo.character_image;
+                console.log("캐릭 원본이미지" + this.characterImage);
                 this.message = "";
 
                 this.characterCashItem = ocidResponse.data.searchedCashItemDTOS;
@@ -657,12 +658,7 @@ export default {
                 return null;
             }
         },
-        //퍼스널컬러 페이지로 이동
-        navigateToPersonalColorPage() {
-            const color = this.personalColorAnalysis;
-            const encodedColor = encodeURIComponent(color); // URL 인코딩
-            this.$router.push(`/personal-color-twelve/${encodedColor}`);
-        },
+
         //퍼스널칼라 분석 부분
         async extractColors(img) {
             return new Promise((resolve) => {
@@ -905,6 +901,31 @@ export default {
                 { tone: "겨울쿨 다크", diff: Infinity }
             ).tone;
         },
+        //퍼스널컬러 페이지로 이동
+        navigateToPersonalColorPage() {
+            const color = this.personalColorAnalysis;
+            const encodedColor = encodeURIComponent(color); // URL 인코딩
+            this.$router.push(`/personal-color-twelve/${encodedColor}`);
+        },
+        //컬러픽 페이지로 이동
+        navigateToColorPickPage() {
+            // 각 변수에 데이터를 저장
+            const characterImage = this.characterImage;
+            const personalColor = this.personalColorAnalysis;
+            const mainColors = this.mainColorsForSave.join(","); // 메인컬러 4개
+            const subColors = this.subColorsForSave.join(","); // 서브컬러 4개
+
+            // URL 인코딩 후 라우터 푸시로 페이지 이동
+            this.$router.push({
+                path: "/color-pick",
+                query: {
+                    characterImage: encodeURIComponent(characterImage),
+                    personalColor: encodeURIComponent(personalColor),
+                    mainColors: encodeURIComponent(mainColors),
+                    subColors: encodeURIComponent(subColors),
+                },
+            });
+        },
     },
     created() {
         this.resetValues(); // 재검색 시 값 초기화
@@ -1065,7 +1086,8 @@ export default {
     z-index: 2;
 }
 
-.motion-button {
+/*컬러픽 버튼 */
+.color-pick-button {
     height: 28px;
     font-size: 10px;
     padding: 0 12px;
@@ -1076,7 +1098,7 @@ export default {
     right: 10px;
 }
 
-.motion-button:hover {
+.color-pick-button:hover {
     background-color: #0056b3;
 }
 

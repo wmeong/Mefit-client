@@ -22,7 +22,7 @@
                     <router-link to="/colorAwards">컬러어워즈</router-link>
                 </li>
                 <li>
-                    <router-link to="/color-test">컬러픽</router-link>
+                    <router-link to="/color-pick">컬러픽</router-link>
                 </li>
                 <li>
                     <router-link to="/royal-simulation">로얄스타일</router-link>
