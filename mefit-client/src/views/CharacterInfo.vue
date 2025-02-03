@@ -564,7 +564,12 @@ export default {
                     const sortedColors = await this.extractColors(img);
 
                     // 메인/서브 컬러와 퍼스널컬러를 각각 분석
-                    this.analyzeMainAndSubColors(sortedColors);
+                    const { mainColors, subColors } =
+                        this.analyzeMainAndSubColors(sortedColors);
+
+                    this.characterInfo.mainColors = mainColors;
+                    this.characterInfo.subColors = subColors;
+
                     this.analyzePersonalColor(sortedColors);
 
                     this.saveColors(); // 퍼스널컬러 저장
@@ -661,53 +666,6 @@ export default {
             }
         },
 
-        //색 추출 부분
-        async extractColors(img) {
-            return new Promise((resolve) => {
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-
-                const imageData = ctx.getImageData(
-                    0,
-                    0,
-                    img.width,
-                    img.height
-                ).data;
-                const colorCounts = {};
-
-                for (let i = 0; i < imageData.length; i += 4) {
-                    const r = imageData[i];
-                    const g = imageData[i + 1];
-                    const b = imageData[i + 2];
-
-                    // 완전 흰색과 완전 검은색 제외
-                    if (
-                        (r === 255 && g === 255 && b === 255) ||
-                        (r === 0 && g === 0 && b === 0)
-                    ) {
-                        continue;
-                    }
-
-                    const hsv = this.rgbToHsv(r, g, b);
-                    const roundedH = Math.round(hsv.h / 5) * 5;
-                    const roundedS = Math.round(hsv.s / 5) * 5;
-                    const roundedV = Math.round(hsv.v / 5) * 5;
-                    const key = `${roundedH},${roundedS},${roundedV}`;
-
-                    colorCounts[key] = (colorCounts[key] || 0) + 1;
-                }
-
-                const sortedColors = Object.entries(colorCounts)
-                    .sort((a, b) => b[1] - a[1])
-                    .map(([color]) => color)
-                    .slice(0, 30);
-
-                resolve(sortedColors);
-            });
-        },
         // 퍼스널컬러 분석 메서드
         analyzePersonalColor(sortedColors) {
             let hSum = 0,
@@ -738,171 +696,6 @@ export default {
             );
         },
 
-        // 메인, 서브컬러 분석 메서드
-        analyzeMainAndSubColors(sortedColors) {
-            const groupColorsByRange = (colors) => {
-                const groupedColors = {};
-
-                colors.forEach((colorKey) => {
-                    const [h, s, v] = colorKey.split(",").map(Number);
-
-                    // HSV 값들을 10 단위로 반올림하여 통합
-                    const roundedH = Math.round(h / 10) * 10;
-                    const roundedS = Math.round(s / 10) * 10;
-                    const roundedV = Math.round(v / 10) * 10;
-
-                    const groupedKey = `${roundedH},${roundedS},${roundedV}`;
-                    groupedColors[groupedKey] =
-                        (groupedColors[groupedKey] || 0) + 1;
-                });
-
-                return Object.entries(groupedColors)
-                    .sort((a, b) => b[1] - a[1])
-                    .map(([key]) => key);
-            };
-
-            let groupedSortedColors = groupColorsByRange(sortedColors);
-
-            // HEX 변환 후 완전 흰색(#ffffff)과 검은색(#000000) 필터링
-            groupedSortedColors = groupedSortedColors.filter((colorKey) => {
-                const [h, s, v] = colorKey.split(",").map(Number);
-                const hexColor = this.hsvToHex(h, s, v);
-                return (
-                    hexColor.toLowerCase() !== "#ffffff" &&
-                    hexColor.toLowerCase() !== "#000000"
-                );
-            });
-
-            groupedSortedColors = groupedSortedColors.slice(0, 8);
-
-            // 메인 컬러: 상위 4개 (HEX로 변환 후 저장)
-            this.mainColorsForSave = groupedSortedColors
-                .slice(0, 4)
-                .map((colorKey) => {
-                    const [h, s, v] = colorKey.split(",").map(Number);
-                    return this.hsvToHex(h, s, v); // HEX 변환 후 저장
-                });
-
-            // 서브 컬러: 다음 4개 (HEX로 변환 후 저장)
-            this.subColorsForSave = groupedSortedColors
-                .slice(4, 8)
-                .map((colorKey) => {
-                    const [h, s, v] = colorKey.split(",").map(Number);
-                    return this.hsvToHex(h, s, v); // HEX 변환 후 저장
-                });
-
-            // 콘솔 로그 추가 (확인용)
-            console.log("Final Main Colors:", this.mainColorsForSave);
-            console.log("Final Sub Colors:", this.subColorsForSave);
-
-            // 화면 표시용
-            this.characterInfo.mainColors = this.mainColorsForSave;
-            this.characterInfo.subColors = this.subColorsForSave;
-        },
-        //퍼스널컬러 분석을 위한 rgb -> hsv 메서드
-        rgbToHsv(r, g, b) {
-            (r /= 255), (g /= 255), (b /= 255);
-            let max = Math.max(r, g, b),
-                min = Math.min(r, g, b);
-            let h,
-                s,
-                v = max,
-                d = max - min;
-            s = max === 0 ? 0 : d / max;
-            if (max === min) h = 0;
-            else
-                h =
-                    max === r
-                        ? (g - b) / d + (g < b ? 6 : 0)
-                        : max === g
-                        ? (b - r) / d + 2
-                        : (r - g) / d + 4;
-            h /= 6;
-
-            return { h: h * 360, s: s * 100, v: v * 100 };
-        },
-
-        // 메인/서브 컬러 분석을 위한 hsv -> hex 메서드
-        hsvToHex(h, s, v) {
-            s /= 100;
-            v /= 100;
-
-            const c = v * s;
-            const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-            const m = v - c;
-
-            let r = 0,
-                g = 0,
-                b = 0;
-            if (h >= 0 && h < 60) {
-                r = c;
-                g = x;
-                b = 0;
-            } else if (h >= 60 && h < 120) {
-                r = x;
-                g = c;
-                b = 0;
-            } else if (h >= 120 && h < 180) {
-                r = 0;
-                g = c;
-                b = x;
-            } else if (h >= 180 && h < 240) {
-                r = 0;
-                g = x;
-                b = c;
-            } else if (h >= 240 && h < 300) {
-                r = x;
-                g = 0;
-                b = c;
-            } else {
-                r = c;
-                g = 0;
-                b = x;
-            }
-
-            r = Math.round((r + m) * 255);
-            g = Math.round((g + m) * 255);
-            b = Math.round((b + m) * 255);
-
-            // HEX 값으로 반환
-            return `#${((1 << 24) + (r << 16) + (g << 8) + b)
-                .toString(16)
-                .slice(1)}`;
-        },
-
-        findClosestPersonalColor(h, s, v) {
-            const personalColors = [
-                { tone: "봄웜 브라이트", h: [0, 30], s: 60, v: 55 }, // 채도(S) 기준 상향
-                { tone: "봄웜 트루", h: [30, 50], s: 50, v: 50 },
-                { tone: "봄웜 라이트", h: [50, 80], s: 40, v: 50 },
-
-                { tone: "여름쿨 라이트", h: [110, 140], s: 30, v: 45 },
-                { tone: "여름쿨 브라이트", h: [140, 170], s: 35, v: 45 },
-                { tone: "여름쿨 뮤트", h: [170, 220], s: 25, v: 40 },
-
-                { tone: "가을웜 뮤트", h: [40, 120], s: 20, v: 30 }, // Hue 범위 확장
-                { tone: "가을웜 스트롱", h: [80, 170], s: 30, v: 35 },
-                { tone: "가을웜 딥", h: [50, 200], s: 15, v: 20 }, // Hue 최대 범위 확장
-
-                { tone: "겨울쿨 브라이트", h: [200, 270], s: 45, v: 55 },
-                { tone: "겨울쿨 스트롱", h: [180, 280], s: 30, v: 35 },
-                { tone: "겨울쿨 다크", h: [270, 360], s: 50, v: 40 },
-            ];
-
-            return personalColors.reduce(
-                (closest, color) => {
-                    const midH = (color.h[0] + color.h[1]) / 2;
-                    const diff =
-                        Math.abs(midH - h) +
-                        Math.abs(color.s - s) +
-                        Math.abs(color.v - v);
-                    return diff < closest.diff
-                        ? { tone: color.tone, diff: diff }
-                        : closest;
-                },
-                { tone: "겨울쿨 다크", diff: Infinity }
-            ).tone;
-        },
         //퍼스널컬러 페이지로 이동
         navigateToPersonalColorPage() {
             const color = this.personalColorAnalysis;
