@@ -192,14 +192,11 @@ h2 {
 .avatar-container {
     display: flex;
     justify-content: center;
-    /* 수평 중앙 정렬 */
     align-items: center;
-    /* 수직 중앙 정렬 */
 }
 
 .avatar-image {
     border-radius: 50%;
-    /* 둥근 모양으로 표시 */
 }
 
 .v-list-item-avatar img {

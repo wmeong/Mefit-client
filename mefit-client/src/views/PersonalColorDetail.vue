@@ -269,7 +269,7 @@ export default {
 
 <style scoped>
 .title-container {
-  position: relative; /* 상대 위치 */
+  position: relative; 
 }
 /* 페이지 타이틀 */
 .page-title {
@@ -280,7 +280,7 @@ export default {
 .refresh-button {
   position: absolute;
   top: 15px;
-  right: 80px; /* 화면 우측과의 거리 */
+  right: 80px; 
   background-color: #afacacb8 !important;
   width: 30px !important;
   height: 30px !important;
@@ -299,9 +299,9 @@ export default {
 .sub-tone-row {
   margin-bottom: 10px;
   padding: 10px;
-  border-bottom: 1px solid #d3d3d381; /* 연한 회색 구분선 */
-  width: 90%; /* 구분선의 길이를 80%로 설정 */
-  margin: 0 auto 10px auto; /* 가운데 정렬을 위한 margin */
+  border-bottom: 1px solid #d3d3d381; 
+  width: 90%; 
+  margin: 0 auto 10px auto; 
 }
 
 .sub-tone-item {
@@ -316,18 +316,18 @@ export default {
   border-radius: 50%;
   margin-bottom: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease; /* 하버 효과와 클릭 효과를 위한 트랜지션 */
+  transition: transform 0.2s ease, box-shadow 0.2s ease; 
   cursor: pointer;
 }
-/* 하버 효과 */
+
 .tone-circle:hover {
-  transform: scale(1.1); /* 약간 확대 */
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2); /* 그림자 강조 */
+  transform: scale(1.1);
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
 }
 /* 클릭 효과 */
 .tone-circle:active {
-  transform: scale(0.95); /* 약간 축소 */
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); /* 그림자 약화 */
+  transform: scale(0.95); 
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
 }
 .tone-label {
   font-size: 1.2rem;
@@ -362,10 +362,10 @@ export default {
 }
 .heart-icon {
   cursor: pointer;
-  font-size: 25px; /* 아이콘 크기 */
+  font-size: 25px; 
   transition: transform 0.2s ease;
 }
 .heart-icon:hover {
-  transform: scale(1.2); /* 호버 시 확대 효과 */
+  transform: scale(1.2);
 }
 </style>

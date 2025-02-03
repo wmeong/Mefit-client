@@ -730,7 +730,7 @@ export default {
 
 <style scoped>
 body {
-    color: rgb(83, 80, 80); /* 모든 페이지의 기본 글씨 색상을 회색으로 설정 */
+    color: rgb(83, 80, 80); /* 모든 페이지 폰트 : 회색 */
 }
 
 h1,
@@ -747,7 +747,7 @@ input {
         83,
         80,
         80
-    ) !important; /* 모든 제목, 텍스트 요소도 회색으로 설정 */
+    ) !important; /* 모든 페이지 제목 : 회색*/
 }
 
 /* 1번: 로얄스타일 결과 */
@@ -769,60 +769,60 @@ input {
 /* 전체 행: 닉네임과 퍼센트를 구분 */
 .ranking-row {
     display: flex;
-    justify-content: space-between; /* 닉네임 왼쪽, 퍼센트 오른쪽 */
-    align-items: center; /* 수직 정렬 */
-    width: 100%; /* 각 행을 꽉 채움 */
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%; 
 }
 
 /* 닉네임 및 아이콘 */
 .ranking-user-info {
     display: flex;
-    align-items: center; /* 닉네임과 아이콘 수직 정렬 */
+    align-items: center;
 }
 
 /* 순위 숫자 */
 .ranking-user-rank {
-    margin-right: 30px; /* 닉네임과 간격 조정 */
+    margin-right: 30px; 
 }
 /* 10위만 조정하는 스타일 */
 .tenth-place .ranking-user-rank {
-    margin-right: 26px; /* 숫자 위치 조정 */
+    margin-right: 26px; 
 }
 
 /* 순위와 닉네임, 아이콘 위치 조정 */
 .tenth-place .ranking-user-info {
-    margin-left: -3px; /* 아이콘과 닉네임이 살짝 왼쪽으로 이동 */
+    margin-left: -3px; 
 }
 /* 닉네임 */
 .ranking-user-name {
-    margin-left: 8px; /* 아이콘과 닉네임 간 여백 */
+    margin-left: 8px; 
 }
 
 /* 퍼센트 */
 .ranking-user-percentage {
-    text-align: right; /* 오른쪽 정렬 */
+    text-align: right; 
     flex-shrink: 0; /* 줄어들지 않도록 고정 */
-    width: 50px; /* 퍼센트 고정 너비 */
+    width: 50px; 
 }
 
 /* 아바타 컨테이너 */
 .ranking-avatar-container {
-    width: 30px; /* 컨테이너의 너비 */
-    height: 30px; /* 컨테이너의 높이 (너비와 동일) */
-    background-color: #d3d3d3; /* 회색 배경색 */
-    border-radius: 50%; /* 원형으로 만들기 */
-    display: flex; /* 내부 정렬을 위해 flex 사용 */
-    align-items: center; /* 세로 중앙 정렬 */
-    justify-content: center; /* 가로 중앙 정렬 */
-    margin-right: 8px; /* 닉네임과 간격 조정 */
+    width: 30px; 
+    height: 30px; 
+    background-color: #d3d3d3; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    margin-right: 8px;
 }
 
 /* 아바타 */
 .ranking-avatar {
-    width: 28px; /* 아바타 크기 */
-    height: 28px; /* 아바타 크기 */
-    border-radius: 50%; /* 아바타 자체도 원형 */
-    object-fit: cover; /* 이미지를 자르지 않고 맞춤 */
+    width: 28px; 
+    height: 28px; 
+    border-radius: 50%;
+    object-fit: cover; 
 }
 
 /* 3번: 로얄스타일 뽑기 */
@@ -830,7 +830,7 @@ input {
 }
 .character-image {
     position: relative;
-    top: 10px; /* 아래로 20px 이동 */
+    top: 10px; 
 }
 
 /*로얄-인풋 박스*/
@@ -839,10 +839,10 @@ input {
     display: flex;
     align-items: center;
     background-color: #f9f9f9;
-    border-radius: 24px; /* 둥글게 */
+    border-radius: 24px; 
     padding: 8px 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 */
-    width: 230px; /* 입력창 너비 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    width: 230px;
 }
 /*로얄 인풋 텍스트*/
 .royal-input {
@@ -853,65 +853,65 @@ input {
     font-size: 12px;
 }
 .search-icon {
-    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
-    transition: background-color 0.3s, box-shadow 0.3s; /* 효과 전환 */
+    cursor: pointer; 
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 .search-icon:active {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 클릭 시 그림자 축소 */
-    transform: scale(0.95); /* 클릭 시 살짝 눌리는 효과 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    transform: scale(0.95);
 }
 
 .refresh-button {
-    background-color: #afacacb8 !important; /* 회색 배경 */
-    width: 30px !important; /* 버튼 크기 */
-    height: 30px !important; /* 버튼 크기 */
-    border-radius: 50%; /* 동그랗게 */
+    background-color: #afacacb8 !important; 
+    width: 30px !important; 
+    height: 30px !important; 
+    border-radius: 50%; 
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 0 !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
-    min-width: 30px !important; /* Vuetify의 기본 최소 너비를 덮어씌움 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    min-width: 30px !important;
 }
 
 .refresh-button:hover {
-    background-color: #d6d6d6; /* 호버 시 더 어두운 회색 */
+    background-color: #d6d6d6; 
 }
 
 .refresh-button .v-icon {
-    font-size: 16px !important; /* 아이콘 크기 */
+    font-size: 16px !important;
 }
 
 /* 4번: 운세보기 */
 .royal-fortune {
-    white-space: pre-line; /* 줄바꿈 처리 */
+    white-space: pre-line; 
 }
 .slime-container {
     position: absolute;
     top: 58%;
     left: 50%;
-    transform: translate(-50%, -50%); /* 완전 중앙 정렬 */
+    transform: translate(-50%, -50%); 
 }
 
 .slime-image {
     width: 100px;
-    animation: bounce 1.5s infinite ease-in-out; /* 통통 튀는 애니메이션 */
+    animation: bounce 1.5s infinite ease-in-out; 
 }
 
 /* 통통 튀는 애니메이션 */
 @keyframes bounce {
     0%,
     100% {
-        transform: translateY(0); /* 기본 위치 */
+        transform: translateY(0); 
     }
     50% {
-        transform: translateY(-20px); /* 위로 튀기 */
+        transform: translateY(-20px);
     }
 }
 .royal-fortune-header {
     text-align: center;
     padding-bottom: 10px;
-    border-bottom: 1px solid #e4e2e2; /* 회색 선 */
+    border-bottom: 1px solid #e4e2e2; 
     margin-bottom: 15px;
     width: 100%;
 }
@@ -932,7 +932,7 @@ input {
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 5px;
-    color: #658dd6 !important; /* 주황색 */
+    color: #658dd6 !important; 
 }
 
 /* 운세 상태 (이모티콘 포함) */
@@ -940,11 +940,11 @@ input {
     font-size: 12px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #2a32427d !important; /* 파란색 */
+    color: #2a32427d !important; 
 }
 
 .fortune-icon {
-    font-size: 40px; /* 이모티콘 크기 조절 */
+    font-size: 40px; 
     margin-bottom: 10px;
 }
 
@@ -969,19 +969,19 @@ input {
 }
 
 .result-image-container {
-    display: flex; /* 이미지 정렬을 위한 플렉스 박스 */
-    justify-content: center; /* 좌우 정렬 */
+    display: flex; 
+    justify-content: center; 
 }
 .result-text {
     font-size: 9.5px;
 }
 .special-label {
     position: absolute;
-    top: 6px; /* 상단 간격 */
-    left: 8px; /* 우측 간격 */
-    width: 40px; /* 이미지 너비 */
-    height: 40px; /* 이미지 높이 */
-    z-index: 1; /* 다른 요소 위에 표시 */
+    top: 6px; 
+    left: 8px; 
+    width: 40px; 
+    height: 40px;
+    z-index: 1; 
 }
 
 /* 폭죽 */
@@ -1025,10 +1025,10 @@ input {
 }
 
 .no-results-image {
-    width: 400px; /* 이미지 크기 */
-    height: auto; /* 비율 유지 */
-    margin-bottom: 100px; /* 아래쪽에 여백 추가 */
-    animation: bounce 2s infinite ease-in-out; /* 통통 튀는 애니메이션 */
+    width: 400px; 
+    height: auto; 
+    margin-bottom: 100px; 
+    animation: bounce 2s infinite ease-in-out; 
 }
 
 /* 통통 튀는 애니메이션 */
@@ -1043,18 +1043,17 @@ input {
 }
 
 /*초기화(리셋) 팝업 */
-/* 초기화(리셋) 팝업 */
 .popup-reset {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* 팝업이 항상 위에 표시되도록 */
+    z-index: 1000; 
 }
 
 .popup-reset-content {
@@ -1146,17 +1145,17 @@ input {
 }
 
 .popup-image {
-    width: 52px; /* 이미지의 너비 */
-    height: 48px; /* 이미지의 높이 */
+    width: 52px;
+    height: 48px; 
 }
 
 .popup-image-container img[alt="Special Label"] {
     position: absolute;
-    top: 20px; /* 상단 위치 */
-    left: 53px; /* 왼쪽 위치 */
-    width: 50px; /* 너비 */
-    height: 50px; /* 높이 */
-    z-index: 1; /* 다른 요소 위에 표시 */
+    top: 20px; 
+    left: 53px; 
+    width: 50px; 
+    height: 50px;
+    z-index: 1; 
 }
 
 /*슈피겔만 이미지 css */

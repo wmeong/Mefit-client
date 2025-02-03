@@ -34,10 +34,10 @@ export default {
 
 .season-grid {
   display: grid;
-  grid-template-columns: 200px 200px; /* 가로 크기를 고정 */
-  gap: 15px; /* 간격 유지 */
-  justify-content: center; /* 중앙 정렬 */
-  width: auto; /* 컨테이너 너비를 자동으로 맞춤 */
+  grid-template-columns: 200px 200px;  
+  gap: 15px;
+  justify-content: center;
+  width: auto; 
   margin: 0 auto;
 }
 

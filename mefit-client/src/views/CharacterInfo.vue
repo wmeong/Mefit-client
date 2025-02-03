@@ -19,6 +19,14 @@
 
         <!-- 데이터가 있을 경우 -->
         <div v-else>
+            <!-- 타이틀 영역 -->
+            <v-row justify="center" class="mb-4">
+                <div class="character-info-banner">
+                    <div class="character-info-background">
+                        <h1 class="character-info-title">Baby Info</h1>
+                    </div>
+                </div>
+            </v-row>
             <!-- 검색창과 선택박스 영역 -->
             <v-row dense class="search-bar-row">
                 <v-col cols="12" md="12">
@@ -111,7 +119,7 @@
                 <!-- 1번 기본 정보 영역 -->
                 <v-col cols="12" md="3">
                     <div class="character-info-card">
-                        <h3 class="font-weight-bold">캐릭터 정보</h3>
+                        <h3 class="font-weight-bold mt-4">캐릭터 정보</h3>
                         <table class="character-info-table">
                             <tbody>
                                 <!-- 레벨 -->
@@ -288,7 +296,7 @@
                 <!-- 3번: 퍼스널 컬러 영역 -->
                 <v-col cols="12" md="5">
                     <div class="personal-color-card">
-                        <h3 class="font-weight-bold">퍼스널컬러</h3>
+                        <h3 class="font-weight-bold mt-4">퍼스널컬러</h3>
                         <!-- 퍼스널 컬러 분석 결과 -->
                         <div
                             :class="[
@@ -548,7 +556,6 @@ export default {
                 );
                 this.characterInfo = ocidResponse.data.characterInfoDTO;
                 this.characterImage = this.characterInfo.character_image;
-                console.log(ocidResponse.data.characterInfoDTO);
                 this.message = "";
 
                 this.characterCashItem = ocidResponse.data.searchedCashItemDTOS;
@@ -636,8 +643,9 @@ export default {
         },
         async saveColors() {
             try {
-                const mainColorString = this.mainColorsForSave.join(",");
-                const subColorString = this.subColorsForSave.join(",");
+                this.characterInfo.subColors;
+                const mainColorString = this.characterInfo.mainColors.join(",");
+                const subColorString = this.characterInfo.subColors.join(",");
 
                 await axios.post(
                     `http://localhost:8081/api/characters/colors`,
@@ -707,8 +715,8 @@ export default {
             // 각 변수에 데이터를 저장
             const characterImage = this.characterImage;
             const personalColor = this.personalColorAnalysis;
-            const mainColors = this.mainColorsForSave.join(","); // 메인컬러 4개
-            const subColors = this.subColorsForSave.join(","); // 서브컬러 4개
+            const mainColors = this.characterInfo.mainColors.join(","); // 메인컬러 4개
+            const subColors = this.characterInfo.subColors.join(","); // 서브컬러 4개
 
             // URL 인코딩 후 라우터 푸시로 페이지 이동
             this.$router.push({
@@ -815,9 +823,62 @@ export default {
 
 <style scoped>
 .main-container {
-    max-width: 1100px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 16px;
+}
+
+.character-info-banner {
+    position: relative;
+    background: #ffc0cb;
+    overflow: hidden;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+.character-info-background {
+    background: #ffc0cb;
+    padding: 15px;
+    border-radius: 20px;
+}
+
+.character-info-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(193, 101, 255, 0.8),
+        0 0 40px rgba(255, 223, 0, 0.6), 0 0 60px rgba(255, 223, 0, 0.4);
+    letter-spacing: 5px;
+}
+
+/* shimmer 효과 */
+.character-info-background::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    /* 빛나는 효과 */
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transform: skewX(-25deg);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -150%;
+    }
+    100% {
+        left: 150%;
+    }
 }
 
 /* 2번 영역*/
@@ -859,7 +920,7 @@ export default {
     font-size: 10.5px;
     font-weight: bold;
     padding: 4px;
-    padding-right: 24px; /* 화살표 공간 확보 */
+    padding-right: 24px;
     border: 1px solid #ccc;
     border-radius: 4px;
     appearance: none;
@@ -868,7 +929,7 @@ export default {
     z-index: 1;
 }
 
-/* 커스텀 화살표 */
+/* select 내부 화살표 */
 .motion-select-wrapper::after {
     content: "▼";
     position: absolute;
@@ -899,7 +960,7 @@ export default {
     background-color: #ffc0cb;
 }
 
-/** */
+/* 확대, 다운로드 버튼 그룹*/
 .button-group {
     position: absolute;
     bottom: 16px;
@@ -921,11 +982,7 @@ export default {
     display: flex;
     justify-content: center;
     gap: 16px;
-}
-
-.button-row v-btn {
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    /* 버튼 그림자 */
 }
 
 .zoom-button-container {
@@ -1106,11 +1163,9 @@ export default {
 
 .job-image {
     width: 80px;
-    /* 직업 이미지 크기 */
     height: 80px;
     border-radius: 8px;
     margin-bottom: 8px;
-    /* 직업 이름과 간격 */
 }
 
 .job-badge {
@@ -1137,7 +1192,6 @@ export default {
 
 .search-input {
     flex: 1;
-    /* 검색창 너비를 버튼과 함께 조정 */
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -1194,6 +1248,30 @@ export default {
     margin-top: 8px;
 }
 
+.personal-color-result:hover {
+    background: linear-gradient(135deg, #fad0c4, #fad0c4, #fad0c4, #ffdde1);
+    background-size: 400% 400%;
+    animation: gradientMove 1.5s infinite;
+    transform: scale(1.01);
+    box-shadow: 0 10px 25px rgba(255, 182, 193, 0.6);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.9);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.9);
+        opacity: 0.7;
+    }
+}
+
+/* 퍼스널컬러 결과별 배경색 */
 .personal-color-result.Spring {
     background-color: #fbe7c6;
     color: #8d5524;

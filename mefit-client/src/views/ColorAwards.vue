@@ -141,7 +141,7 @@ export default {
 
 
 
-/* shimmer 효과를 위한 ::before 가상요소 */
+/* shimmer 효과*/
 .award-background::before {
   content: "";
   position: absolute;
@@ -149,7 +149,7 @@ export default {
   left: -150%;
   width: 150%;
   height: 100%;
-  /* 빛나는 효과를 위한 투명 그라데이션 */
+  /* 빛나는 효과 */
   background: linear-gradient(
     120deg,
     transparent,
@@ -173,7 +173,7 @@ export default {
 
 
 
-/* 계절 섹션 스타일 */
+/* 계절 섹션 */
 .season-section {
     display: flex;
     flex-direction: column;
@@ -236,8 +236,8 @@ export default {
     border-radius: 50%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 10;
-    width: 30px; /* 가로 크기 */
-    height: 30px; /* 세로 크기 */
+    width: 30px;
+    height: 30px; 
 }
 
 /* 이미지 스타일 */

@@ -375,7 +375,7 @@ export default {
 
 <style scoped>
 .title-container {
-  position: relative; /* 상대 위치 */
+  position: relative;   
 }
 
 .page-title {
@@ -385,7 +385,7 @@ export default {
 }
 /*네비*/
 .upper-navi {
-  position: absolute; /* 절대 위치 적용 */
+  position: absolute;
   top: 20px;
   font-size: 14px;
   color: #333;
@@ -395,7 +395,7 @@ export default {
 .hover-personal-color,
 .hover-main-season {
   cursor: pointer;
-  color: #424242; /* 기본 색상 */
+  color: #424242; 
   transition: color 0.2s ease, text-decoration 0.2s ease;
 }
 
@@ -408,7 +408,7 @@ export default {
 .refresh-button {
   position: absolute;
   top: 15px;
-  right: 70px; /* 화면 우측과의 거리 */
+  right: 70px; 
   background-color: #afacacb8 !important;
   width: 30px !important;
   height: 30px !important;
@@ -421,7 +421,7 @@ export default {
 }
 
 .personal-color-container {
-  position: relative; /* 기준 위치 설정 */
+  position: relative; 
   padding: 20px;
 }
 

@@ -83,6 +83,16 @@
                             transition: 'transform 0.3s ease-in-out',
                         }"
                     />
+                    <img
+                        v-else
+                        src="@/assets/royalstyle/blare.png"
+                        alt="Default Image"
+                        class="character-image"
+                        :style="{
+                            transform: `scale(${scale})`,
+                            transition: 'transform 0.3s ease-in-out',
+                        }"
+                    />
                     <v-btn
                         @click="toggleZoom"
                         class="toggle-btn"
@@ -122,21 +132,43 @@
         </v-btn>
 
         <v-card class="picker-saved-colors-box">
+            <!-- 새로고침 버튼 추가 -->
+            <v-btn
+                icon
+                @click="resetSavedColors"
+                class="refresh-btn"
+                elevation="2"
+            >
+                <v-icon>mdi-refresh</v-icon>
+            </v-btn>
             <v-row dense justify="center" class="mt-4 picker-saved-color-grid">
-                <v-col
-                    v-for="(color, index) in savedColors"
-                    :key="index"
-                    cols="1.5"
-                    class="pa-1"
-                >
-                    <v-card
-                        :style="{ backgroundColor: color }"
-                        class="picker-color-result"
-                        outlined
+                <template v-if="savedColors.length === 0">
+                    <img
+                        src="@/assets/colorpick.png"
+                        alt="기본 이미지"
+                        class="default-saved-color-image mt-4"
+                        :style="{
+                            width: '440px',
+                            objectFit: 'contain',
+                        }"
+                    />
+                </template>
+                <template v-else>
+                    <v-col
+                        v-for="(color, index) in savedColors"
+                        :key="index"
+                        cols="1.5"
+                        class="pa-1"
                     >
-                        <div class="picker-color-info">{{ color }}</div>
-                    </v-card>
-                </v-col>
+                        <v-card
+                            :style="{ backgroundColor: color }"
+                            class="picker-color-result"
+                            outlined
+                        >
+                            <div class="picker-color-info">{{ color }}</div>
+                        </v-card>
+                    </v-col>
+                </template>
             </v-row>
         </v-card>
         <!-- 공통 알림 팝업 추가 -->
@@ -192,6 +224,15 @@ export default {
         this.characterInfo.subColors = subColorsRaw
             ? subColorsRaw.split(",")
             : [];
+
+        console.log(
+            "캐릭터정보에서 그대로 가져온 메인컬러" +
+                this.characterInfo.mainColors
+        );
+        console.log(
+            "캐릭터정보에서 그대로 가져온 서브컬러" +
+                this.characterInfo.subColors
+        );
     },
     methods: {
         /**
@@ -209,7 +250,6 @@ export default {
 
                 this.characterInfo.characterImage =
                     response.data.characterInfoDTO.character_image;
-                console.log(this.characterInfo.characterImage);
                 // 이미지 로드 후 색상 분석 실행
                 const img = new Image();
                 img.crossOrigin = "Anonymous";
@@ -244,6 +284,10 @@ export default {
             ) {
                 this.savedColors.push(this.selectedColor);
             }
+        },
+        // 저장 영역 비우기
+        resetSavedColors() {
+            this.savedColors = [];
         },
         toggleZoom() {
             const zoomLevels = [0.8, 1.1, 1.8];
@@ -298,6 +342,7 @@ export default {
     padding: 0 16px;
 }
 
+/* 타이틀 영역 */
 .color-pick-banner {
     position: relative;
     background: #ffc0cb;
@@ -323,7 +368,7 @@ export default {
     letter-spacing: 5px;
 }
 
-/* shimmer 효과를 위한 ::before 가상요소 */
+/* shimmer 효과 */
 .color-pick-background::before {
     content: "";
     position: absolute;
@@ -331,7 +376,7 @@ export default {
     left: -150%;
     width: 150%;
     height: 100%;
-    /* 빛나는 효과를 위한 투명 그라데이션 */
+    /* 빛나는 효과 */
     background: linear-gradient(
         120deg,
         transparent,
@@ -517,7 +562,7 @@ export default {
 }
 
 .fixed-add-btn:hover {
-    background-color: #ff85c0; /* 호버 시 배경색 */
+    background-color: #f6bed9; /* 호버 시 배경색 */
 }
 
 .picker-saved-colors-box {
@@ -529,7 +574,6 @@ export default {
     overflow-y: auto;
 }
 
-/*  */
 .picker-color-result {
     height: 110px;
     width: 110px;
@@ -549,6 +593,44 @@ export default {
 
 .picker-color-result:hover {
     transform: scale(1.1) rotate(-2deg);
-    box-shadow: 0 6px 15px rgba(255, 105, 180, 0.8);
+    box-shadow: 0 6px 15px rgba(242, 155, 199, 0.8);
+}
+
+.refresh-btn {
+    position: absolute;
+    background-color: #dfdadab8 !important;
+    top: 10px;
+    right: 10px;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    min-width: 30px !important;
+}
+
+.refresh-btn:hover {
+    background-color: #d6d6d6;
+}
+
+.refresh-btn .v-icon {
+    font-size: 16px !important;
+}
+
+.default-saved-color-image {
+    animation: bounce 2s infinite ease-in-out;
+}
+/* 통통 튀는 애니메이션 */
+@keyframes bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
 }
 </style>

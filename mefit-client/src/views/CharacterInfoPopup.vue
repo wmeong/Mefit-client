@@ -249,10 +249,6 @@ export default {
                 });
 
                 const itemData = response.data || {};
-                console.log(
-                    "API 응답 데이터:",
-                    JSON.stringify(itemData, null, 2)
-                );
 
                 // ✅ 첫 번째 아이템 가져오기
                 const firstAvailableItem =
@@ -271,20 +267,6 @@ export default {
                 this.characterInfo.subColors = firstAvailableItem.sub_color
                     ? firstAvailableItem.sub_color.split(",")
                     : [];
-
-                // ✅ 디버깅 로그
-                console.log(
-                    "Vue에 저장된 퍼스널 배열:",
-                    this.characterInfo.personalColor
-                );
-                console.log(
-                    "Vue에 저장된 메인컬러 배열:",
-                    this.characterInfo.mainColors
-                );
-                console.log(
-                    "Vue에 저장된 서브컬러 배열:",
-                    this.characterInfo.subColors
-                );
 
                 // ✅ 아이템 배열 처리
                 const searchedCashItemDTOS =
@@ -342,7 +324,7 @@ export default {
 
 /* 계절별 팝업 테두리 배경색 */
 .popup-card.Spring {
-    background-color: #fff7e6; /* 연한 봄웜 */
+    background-color: #ffe5fb; /* 연한 봄웜 */
 }
 
 .popup-card.Summer {
@@ -354,7 +336,7 @@ export default {
 }
 
 .popup-card.Winter {
-    background-color: #fbf7fc; /* 연한 겨울쿨 */
+    background-color: #e6e6e6; /* 연한 겨울쿨 */
 }
 
 .center-title {
@@ -412,7 +394,6 @@ export default {
 }
 
 /* 메인, 서브컬러 영역 */
-/* 메인 + 서브 컬러 통합 박스 스타일 */
 .color-box {
     width: 249px;
     margin-left: 1px;
@@ -499,10 +480,10 @@ export default {
     width: 35px;
     height: 35px;
     flex-shrink: 0;
-    background-color: #f0f0f0; /* ✅ 연한 회색 배경 */
-    border-radius: 8px; /* ✅ 둥근 네모 */
-    padding: 5px; /* ✅ 내부 여백 */
-    display: flex; /* ✅ 아이콘 가운데 정렬 */
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 5px;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
