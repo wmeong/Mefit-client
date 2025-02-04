@@ -574,10 +574,17 @@ export default {
                     const { mainColors, subColors } =
                         this.analyzeMainAndSubColors(sortedColors);
 
+                    // 퍼스널컬러 판단
+                    const personalColorTone = this.determinePersonalColor(
+                        mainColors,
+                        subColors
+                    );
+
+                    // 결과 저장 및 UI 업데이트
                     this.characterInfo.mainColors = mainColors;
                     this.characterInfo.subColors = subColors;
-
-                    this.analyzePersonalColor(sortedColors);
+                    // this.analyzePersonalColor(sortedColors);
+                    this.personalColorAnalysis = personalColorTone;
 
                     this.saveColors(); // 퍼스널컬러 저장
                 };

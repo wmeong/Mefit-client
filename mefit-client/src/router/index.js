@@ -8,6 +8,7 @@ import RoyalStyleSimulation from "@/views/RoyalStyleSimulation.vue";
 import PersonalColorTwelve from "@/views/PersonalColorTwelve.vue";
 import ColorPick from "@/views/ColorPick.vue";
 import TestRedis from "@/views/TestRedis.vue";
+import PersonalColorTest from "@/views/PersonalColorTest.vue";
 
 const routes = [
     { path: "/", name: "Home", component: Home },
@@ -36,6 +37,11 @@ const routes = [
         props: true,
     },
     { path: "/color-pick", name: "ColorPick", component: ColorPick },
+    {
+        path: "/personal-colorTest",
+        name: "PersonalColorTest",
+        component: PersonalColorTest,
+    },
     {
         path: "/test-redis",
         name: "TestRedis",

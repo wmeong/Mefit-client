@@ -227,6 +227,7 @@ export default {
                 },
                 { tone: "겨울쿨 다크", diff: Infinity }
             ).tone;
+            //mefit폴더 mixin백업에 백업해놓음
         },
     },
 };
