@@ -85,7 +85,7 @@
                     />
                     <img
                         v-else
-                        src="@/assets/royalstyle/blare.png"
+                        src="@/assets/avatar.png"
                         alt="Default Image"
                         class="character-image"
                         :style="{
@@ -144,11 +144,11 @@
             <v-row dense justify="center" class="mt-4 picker-saved-color-grid">
                 <template v-if="savedColors.length === 0">
                     <img
-                        src="@/assets/colorpick.png"
+                        src="@/assets/colorpick.gif"
                         alt="기본 이미지"
-                        class="default-saved-color-image mt-4"
+                        class="default-saved-color-image"
                         :style="{
-                            width: '440px',
+                            width: '200px',
                             objectFit: 'contain',
                         }"
                     />
@@ -562,11 +562,11 @@ export default {
 }
 
 .fixed-add-btn:hover {
-    background-color: #f6bed9; /* 호버 시 배경색 */
+    background-color: #f6bed9; 
 }
 
 .picker-saved-colors-box {
-    padding: 24px;
+    padding: 0 24px 24px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
     border-radius: 8px;
@@ -578,9 +578,9 @@ export default {
     height: 110px;
     width: 110px;
     gap: 20px;
-    padding: 12px; /* 안쪽 여백 조정 */
+    padding: 12px; 
     margin: 20px;
-    font-size: 0.8rem; /* 글씨 크기 조정 */
+    font-size: 0.8rem; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -618,19 +618,5 @@ export default {
 
 .refresh-btn .v-icon {
     font-size: 16px !important;
-}
-
-.default-saved-color-image {
-    animation: bounce 2s infinite ease-in-out;
-}
-/* 통통 튀는 애니메이션 */
-@keyframes bounce {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-15px);
-    }
 }
 </style>

@@ -66,8 +66,9 @@ header h1 {
 }
 /*로고*/
 header h1 .logo img {
+    margin-top: 10px;
     width: 130px;
-    margin-right: 130px;
+    margin-right: 10px;
 }
 
 .menuWrap {
