@@ -7,6 +7,13 @@
             :visible="showAlert"
             @close="closeCustomAlert"
         />
+        <v-row justify="center" class="mb-4">
+            <div class="royal-style-banner">
+                <div class="royal-style-background">
+                    <h1 class="royal-style-title">Royal Style</h1>
+                </div>
+            </div>
+        </v-row>
         <!-- 첫 번째 줄: 1번, 3번, 4번 -->
         <v-row class="px-2">
             <!-- 1번: 로얄스타일 결산 영역 -->
@@ -743,11 +750,61 @@ p,
 span,
 v-list-item-content,
 input {
-    color: rgb(
-        83,
-        80,
-        80
-    ) !important; /* 모든 페이지 제목 : 회색*/
+    color: rgb(83, 80, 80) !important; /* 모든 페이지 제목 : 회색*/
+}
+
+.royal-style-banner {
+    margin-top: 20px;
+    position: relative;
+    background: #ffc0cb;
+    overflow: hidden;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+.royal-style-background {
+    background: #ffc0cb;
+    padding: 15px;
+    border-radius: 20px;
+}
+
+.royal-style-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff !important;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(193, 101, 255, 0.8),
+        0 0 40px rgba(255, 223, 0, 0.6), 0 0 60px rgba(255, 223, 0, 0.4);
+    letter-spacing: 5px;
+}
+
+/* shimmer 효과 */
+.royal-style-background::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    /* 빛나는 효과 */
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transform: skewX(-25deg);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -150%;
+    }
+    100% {
+        left: 150%;
+    }
 }
 
 /* 1번: 로얄스타일 결과 */
@@ -769,9 +826,9 @@ input {
 /* 전체 행: 닉네임과 퍼센트를 구분 */
 .ranking-row {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
-    width: 100%; 
+    width: 100%;
 }
 
 /* 닉네임 및 아이콘 */
@@ -782,47 +839,47 @@ input {
 
 /* 순위 숫자 */
 .ranking-user-rank {
-    margin-right: 30px; 
+    margin-right: 30px;
 }
 /* 10위만 조정하는 스타일 */
 .tenth-place .ranking-user-rank {
-    margin-right: 26px; 
+    margin-right: 26px;
 }
 
 /* 순위와 닉네임, 아이콘 위치 조정 */
 .tenth-place .ranking-user-info {
-    margin-left: -3px; 
+    margin-left: -3px;
 }
 /* 닉네임 */
 .ranking-user-name {
-    margin-left: 8px; 
+    margin-left: 8px;
 }
 
 /* 퍼센트 */
 .ranking-user-percentage {
-    text-align: right; 
+    text-align: right;
     flex-shrink: 0; /* 줄어들지 않도록 고정 */
-    width: 50px; 
+    width: 50px;
 }
 
 /* 아바타 컨테이너 */
 .ranking-avatar-container {
-    width: 30px; 
-    height: 30px; 
-    background-color: #d3d3d3; 
-    border-radius: 50%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
+    width: 30px;
+    height: 30px;
+    background-color: #d3d3d3;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-right: 8px;
 }
 
 /* 아바타 */
 .ranking-avatar {
-    width: 28px; 
-    height: 28px; 
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    object-fit: cover; 
+    object-fit: cover;
 }
 
 /* 3번: 로얄스타일 뽑기 */
@@ -830,7 +887,7 @@ input {
 }
 .character-image {
     position: relative;
-    top: 10px; 
+    top: 10px;
 }
 
 /*로얄-인풋 박스*/
@@ -839,9 +896,9 @@ input {
     display: flex;
     align-items: center;
     background-color: #f9f9f9;
-    border-radius: 24px; 
+    border-radius: 24px;
     padding: 8px 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 230px;
 }
 /*로얄 인풋 텍스트*/
@@ -853,19 +910,19 @@ input {
     font-size: 12px;
 }
 .search-icon {
-    cursor: pointer; 
+    cursor: pointer;
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 .search-icon:active {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transform: scale(0.95);
 }
 
 .refresh-button {
-    background-color: #afacacb8 !important; 
-    width: 30px !important; 
-    height: 30px !important; 
-    border-radius: 50%; 
+    background-color: #afacacb8 !important;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -875,7 +932,7 @@ input {
 }
 
 .refresh-button:hover {
-    background-color: #d6d6d6; 
+    background-color: #d6d6d6;
 }
 
 .refresh-button .v-icon {
@@ -884,25 +941,25 @@ input {
 
 /* 4번: 운세보기 */
 .royal-fortune {
-    white-space: pre-line; 
+    white-space: pre-line;
 }
 .slime-container {
     position: absolute;
     top: 58%;
     left: 50%;
-    transform: translate(-50%, -50%); 
+    transform: translate(-50%, -50%);
 }
 
 .slime-image {
     width: 100px;
-    animation: bounce 1.5s infinite ease-in-out; 
+    animation: bounce 1.5s infinite ease-in-out;
 }
 
 /* 통통 튀는 애니메이션 */
 @keyframes bounce {
     0%,
     100% {
-        transform: translateY(0); 
+        transform: translateY(0);
     }
     50% {
         transform: translateY(-20px);
@@ -911,7 +968,7 @@ input {
 .royal-fortune-header {
     text-align: center;
     padding-bottom: 10px;
-    border-bottom: 1px solid #e4e2e2; 
+    border-bottom: 1px solid #e4e2e2;
     margin-bottom: 15px;
     width: 100%;
 }
@@ -932,7 +989,7 @@ input {
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 5px;
-    color: #658dd6 !important; 
+    color: #658dd6 !important;
 }
 
 /* 운세 상태 (이모티콘 포함) */
@@ -940,11 +997,11 @@ input {
     font-size: 12px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #2a32427d !important; 
+    color: #2a32427d !important;
 }
 
 .fortune-icon {
-    font-size: 40px; 
+    font-size: 40px;
     margin-bottom: 10px;
 }
 
@@ -969,19 +1026,19 @@ input {
 }
 
 .result-image-container {
-    display: flex; 
-    justify-content: center; 
+    display: flex;
+    justify-content: center;
 }
 .result-text {
     font-size: 9.5px;
 }
 .special-label {
     position: absolute;
-    top: 6px; 
-    left: 8px; 
-    width: 40px; 
+    top: 6px;
+    left: 8px;
+    width: 40px;
     height: 40px;
-    z-index: 1; 
+    z-index: 1;
 }
 
 /* 폭죽 */
@@ -1025,10 +1082,10 @@ input {
 }
 
 .no-results-image {
-    width: 400px; 
-    height: auto; 
-    margin-bottom: 100px; 
-    animation: bounce 2s infinite ease-in-out; 
+    width: 400px;
+    height: auto;
+    margin-bottom: 100px;
+    animation: bounce 2s infinite ease-in-out;
 }
 
 /* 통통 튀는 애니메이션 */
@@ -1053,7 +1110,7 @@ input {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; 
+    z-index: 1000;
 }
 
 .popup-reset-content {
@@ -1146,16 +1203,16 @@ input {
 
 .popup-image {
     width: 52px;
-    height: 48px; 
+    height: 48px;
 }
 
 .popup-image-container img[alt="Special Label"] {
     position: absolute;
-    top: 20px; 
-    left: 53px; 
-    width: 50px; 
+    top: 20px;
+    left: 53px;
+    width: 50px;
     height: 50px;
-    z-index: 1; 
+    z-index: 1;
 }
 
 /*슈피겔만 이미지 css */
