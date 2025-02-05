@@ -27,11 +27,11 @@
                 <li>
                     <router-link to="/royal-simulation">로얄스타일</router-link>
                 </li>
-                <li>
+                <!-- <li>
                     <router-link to="/personal-colorTest"
                         >퍼스널테스트</router-link
                     >
-                </li>
+                </li> -->
             </ul>
         </div>
     </header>

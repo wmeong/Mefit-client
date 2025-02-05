@@ -433,8 +433,8 @@
 
 <script>
 import axios from "axios";
-import CustomAlert from "@/components/CustomAlert.vue"; // 공통 알림 컴포넌트
-import colorAnalysisMixin from "@/mixins/colorAnalysisMixin"; //컬러 분석 믹스인
+import CustomAlert from "@/components/CustomAlert.vue";
+import colorAnalysisMixin from "@/mixins/colorAnalysisMixin";
 
 export default {
     name: "CharacterInfo",
@@ -562,29 +562,24 @@ export default {
                 this.characterCashFace = ocidResponse.data.searchedCashFaceDTOS;
 
                 this.loadMotionData(); // 페이지 로드 시 동작/감정 데이터 가져오기
-                // 이미지가 로드된 후 extractColors 실행
                 const img = new Image();
                 img.crossOrigin = "Anonymous"; // 크로스 도메인 이미지 처리
                 img.src = this.characterImage;
 
                 img.onload = async () => {
+                    //mixin 활용 컬러분석 메서드 호출
                     const sortedColors = await this.extractColors(img);
 
-                    // 메인/서브 컬러와 퍼스널컬러를 각각 분석
                     const { mainColors, subColors } =
                         this.analyzeMainAndSubColors(sortedColors);
-
-                    // 퍼스널컬러 판단
-                    const personalColorTone = this.determinePersonalColor(
+                    const personalColor = this.determinePersonalColor(
                         mainColors,
                         subColors
                     );
 
-                    // 결과 저장 및 UI 업데이트
                     this.characterInfo.mainColors = mainColors;
                     this.characterInfo.subColors = subColors;
-                    // this.analyzePersonalColor(sortedColors);
-                    this.personalColorAnalysis = personalColorTone;
+                    this.personalColorAnalysis = personalColor;
 
                     this.saveColors(); // 퍼스널컬러 저장
                 };

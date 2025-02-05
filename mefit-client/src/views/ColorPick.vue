@@ -256,15 +256,19 @@ export default {
                 img.src = this.characterInfo.characterImage;
 
                 img.onload = async () => {
+                    //mixin 활용 컬러분석 메서드 호출
                     const sortedColors = await this.extractColors(img);
 
-                    // 메인, 서브컬러 및 퍼스널컬러 분석
                     const { mainColors, subColors } =
                         this.analyzeMainAndSubColors(sortedColors);
+                    const personalColor = this.determinePersonalColor(
+                        mainColors,
+                        subColors
+                    );
+
                     this.characterInfo.mainColors = mainColors;
                     this.characterInfo.subColors = subColors;
-                    this.characterInfo.personalColor =
-                        this.analyzePersonalColor(sortedColors);
+                    this.characterInfo.personalColor = personalColor;
                 };
             } catch (error) {
                 this.alertMessage = "존재하지 않는 캐릭터입니다";
@@ -562,7 +566,7 @@ export default {
 }
 
 .fixed-add-btn:hover {
-    background-color: #f6bed9; 
+    background-color: #f6bed9;
 }
 
 .picker-saved-colors-box {
@@ -578,9 +582,9 @@ export default {
     height: 110px;
     width: 110px;
     gap: 20px;
-    padding: 12px; 
+    padding: 12px;
     margin: 20px;
-    font-size: 0.8rem; 
+    font-size: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: center;
