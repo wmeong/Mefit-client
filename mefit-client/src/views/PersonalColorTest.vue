@@ -1,38 +1,19 @@
 <template>
     <div>
-        <h1>테스트 화면</h1>
-        <input
-            type="file"
-            multiple
-            accept="image/*"
-            @change="handleFileUpload"
-        />
+        <h1>퍼스널 컬러 분석</h1>
+        <input type="file" multiple accept="image/*" @change="handleFileUpload" />
         <div v-if="imageData.length > 0" class="image-grid">
-            <div
-                v-for="(data, index) in imageData"
-                :key="index"
-                class="image-item"
-            >
-                <img :src="data.url" alt="uploaded image" />
+            <div v-for="(data, index) in imageData" :key="index" class="image-item">
+                <img :src="data.url" alt="Uploaded Image" />
                 <div class="color-info">
                     <p>퍼스널컬러: {{ data.personalColor }}</p>
                     <p>메인컬러:</p>
                     <div class="colors-row">
-                        <span
-                            v-for="(color, idx) in data.mainColors"
-                            :key="'main-' + idx"
-                            class="color-box"
-                            :style="{ backgroundColor: color }"
-                        ></span>
+                        <span v-for="(color, idx) in data.mainColors" :key="'main-' + idx" class="color-box" :style="{ backgroundColor: color }"></span>
                     </div>
                     <p>서브컬러:</p>
                     <div class="colors-row">
-                        <span
-                            v-for="(color, idx) in data.subColors"
-                            :key="'sub-' + idx"
-                            class="color-box"
-                            :style="{ backgroundColor: color }"
-                        ></span>
+                        <span v-for="(color, idx) in data.subColors" :key="'sub-' + idx" class="color-box" :style="{ backgroundColor: color }"></span>
                     </div>
                 </div>
             </div>
@@ -45,128 +26,20 @@ export default {
     data() {
         return {
             imageData: [],
-            personalColorsData: {
-                "봄웜 라이트": [
-                    "#F08080",
-                    "#FFFFE0",
-                    "#FFDAB9",
-                    "#FFF0F5",
-                    "#E0FFF0",
-                    "#E6E6FA",
-                    "#ADD8E6",
-                    "#B0E0E6",
-                ],
-                "봄웜 브라이트": [
-                    "#FFA07A",
-                    "#FFD1DC",
-                    "#F9E79F",
-                    "#FF7F50",
-                    "#F2D4CC",
-                    "#FF2400",
-                    "#F8E473",
-                    "#FFFDD0",
-                ],
-                "봄웜 트루": [
-                    "#FFB07C",
-                    "#FFFDD0",
-                    "#FF7F50",
-                    "#A0785A",
-                    "#E6BE8A",
-                    "#F28E63",
-                    "#F5BD47",
-                    "#FFFFF0",
-                ],
-                "여름쿨 라이트": [
-                    "#ADD8E6",
-                    "#E6E6FA",
-                    "#B8E2DC",
-                    "#FFD1DC",
-                    "#D0F0F0",
-                    "#C0C0C0",
-                    "#AEC6CF",
-                    "#E0FFFF",
-                ],
-                "여름쿨 브라이트": [
-                    "#00FFFF",
-                    "#D8BFD8",
-                    "#C8A2C8",
-                    "#7FFFD4",
-                    "#CDE7F0",
-                    "#DCAE96",
-                    "#D3BCCC",
-                    "#8EE5EE",
-                ],
-                "여름쿨 뮤트": [
-                    "#DCAE96",
-                    "#B0C4DE",
-                    "#C8A2C8",
-                    "#A9D6CC",
-                    "#B0A4E3",
-                    "#D8D3E3",
-                    "#D0CCE0",
-                    "#B0C4E3",
-                ],
-                "가을웜 뮤트": [
-                    "#8B4513",
-                    "#F5DEB3",
-                    "#808000",
-                    "#CD7F32",
-                    "#F4A460",
-                    "#D2691E",
-                    "#7F6A55",
-                    "#FFDB58",
-                ],
-                "가을웜 스트롱": [
-                    "#C04000",
-                    "#B8860B",
-                    "#9B111E",
-                    "#A0522D",
-                    "#DAA520",
-                    "#884C23",
-                    "#A45A52",
-                    "#FFD700",
-                ],
-                "가을웜 딥": [
-                    "#3F1E12",
-                    "#800020",
-                    "#FF8C00",
-                    "#4B5320",
-                    "#8A3324",
-                    "#E3963E",
-                    "#FFB84D",
-                    "#800000",
-                ],
-                "겨울쿨 브라이트": [
-                    "#007FFF",
-                    "#FFD1DC",
-                    "#32CD32",
-                    "#1E90FF",
-                    "#009DC4",
-                    "#0F52BA",
-                    "#FFFFFF",
-                    "#FF2400",
-                ],
-                "겨울쿨 스트롱": [
-                    "#001F54",
-                    "#4B0082",
-                    "#DE3163",
-                    "#36454F",
-                    "#228B22",
-                    "#B22222",
-                    "#4169E1",
-                    "#00CED1",
-                ],
-                "겨울쿨 다크": [
-                    "#00008B",
-                    "#673147",
-                    "#722F37",
-                    "#2F4F4F",
-                    "#191970",
-                    "#101820",
-                    "#4B0082",
-                    "#5B504F",
-                ],
-            },
+            personalColorCategories: [
+                { tone: "봄웜 라이트", hRange: [15, 65], sRange: [20, 60], vRange: [55, 90] },
+                { tone: "봄웜 브라이트", hRange: [0, 30], sRange: [40, 90], vRange: [65, 95] },
+                { tone: "봄웜 트루", hRange: [20, 50], sRange: [35, 75], vRange: [55, 85] },
+                { tone: "여름쿨 라이트", hRange: [120, 160], sRange: [15, 30], vRange: [50, 65] },
+                { tone: "여름쿨 브라이트", hRange: [140, 180], sRange: [35, 70], vRange: [65, 90] },
+                { tone: "여름쿨 뮤트", hRange: [190, 230], sRange: [10, 30], vRange: [45, 65] },
+                { tone: "가을웜 뮤트", hRange: [35, 75], sRange: [15, 40], vRange: [40, 65] },
+                { tone: "가을웜 스트롱", hRange: [40, 90], sRange: [50, 60], vRange: [50, 70] },
+                { tone: "가을웜 딥", hRange: [0, 60], sRange: [35, 60], vRange: [20, 50] },
+                { tone: "겨울쿨 브라이트", hRange: [200, 260], sRange: [45, 80], vRange: [75, 100] },
+                { tone: "겨울쿨 스트롱", hRange: [240, 290], sRange: [40, 70], vRange: [45, 80] },
+                { tone: "겨울쿨 다크", hRange: [270, 360], sRange: [20, 55], vRange: [10, 40] },
+            ],
         };
     },
     methods: {
@@ -179,12 +52,9 @@ export default {
                 const img = await this.loadImage(url);
 
                 const sortedColors = await this.extractColors(img);
-                const { mainColors, subColors } =
-                    this.analyzeMainAndSubColors(sortedColors);
-                const personalColor = this.determinePersonalColor(
-                    mainColors,
-                    subColors
-                );
+                const { mainColors, subColors } = this.analyzeMainAndSubColors(sortedColors);
+                const personalColor = this.determinePersonalColor(mainColors, subColors);
+
                 this.imageData.push({
                     url,
                     mainColors,
@@ -203,163 +73,260 @@ export default {
         },
 
         async extractColors(img) {
-            return new Promise((resolve) => {
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
 
-                const imageData = ctx.getImageData(
-                    0,
-                    0,
-                    img.width,
-                    img.height
-                ).data;
-                const colorCounts = {};
+            const imageData = ctx.getImageData(0, 0, img.width, img.height).data;
+            const colorCounts = {};
+            const pixelPositions = {};
 
-                for (let i = 0; i < imageData.length; i += 4) {
-                    const r = imageData[i];
-                    const g = imageData[i + 1];
-                    const b = imageData[i + 2];
+            for (let i = 0; i < imageData.length; i += 4) {
+                const [r, g, b, a] = imageData.slice(i, i + 4);
+                if (a === 0) continue; // 투명 픽셀 제외
 
-                    if (
-                        (r === 255 && g === 255 && b === 255) ||
-                        (r === 0 && g === 0 && b === 0)
-                    )
-                        continue;
+                const hsv = this.rgbToHsv(r, g, b);
+                if (hsv.v < 5 || hsv.v > 95 || hsv.s < 5) continue; // 너무 어둡거나 밝거나 채도가 낮은 색상 제외
 
-                    const hsv = this.rgbToHsv(r, g, b);
-                    const roundedH = Math.round(hsv.h / 5) * 5;
-                    const roundedS = Math.round(hsv.s / 5) * 5;
-                    const roundedV = Math.round(hsv.v / 5) * 5;
-                    const key = `${roundedH},${roundedS},${roundedV}`;
+                const key = `${Math.round(hsv.h / 5) * 5},${Math.round(hsv.s / 5) * 5},${Math.round(hsv.v / 5) * 5}`;
+                colorCounts[key] = (colorCounts[key] || 0) + 1;
 
-                    colorCounts[key] = (colorCounts[key] || 0) + 1;
+                // 픽셀 위치 정보 저장 (면적 분석용)
+                const pixelIndex = i / 4;
+                const y = Math.floor(pixelIndex / img.width);
+                const x = pixelIndex % img.width;
+                if (!pixelPositions[key]) pixelPositions[key] = [];
+                pixelPositions[key].push({ x, y });
+            }
+
+            // 면적 기반 가중치 적용
+            for (const key in colorCounts) {
+                const connectedArea = this.calculateConnectedArea(pixelPositions[key]);
+                colorCounts[key] += connectedArea * 0.5; // 가중치 부여
+            }
+
+            return Object.entries(colorCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 30)
+                .map(([color]) => color);
+        },
+
+        calculateConnectedArea(pixels) {
+            const visited = new Set();
+            let area = 0;
+
+            const isConnected = (px1, px2) => {
+                const dx = Math.abs(px1.x - px2.x);
+                const dy = Math.abs(px1.y - px2.y);
+                return (dx === 1 && dy === 0) || (dx === 0 && dy === 1);
+            };
+
+            const explore = (pixel) => {
+                if (visited.has(`${pixel.x},${pixel.y}`)) return;
+                visited.add(`${pixel.x},${pixel.y}`);
+                area++;
+
+                for (const neighbor of pixels) {
+                    if (isConnected(pixel, neighbor)) {
+                        explore(neighbor);
+                    }
                 }
+            };
 
-                const sortedColors = Object.entries(colorCounts)
-                    .sort((a, b) => b[1] - a[1])
-                    .map(([color]) => color)
-                    .slice(0, 30);
-
-                resolve(sortedColors);
-            });
+            pixels.forEach((pixel) => explore(pixel));
+            return area;
         },
 
         analyzeMainAndSubColors(sortedColors) {
-            const groupedSortedColors = sortedColors.slice(0, 8);
-
             return {
-                mainColors: groupedSortedColors
-                    .slice(0, 4)
-                    .map((colorKey) =>
-                        this.hsvToHex(...colorKey.split(",").map(Number))
-                    ),
-                subColors: groupedSortedColors
-                    .slice(4)
-                    .map((colorKey) =>
-                        this.hsvToHex(...colorKey.split(",").map(Number))
-                    ),
+                mainColors: sortedColors.slice(0, 4).map((colorKey) => this.hsvToHex(...colorKey.split(",").map(Number))),
+                subColors: sortedColors.slice(4, 8).map((colorKey) => this.hsvToHex(...colorKey.split(",").map(Number))),
             };
         },
 
         determinePersonalColor(mainColors, subColors) {
             const allColors = [...mainColors, ...subColors];
 
-            // 메인컬러 1등 가져오기
-            const primaryColor = mainColors[0];
-            const { h } = this.hexToHsv(primaryColor);
+            // Step 1: 메인컬러 기준 퍼스널컬러 분석
+            const primaryColor = mainColors.length > 0 ? mainColors[0] : "#000000"; 
+            const { h, s, v } = this.hexToHsv(primaryColor);
+            let personalColor = this.getBasePersonalColor(h, s, v);
 
-            // 1. 메인컬러가 갈색 계열이면 강제 가을 분류
-            if (h >= 20 && h <= 50) {
-                return this.determineAutumnTone(allColors);
+            // Step 2: 서브컬러 조정 적용
+            personalColor = this.adjustForSubColors(allColors, h, s, v);
+
+            // 봄 매칭
+            if (v > 65 && s > 40 && s < 70) {
+                return this.findClosestPersonalColor(h, s, v, ["봄웜 브라이트"]);
             }
 
-            // 2. 어두운 색상 분류
-            const darkColorCount = allColors.filter((color) => {
-                const { v } = this.hexToHsv(color);
-
-                // 검은색 계열 추가 조건
-                const isBlackColor = ["#1A1A1A", "#333333", "#4D4D4D"].includes(
-                    color.toUpperCase()
-                );
-
-                // V 값이 낮거나 검은색 계열로 간주되는 경우
-                return v <= 20 || isBlackColor;
-            }).length;
-
-            const isPrimaryBlack = ["#1A1A1A", "#333333", "#4D4D4D"].includes(
-                primaryColor.toUpperCase()
-            );
-
-            if (isPrimaryBlack) {
-                return "겨울쿨 다크";
-            }
-            // 어두운 색 비율이 50% 이상이면 겨울쿨 다크로 분류
-            if (darkColorCount / allColors.length >= 0.4) {
-                return "겨울쿨 다크";
+            if (v >= 55 && v < 75 && s >= 20 && s < 45) {
+                return this.findClosestPersonalColor(h, s, v, ["봄웜 라이트"]);
             }
 
-            // 3. 보라/핑크 계열 분류
-            const purpleCount = allColors.filter((color) => {
+            if (v >= 60 && s >= 35 && s < 65) {
+                return this.findClosestPersonalColor(h, s, v, ["봄웜 트루"]);
+            }
+
+
+            // Step 3: 어두운색일 경우 겨울쿨 다크 우선 매칭
+            if (v > 70 && s > 45) {
+                return this.findClosestPersonalColor(h, s, v, ["겨울쿨 브라이트"]);
+            }
+            
+            if (v < 30) {
+                if (s < 25) {
+                    // 매우 어둡고 채도가 낮은 경우 특정 카테고리로 바로 분류
+                    return this.findClosestPersonalColor(h, s, v, ["겨울쿨 다크"]);
+                }
+                // 어둡지만 채도가 낮지 않은 경우 추가로 겨울쿨 다크, 스트롱 중에서 선택
+                return this.findClosestPersonalColor(h, s, v, ["겨울쿨 다크", "겨울쿨 스트롱"]);
+            }
+
+            // Step 4: 가중치 적용 후 추가 조정
+            const weight = this.adjustToneWeights(personalColor);
+            if (weight > 1.0) {
+                personalColor = this.findClosestPersonalColor(h, s, v, [personalColor]);
+            }
+
+
+             // Step 5: 특정 톤의 과다 발생에 따른 추가 보정
+            if (personalColor === "여름쿨 뮤트") {
+                const subBalance = this.adjustForBalance(mainColors, subColors, "여름쿨 브라이트", "여름쿨 라이트");
+                if (subBalance) return subBalance;
+            }
+
+            // 가을웜 조정
+            if (personalColor === "가을웜 스트롱") {
+                const subBalance = this.adjustForBalance(mainColors, subColors, "가을웜 뮤트", "가을웜 딥");
+                if (subBalance) return subBalance;
+            }
+
+            // 겨울쿨 조정
+            if (personalColor === "겨울쿨 다크") {
+                const avgBrightness = subColors.reduce((sum, color) => {
+                    const { v } = this.hexToHsv(color);
+                    return sum + v;
+                }, 0) / subColors.length;
+
+                if (avgBrightness > 60 && s > 45) return "겨울쿨 브라이트";
+                if (avgBrightness > 45) return "겨울쿨 스트롱";
+            }
+
+
+            // Step 4: 미분류일 경우 가장 가까운 퍼스널컬러 강제 매칭
+            if (personalColor === "미분류") {
+                personalColor = this.findClosestPersonalColor(h, s, v);
+            }
+
+            return this.analyzeColorBalance(mainColors, subColors, personalColor);
+        },
+
+        getBasePersonalColor(h, s, v) {
+            for (const category of this.personalColorCategories) {
+                const [hMin, hMax] = category.hRange;
+                const [sMin, sMax] = category.sRange;
+                const [vMin, vMax] = category.vRange;
+
+                if (h >= hMin && h <= hMax && s >= sMin && s <= sMax && v >= vMin && v <= vMax) {
+                    return category.tone;
+                }
+            }
+            return "미분류";
+        },
+
+        findClosestPersonalColor(h, s, v, specificCategories = null) {
+            const categories = specificCategories
+                ? this.personalColorCategories.filter(cat => specificCategories.includes(cat.tone))
+                : this.personalColorCategories;
+
+            return categories.reduce((closest, category) => {
+                const [hMin, hMax] = category.hRange;
+                const [sMin, sMax] = category.sRange;
+                const [vMin, vMax] = category.vRange;
+                const hMid = (hMin + hMax) / 2;
+                const sMid = (sMin + sMax) / 2;
+                const vMid = (vMin + vMax) / 2;
+
+                const diff = Math.abs(h - hMid) + Math.abs(s - sMid) + Math.abs(v - vMid);
+                return diff < closest.diff ? { tone: category.tone, diff } : closest;
+            }, { tone: "미분류", diff: Infinity }).tone;
+        },
+
+        adjustForSubColors(allColors, baseH, baseS, baseV) {
+            const complementaryTones = allColors.filter((color) => {
                 const { h } = this.hexToHsv(color);
-                return h >= 260 && h <= 310;
-            }).length;
-
-            if (purpleCount / allColors.length >= 0.3) {
-                const strongPurple = allColors.some((color) => {
-                    const { s, v } = this.hexToHsv(color);
-                    return s >= 60 && v <= 60;
+                const complementaryHue = (h + 180) % 360;
+                return allColors.some((c) => {
+                    const { h: subH } = this.hexToHsv(c);
+                    return Math.abs(subH - complementaryHue) <= 20;
                 });
+            });
 
-                if (strongPurple) return "겨울쿨 스트롱";
-
-                const brightPurple = allColors.some((color) => {
-                    const { s, v } = this.hexToHsv(color);
-                    return s >= 40 && v >= 70;
-                });
-
-                if (brightPurple) return "겨울쿨 브라이트";
+            if (complementaryTones.length > 1) {
+                return this.findClosestPersonalColor(baseH, baseS, baseV);
             }
 
-            // 4. 기본 매칭 로직
-            const matchedTone = this.matchColorGroupByHex(allColors);
-            if (matchedTone) return matchedTone;
+            const warmTones = allColors.filter((color) => {
+                const { h } = this.hexToHsv(color);
+                return h >= 20 && h <= 50;
+            });
 
-            const fallbackHSV = this.analyzeFallbackHSV(mainColors);
-            return this.findClosestPersonalColor(
-                fallbackHSV.h,
-                fallbackHSV.s,
-                fallbackHSV.v
-            );
+            const coolTones = allColors.filter((color) => {
+                const { h } = this.hexToHsv(color);
+                return h >= 150 && h <= 250;
+            });
+
+            if (warmTones.length > coolTones.length) {
+                return this.findClosestPersonalColor(40, 55, 60, ["가을웜 뮤트", "가을웜 스트롱", "가을웜 딥"]);
+            } else {
+                return this.findClosestPersonalColor(210, 35, 60, ["여름쿨 라이트", "여름쿨 브라이트", "여름쿨 뮤트"]);
+            }
+        },
+
+        adjustForBalance(mainColors, subColors, preferredTone1, preferredTone2) {
+            const avgSaturation = subColors.reduce((sum, color) => {
+                const { s } = this.hexToHsv(color);
+                return sum + s;
+            }, 0) / subColors.length;
+
+            // 채도에 따라 다른 톤으로 조정
+            if (avgSaturation >= 50) return preferredTone1;
+            if (avgSaturation >= 30) return preferredTone2;
+
+            return null;
+        },
+
+        adjustToneWeights(tone) {
+            const weightMap = {
+                "겨울쿨 다크": 1.0,   // 기본 가중치로 설정
+                "겨울쿨 스트롱": 1.1, // 약간 높임
+                "겨울쿨 브라이트": 1.2 // 우선순위를 높임
+            };
+            return weightMap[tone] || 1.0;
+        },
+
+
+        analyzeColorBalance(mainColors, subColors, baseColor) {
+            const mainColorRatio = mainColors.length / (mainColors.length + subColors.length);
+            if (mainColorRatio >= 0.6) {
+                return baseColor;
+            }
+            return baseColor;
         },
 
         rgbToHsv(r, g, b) {
-            r /= 255;
-            g /= 255;
-            b /= 255;
-
-            const max = Math.max(r, g, b);
-            const min = Math.min(r, g, b);
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
             const d = max - min;
-
-            let h = 0,
-                s = max === 0 ? 0 : d / max,
-                v = max;
+            let h = 0, s = max === 0 ? 0 : d / max, v = max;
 
             if (max !== min) {
-                switch (max) {
-                    case r:
-                        h = (g - b) / d + (g < b ? 6 : 0);
-                        break;
-                    case g:
-                        h = (b - r) / d + 2;
-                        break;
-                    case b:
-                        h = (r - g) / d + 4;
-                        break;
-                }
+                h = max === r ? (g - b) / d + (g < b ? 6 : 0)
+                    : max === g ? (b - r) / d + 2
+                    : (r - g) / d + 4;
                 h /= 6;
             }
 
@@ -367,200 +334,28 @@ export default {
         },
 
         hsvToHex(h, s, v) {
-            s /= 100;
-            v /= 100;
+            s /= 100; v /= 100;
+            const c = v * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = v - c;
+            let [r, g, b] = h < 60 ? [c, x, 0]
+                : h < 120 ? [x, c, 0]
+                : h < 180 ? [0, c, x]
+                : h < 240 ? [0, x, c]
+                : h < 300 ? [x, 0, c] : [c, 0, x];
 
-            const c = v * s;
-            const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-            const m = v - c;
-
-            let r = 0,
-                g = 0,
-                b = 0;
-
-            if (h >= 0 && h < 60) {
-                r = c;
-                g = x;
-            } else if (h >= 60 && h < 120) {
-                r = x;
-                g = c;
-            } else if (h >= 120 && h < 180) {
-                g = c;
-                b = x;
-            } else if (h >= 180 && h < 240) {
-                g = x;
-                b = c;
-            } else if (h >= 240 && h < 300) {
-                r = x;
-                b = c;
-            } else {
-                r = c;
-                b = x;
-            }
-
-            r = Math.round((r + m) * 255);
-            g = Math.round((g + m) * 255);
-            b = Math.round((b + m) * 255);
-
-            return `#${((1 << 24) + (r << 16) + (g << 8) + b)
-                .toString(16)
-                .slice(1)}`;
-        },
-        determineAutumnTone(colors) {
-            // 1. 강한 브라운 계열을 우선 평가
-            const strongBrown = colors.some((color) => {
-                const { h, s, v } = this.hexToHsv(color);
-                return h >= 20 && h <= 50 && s >= 50 && v >= 50;
-            });
-            if (strongBrown) return "가을웜 스트롱";
-
-            // 2. 연한 톤 조건
-            const lightTone = colors.some((color) => {
-                const { s, v } = this.hexToHsv(color);
-                return s <= 30 && v >= 70;
-            });
-            if (lightTone) return "가을웜 뮤트";
-
-            // 3. 딥 브라운 또는 버건디 조건
-            const deepBrownOrBurgundy = colors.some((color) => {
-                const { h, s, v } = this.hexToHsv(color);
-                return (
-                    (h >= 0 && h <= 20) ||
-                    (h >= 300 && h <= 360) ||
-                    (h >= 50 && h <= 100 && s >= 40 && v <= 40)
-                );
-            });
-            if (deepBrownOrBurgundy) return "가을웜 딥";
-
-            // 4. 뮤트 브라운 기본 조건
-            const mutedBrown = colors.some((color) => {
-                const { h, s, v } = this.hexToHsv(color);
-                return (
-                    h >= 20 &&
-                    h <= 50 &&
-                    s >= 15 &&
-                    s <= 50 &&
-                    v >= 40 &&
-                    v <= 70
-                );
-            });
-            if (mutedBrown) return "가을웜 뮤트";
-
-            return "가을웜 뮤트"; // 기본 반환값
+            return `#${[(r + m) * 255, (g + m) * 255, (b + m) * 255]
+                .map((n) => Math.round(n).toString(16).padStart(2, "0"))
+                .join("")}`;
         },
 
         hexToHsv(hex) {
-            const rgb = parseInt(hex.substring(1), 16);
-            const r = (rgb >> 16) & 0xff;
-            const g = (rgb >> 8) & 0xff;
-            const b = rgb & 0xff;
-            return this.rgbToHsv(r, g, b);
-        },
-
-        matchColorGroupByHex(colors) {
-            for (const [tone, colorList] of Object.entries(
-                this.personalColorsData
-            )) {
-                if (colors.some((color) => colorList.includes(color))) {
-                    return tone;
-                }
-            }
-            return null;
-        },
-
-        // 퍼스널컬러 중 기본 매칭 실패 시 HSV 값 기반 최근접 컬러 분석
-        analyzeFallbackHSV(colors) {
-            const weights = [25, 20, 15, 10, 8, 6, 4, 2]; // 각 주요 색상에 대한 우선순위
-
-            let hSum = 0,
-                sSum = 0,
-                vSum = 0,
-                weightSum = 0;
-
-            colors.forEach((hex, index) => {
-                const { h, s, v } = this.hexToHsv(hex);
-                const weight = weights[index] || 1;
-
-                hSum += h * weight;
-                sSum += s * weight;
-                vSum += v * weight;
-                weightSum += weight;
-            });
-
-            return {
-                h: hSum / weightSum,
-                s: sSum / weightSum,
-                v: vSum / weightSum,
-            };
-        },
-        findClosestPersonalColor(h, s, v) {
-            const personalColors = [
-                { tone: "봄웜 브라이트", h: [0, 30], s: 60, v: 55 }, //12개
-                { tone: "봄웜 트루", h: [30, 50], s: 50, v: 50 }, //12개
-                { tone: "봄웜 라이트", h: [50, 80], s: [30, 50], v: [45, 60] }, //0개
-                {
-                    tone: "여름쿨 라이트", //0개
-                    h: [110, 140],
-                    s: [25, 45],
-                    v: [40, 60],
-                },
-                { tone: "여름쿨 브라이트", h: [140, 170], s: 35, v: 45 },
-                { tone: "여름쿨 뮤트", h: [170, 220], s: 25, v: 40 }, //6개
-                { tone: "가을웜 뮤트", h: [40, 120], s: [15, 35], v: [20, 50] }, //8개
-                { tone: "가을웜 스트롱", h: [70, 170], s: 50, v: [40, 70] }, //12개
-                { tone: "가을웜 딥", h: [20, 50], s: 20, v: 30 }, //39개
-                { tone: "겨울쿨 브라이트", h: [200, 270], s: 45, v: 55 }, //15개
-                { tone: "겨울쿨 스트롱", h: [180, 280], s: 30, v: 35 }, //3개
-                { tone: "겨울쿨 다크", h: [270, 360], s: 50, v: 40 }, //29개(가을웜 딥으로 분류돼야할 거 여기로 몇개 왔음)
-            ];
-
-            return personalColors.reduce(
-                (closest, color) => {
-                    const midH = (color.h[0] + color.h[1]) / 2;
-                    const diff =
-                        Math.abs(midH - h) +
-                        Math.abs(color.s - s) +
-                        Math.abs(color.v - v);
-
-                    return diff < closest.diff
-                        ? { tone: color.tone, diff }
-                        : closest;
-                },
-                { tone: "겨울쿨 다크", diff: Infinity }
-            ).tone;
-        },
-        // 그룹별 색상 정렬 후 반환
-        groupColorsByRange(colors) {
-            const groupedColors = {};
-
-            colors.forEach((colorKey) => {
-                const [h, s, v] = colorKey.split(",").map(Number);
-                const roundedH = Math.round(h / 10) * 10;
-                const roundedS = Math.round(s / 10) * 10;
-                const roundedV = Math.round(v / 10) * 10;
-                const groupedKey = `${roundedH},${roundedS},${roundedV}`;
-                groupedColors[groupedKey] =
-                    (groupedColors[groupedKey] || 0) + 1;
-            });
-
-            return Object.entries(groupedColors)
-                .sort((a, b) => b[1] - a[1])
-                .map(([key]) => key);
-        },
-        // 이미지는 잘라내기/크기 조정 후 추가 분석할 수 있습니다.
-        cropAndResizeImage(img, width, height) {
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(img, 0, 0, width, height);
-            return canvas.toDataURL();
+            const rgb = parseInt(hex.slice(1), 16);
+            return this.rgbToHsv((rgb >> 16) & 0xff, (rgb >> 8) & 0xff, rgb & 0xff);
         },
     },
 };
 </script>
 
-<style>
+<style scoped>
 .image-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -585,12 +380,9 @@ export default {
     margin: 10px 0;
 }
 .color-box {
-    display: inline-block;
     width: 30px;
     height: 30px;
     border: 1px solid #aaa;
     border-radius: 50%;
 }
 </style>
-
-
