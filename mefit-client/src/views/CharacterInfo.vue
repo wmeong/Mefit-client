@@ -299,11 +299,8 @@
                         <h3 class="font-weight-bold mt-4">퍼스널컬러</h3>
                         <!-- 퍼스널 컬러 분석 결과 -->
                         <div
-                            :class="[
-                                'text-center',
-                                'personal-color-result',
-                                personalColorGroup,
-                            ]"
+                            :class="['text-center', 'personal-color-result']"
+                            :style="{ backgroundColor: colorForBackground }"
                             @click="navigateToPersonalColorPage"
                             style="cursor: pointer"
                         >
@@ -475,6 +472,7 @@ export default {
             selectedWmotion: "",
             mainColorsForSave: [],
             subColorsForSave: [],
+            colorForBackground: "",
         };
     },
     methods: {
@@ -578,6 +576,7 @@ export default {
                     );
 
                     this.characterInfo.mainColors = mainColors;
+                    this.colorForBackground = this.characterInfo.mainColors[0];
                     this.characterInfo.subColors = subColors;
                     this.personalColorAnalysis = personalColor;
 
@@ -1248,6 +1247,7 @@ export default {
     padding: 4px 8px;
     text-align: center;
     margin-top: 8px;
+    color: white;
 }
 
 .personal-color-result:hover {
@@ -1271,27 +1271,6 @@ export default {
         transform: scale(0.9);
         opacity: 0.7;
     }
-}
-
-/* 퍼스널컬러 결과별 배경색 */
-.personal-color-result.Spring {
-    background-color: #fbe7c6;
-    color: #8d5524;
-}
-
-.personal-color-result.Summer {
-    background-color: #e6f7ff;
-    color: #007acc;
-}
-
-.personal-color-result.Autumn {
-    background-color: #fdecc8;
-    color: #a64b2a;
-}
-
-.personal-color-result.Winter {
-    background-color: #f0f4f7;
-    color: #3a4e80;
 }
 
 .main-color {

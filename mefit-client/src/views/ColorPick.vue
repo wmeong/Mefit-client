@@ -28,7 +28,11 @@
         <!-- 1번: 퍼스널컬러 정보 영역 -->
 
         <v-card v-if="characterInfo.characterImage" class="personal-card mb-6">
-            <div class="personal-color-result" :class="personalColorGroup">
+            <div
+                class="personal-color-result"
+                :class="personalColorGroup"
+                :style="{ backgroundColor: colorForBackground }"
+            >
                 {{ characterInfo.personalColor }}
             </div>
             <v-row class="align-center main-sub-color-row">
@@ -204,6 +208,7 @@ export default {
             scale: 0.8,
             showAlert: false, // 알림 팝업 상태 추가
             message: "", // 오류 메시지
+            colorForBackground: "",
         };
     },
     created() {
@@ -267,6 +272,7 @@ export default {
                     );
 
                     this.characterInfo.mainColors = mainColors;
+                    this.colorForBackground = this.characterInfo.mainColors[0];
                     this.characterInfo.subColors = subColors;
                     this.characterInfo.personalColor = personalColor;
                 };
@@ -449,32 +455,11 @@ export default {
 
 .personal-color-result {
     font-size: 16px;
-    font-weight: bold;
     text-align: center;
     padding: 8px;
     margin-bottom: 16px;
     border-radius: 8px;
-}
-
-/* 계절별 퍼스널컬러 스타일 */
-.personal-color-result.Spring {
-    background-color: #fbe7c6;
-    color: #8d5524;
-}
-
-.personal-color-result.Summer {
-    background-color: #e6f7ff;
-    color: #007acc;
-}
-
-.personal-color-result.Autumn {
-    background-color: #fdecc8;
-    color: #a64b2a;
-}
-
-.personal-color-result.Winter {
-    background-color: #f0f4f7;
-    color: #3a4e80;
+    color: white;
 }
 
 .main-sub-color-row {
