@@ -27,6 +27,7 @@
                     </div>
                 </div>
             </v-row>
+
             <!-- 검색창과 선택박스 영역 -->
             <v-row dense class="search-bar-row">
                 <v-col cols="12" md="12">
@@ -296,7 +297,51 @@
                 <!-- 3번: 퍼스널 컬러 영역 -->
                 <v-col cols="12" md="5">
                     <div class="personal-color-card">
-                        <h3 class="font-weight-bold mt-4">퍼스널컬러</h3>
+                        <v-row class="align-items-center">
+                            <!-- 퍼스널컬러 텍스트 -->
+                            <v-col
+                                cols="auto"
+                                class="d-flex align-items-center"
+                            >
+                                <h3 class="font-weight-bold mt-4 mb-0">
+                                    퍼스널컬러
+                                </h3>
+                                <!-- 도움말 아이콘 버튼 -->
+                                <v-btn
+                                    icon
+                                    color="grey darken-2"
+                                    class="help-btn ml-2 mt-4"
+                                    style="width: 20px; height: 20px"
+                                >
+                                    <v-tooltip bottom>
+                                        <template #activator="{ props }">
+                                            <v-icon
+                                                v-bind="props"
+                                                class="help-icon"
+                                            >
+                                                mdi-help-circle-outline
+                                            </v-icon>
+                                        </template>
+                                        <span>
+                                            퍼스널컬러 분석은 캐릭터 색상을
+                                            <br />
+                                            기반으로 제공됩니다.
+                                            <br />
+                                            기술적 처리 방식과 이미지의 특성상
+                                            <br />
+                                            일부 색상 정보가 왜곡될 수 있으며,
+                                            <br />
+                                            화면 환경에 따라 차이가 발생할 수
+                                            있습니다.
+                                            <br />
+                                            분석 결과는 참고용으로 활용해
+                                            주세요.
+                                        </span>
+                                    </v-tooltip>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+
                         <!-- 퍼스널 컬러 분석 결과 -->
                         <div
                             :class="['text-center', 'personal-color-result']"
@@ -1295,5 +1340,11 @@ export default {
 .no-gutters {
     margin: 0 !important;
     padding: 0 !important;
+}
+
+.help-icon {
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
 }
 </style>

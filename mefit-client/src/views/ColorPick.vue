@@ -34,7 +34,42 @@
                 :style="{ backgroundColor: colorForBackground }"
             >
                 {{ characterInfo.personalColor }}
+                <v-btn
+                    icon
+                    color="grey darken-2"
+                    class="help-btn ml-2 mb-1"
+                    style="width: 20px; height: 20px"
+                >
+                    <v-tooltip bottom>
+                        <template #activator="{ props }">
+                            <v-icon
+                                v-bind="props"
+                                style="
+                                    font-size: 16px;
+                                    cursor: pointer;
+                                    line-height: 1;
+                                "
+                            >
+                                mdi-help-circle-outline
+                            </v-icon>
+                        </template>
+                        <span>
+                            퍼스널컬러 분석은 캐릭터 색상을
+                            <br />
+                            기반으로 제공됩니다.
+                            <br />
+                            기술적 처리 방식과 이미지의 특성상
+                            <br />
+                            일부 색상 정보가 왜곡될 수 있으며,
+                            <br />
+                            화면 환경에 따라 차이가 발생할 수 있습니다.
+                            <br />
+                            분석 결과는 참고용으로 활용해 주세요.
+                        </span>
+                    </v-tooltip>
+                </v-btn>
             </div>
+
             <v-row class="align-center main-sub-color-row">
                 <!-- 메인컬러 왼쪽 정렬 -->
                 <v-col cols="6" class="main-color-area d-flex align-center">
