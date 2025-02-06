@@ -68,7 +68,7 @@ header h1 {
 header h1 .logo img {
     margin-top: 10px;
     width: 130px;
-    margin-right: 10px;
+    margin-right: 230px;
 }
 
 .menuWrap {
