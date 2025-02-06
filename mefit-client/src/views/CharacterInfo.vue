@@ -624,6 +624,7 @@ export default {
                     this.colorForBackground = this.characterInfo.mainColors[0];
                     this.characterInfo.subColors = subColors;
                     this.personalColorAnalysis = personalColor;
+          
 
                     this.saveColors(); // 퍼스널컬러 저장
                 };

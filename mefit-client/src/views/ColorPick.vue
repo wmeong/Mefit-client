@@ -255,6 +255,7 @@ export default {
         this.characterInfo.personalColor = decodeURIComponent(
             query.personalColor || ""
         );
+
         const mainColorsRaw = decodeURIComponent(query.mainColors || "");
         const subColorsRaw = decodeURIComponent(query.subColors || "");
 
@@ -264,6 +265,7 @@ export default {
         this.characterInfo.subColors = subColorsRaw
             ? subColorsRaw.split(",")
             : [];
+        this.colorForBackground = this.characterInfo.mainColors[0];
     },
     methods: {
         /**
@@ -281,7 +283,6 @@ export default {
 
                 this.characterInfo.characterImage =
                     response.data.characterInfoDTO.character_image;
-                // 이미지 로드 후 색상 분석 실행
                 const img = new Image();
                 img.crossOrigin = "Anonymous";
                 img.src = this.characterInfo.characterImage;
@@ -309,7 +310,7 @@ export default {
             }
         },
         updateCharacterName(event) {
-            this.characterName = event.target.value; // 입력값 명시적 동기화
+            this.characterName = event.target.value;
         },
 
         addColor() {
