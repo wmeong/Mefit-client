@@ -103,7 +103,7 @@
                 </v-carousel>
             </div>
         </div>
-
+        <div class="divider-line"></div>
         <!-- 캐릭터 아바타 그리드 -->
         <v-row justify="center" class="avatar-grid">
             <v-col cols="12" class="text-center">
@@ -478,9 +478,18 @@ export default {
 .style-tips ul li {
     margin-bottom: 10px;
 }
+.divider-line {
+    justify-content: center;
+    height: 1px;
+    background-color: #d3d3d3;
+    width: 90%;
+    margin-top: 20px;
+    margin-left: 50px;
+}
+
 /* 아바타 그리드 */
 .avatar-grid {
-    margin-top: 30px;
+    margin-top: 10px;
     min-height: 500px; /* 데이터가 없을 때도 이 높이를 유지 */
     display: flex;
     flex-wrap: wrap;
