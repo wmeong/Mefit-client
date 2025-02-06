@@ -16,7 +16,7 @@
         </v-row>
         <v-row justify="center" align="center" class="title-container">
             <v-col cols="auto" class="text-center">
-                <h3 class="page-title">{{ seasonTitle }}</h3>
+                <h3 :class="['page-title', titleClass]">{{ seasonTitle }}</h3>
             </v-col>
             <v-col cols="auto" class="text-right">
                 <v-btn
@@ -167,6 +167,16 @@ export default {
             };
             return titles[season];
         },
+        titleClass() {
+            const classMapping = {
+                봄웜: "spring-title",
+                여름쿨: "summer-title",
+                가을웜: "fall-title",
+                겨울쿨: "winter-title",
+            };
+            return classMapping[this.seasonTitle] || "";
+        },
+
         // 하위 톤 목록
         subTones() {
             const tones = {
@@ -357,12 +367,77 @@ export default {
 .title-container {
     position: relative;
 }
-/* 페이지 타이틀 */
+
 .page-title {
-    font-size: 2rem;
-    font-weight: bold;
+    font-size: 2.6rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    font-family: "Baloo 2", sans-serif;
     color: #4c4c4c;
 }
+
+/* 각 시즌별 색상 */
+.spring-title {
+    color: #ffb6b9;
+}
+
+.summer-title {
+    color: #91c7d6;
+}
+
+.fall-title {
+    color: #d68d63;
+}
+
+.winter-title {
+    color: #7e57c2;
+}
+@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
+
+/* 페이지 타이틀 */
+.page-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    font-family: "Jua", sans-serif;
+}
+
+/* 봄웜 스타일 */
+.spring-title {
+    color: #ffb6b9;
+    background: linear-gradient(90deg, #ffe4e4, #ffb6b9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 여름쿨 스타일 */
+.summer-title {
+    color: #91c7d6;
+    background: linear-gradient(90deg, #d4f1f9, #91c7d6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 가을웜 스타일 */
+.fall-title {
+    color: #d68d63;
+    background: linear-gradient(90deg, #f5ceb1, #d68d63);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 겨울쿨 스타일 */
+.winter-title {
+    color: #7e57c2;
+    background: linear-gradient(90deg, #c5b3e7, #7e57c2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 .refresh-button {
     position: absolute;
     top: 15px;
@@ -437,8 +512,8 @@ export default {
     justify-content: center;
 }
 .avatar-img {
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
@@ -464,5 +539,4 @@ export default {
     line-height: 1;
     cursor: pointer;
 }
-
 </style>

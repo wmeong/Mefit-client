@@ -26,7 +26,9 @@
         <!-- 제목 및 설명 -->
         <v-row justify="center" align="center" class="title-container">
             <v-col cols="auto" class="text-center">
-                <h2 class="page-title">{{ colorName }}</h2>
+                <h2 :class="['page-title', seasonTitleClass]">
+                    {{ colorName }}
+                </h2>
             </v-col>
             <v-col cols="auto" class="text-right">
                 <v-btn
@@ -75,19 +77,30 @@
                 </v-btn>
             </v-row>
             <div class="palette-row">
-                <div
-                    v-for="(color, index) in palette"
-                    :key="index"
-                    class="color-box-wrapper"
+                <v-carousel
+                    hide-delimiters
+                    class="custom-carousel"
+                    height="160px"
                 >
-                    <!-- 색상 네모 상자 -->
-                    <div
-                        class="color-box"
-                        :style="{ backgroundColor: color.hex }"
-                    ></div>
-                    <!-- 하단 텍스트 표시 -->
-                    <div class="color-label">{{ color.name }}</div>
-                </div>
+                    <v-carousel-item
+                        v-for="(group, groupIndex) in colorGroups"
+                        :key="groupIndex"
+                    >
+                        <div class="palette-row">
+                            <div
+                                v-for="(color, index) in group"
+                                :key="index"
+                                class="color-box-wrapper"
+                            >
+                                <div
+                                    class="color-box"
+                                    :style="{ backgroundColor: color.hex }"
+                                ></div>
+                                <div class="color-label">{{ color.name }}</div>
+                            </div>
+                        </div>
+                    </v-carousel-item>
+                </v-carousel>
             </div>
         </div>
 
@@ -172,6 +185,17 @@ export default {
         palette() {
             return ColorMockData[this.colorName] || [];
         },
+        colorGroups() {
+            // palette를 6개씩 나누어 그룹화
+            return this.palette.reduce((groups, color, index) => {
+                const groupIndex = Math.floor(index / 6);
+                if (!groups[groupIndex]) {
+                    groups[groupIndex] = [];
+                }
+                groups[groupIndex].push(color);
+                return groups;
+            }, []);
+        },
         mainSeason() {
             const seasonMapping = {
                 "봄웜 라이트": "봄",
@@ -188,6 +212,18 @@ export default {
                 "겨울쿨 다크": "겨울",
             };
             return seasonMapping[this.colorName] || "";
+        },
+        seasonTitleClass() {
+            if (this.colorName.includes("봄")) {
+                return "spring-title";
+            } else if (this.colorName.includes("여름")) {
+                return "summer-title";
+            } else if (this.colorName.includes("가을")) {
+                return "fall-title";
+            } else if (this.colorName.includes("겨울")) {
+                return "winter-title";
+            }
+            return "";
         },
     },
     methods: {
@@ -307,8 +343,6 @@ export default {
 };
 </script>
 
-<style scoped></style>
-
 <style scoped>
 .personal-color-container {
     position: relative;
@@ -319,11 +353,48 @@ export default {
     position: relative;
 }
 
+/* 타이틀 공통 스타일 */
 .page-title {
-    font-size: 2rem;
+    font-size: 2.6rem;
     font-weight: bold;
-    color: #4c4c4c;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    font-family: "Jua", sans-serif;
 }
+
+/* 봄웜 스타일 */
+.spring-title {
+    color: #ffb6b9;
+    background: linear-gradient(90deg, #ffe4e4, #ffb6b9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 여름쿨 스타일 */
+.summer-title {
+    color: #91c7d6;
+    background: linear-gradient(90deg, #d4f1f9, #91c7d6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 가을웜 스타일 */
+.fall-title {
+    color: #d68d63;
+    background: linear-gradient(90deg, #f5ceb1, #d68d63);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 겨울쿨 스타일 */
+.winter-title {
+    color: #7e57c2;
+    background: linear-gradient(90deg, #c5b3e7, #7e57c2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 /*네비*/
 .upper-navi {
     position: absolute;
@@ -424,8 +495,8 @@ export default {
     justify-content: center;
 }
 .avatar-img {
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
@@ -446,7 +517,20 @@ export default {
     transform: scale(1.2);
 }
 
-/*색상카드 */
+/*팔레트 */
+.custom-carousel {
+    position: relative !important;
+}
+::v-deep(.custom-carousel .v-btn) {
+    --v-btn-height: 24px;
+    --v-btn-width: 24px;
+    --v-icon-size: 16px;
+    padding: 0 !important; /* 패딩 제거 */
+    margin: 0 !important; /* 마진 제거 */
+    min-width: 0 !important; /* 최소 너비 제거 */
+    min-height: 0 !important; /* 최소 높이 제거 */
+}
+
 .palette-section {
     margin-top: 20px;
     text-align: center;
@@ -455,21 +539,20 @@ export default {
 .palette-row {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 25px;
     flex-wrap: wrap;
     margin-top: 20px;
 }
-
-.color-box-wrapper {
-    width: 100px;
-    text-align: center;
-}
-
 .color-box {
-    width: 100px;
+    width: 110px;
     height: 100px;
     border-radius: 10px 10px 0 0;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.color-box-wrapper {
+    width: 110px;
+    text-align: center;
 }
 
 .color-label {
@@ -486,6 +569,7 @@ export default {
 .palette-text {
     color: #747272;
 }
+
 .help-icon {
     font-size: 16px;
     line-height: 1;
