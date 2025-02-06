@@ -156,11 +156,11 @@
                     </div>
 
                     <!-- 운세 메시지가 없을 때 -->
-                    <div v-if="!fortuneMessage" class="slime-container">
+                    <div v-if="!fortuneMessage" class="fortune-container">
                         <img
-                            src="@/assets/slime.png"
-                            alt="Slime"
-                            class="slime-image"
+                            src="@/assets/fortune.png"
+                            alt="fortune"
+                            class="fortune-image"
                         />
                     </div>
 
@@ -244,7 +244,7 @@
                         class="no-results-container"
                     >
                         <img
-                            src="@/assets/maplefamily.png"
+                            src="@/assets/style.png"
                             alt="No Results"
                             class="no-results-image"
                         />
@@ -943,28 +943,18 @@ input {
 .royal-fortune {
     white-space: pre-line;
 }
-.slime-container {
+.fortune-container {
     position: absolute;
     top: 58%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-.slime-image {
+.fortune-image {
     width: 100px;
     animation: bounce 1.5s infinite ease-in-out;
 }
 
-/* 통통 튀는 애니메이션 */
-@keyframes bounce {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-20px);
-    }
-}
 .royal-fortune-header {
     text-align: center;
     padding-bottom: 10px;
@@ -1085,18 +1075,6 @@ input {
     width: 400px;
     height: auto;
     margin-bottom: 100px;
-    animation: bounce 2s infinite ease-in-out;
-}
-
-/* 통통 튀는 애니메이션 */
-@keyframes bounce {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-15px);
-    }
 }
 
 /*초기화(리셋) 팝업 */
