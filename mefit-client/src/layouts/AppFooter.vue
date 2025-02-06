@@ -12,7 +12,7 @@
             </span>
             <br />
             <br />
-            MAPLESTORY PARTNERS | Data powered by NEXON OPEN API
+            Data powered by NEXON OPEN API
             <br />
             This is an independent project not associated with NEXON Korea.
         </span>

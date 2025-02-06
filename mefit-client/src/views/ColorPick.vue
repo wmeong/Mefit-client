@@ -264,15 +264,6 @@ export default {
         this.characterInfo.subColors = subColorsRaw
             ? subColorsRaw.split(",")
             : [];
-
-        console.log(
-            "캐릭터정보에서 그대로 가져온 메인컬러" +
-                this.characterInfo.mainColors
-        );
-        console.log(
-            "캐릭터정보에서 그대로 가져온 서브컬러" +
-                this.characterInfo.subColors
-        );
     },
     methods: {
         /**
