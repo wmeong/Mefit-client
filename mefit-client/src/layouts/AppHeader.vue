@@ -53,7 +53,7 @@ export default {
 header {
     display: flex;
     align-items: center;
-    justify-content: center; /* 로고와 메뉴를 전체 가운데 정렬 */
+    justify-content: center;
     background-color: #ffffff;
     padding: 15px 40px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

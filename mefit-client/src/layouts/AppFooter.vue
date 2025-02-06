@@ -37,20 +37,22 @@ export default {
 
 <style scoped>
 footer {
-    border-top: 1px solid #35495e;
+    border-top: 2px solid #d3d3d3;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
     font-size: 12px;
     color: #1a191a75;
     margin: 50px 0 0 0;
-    padding: 10px 0;
+    padding: 20px 0;
+    background-color: #fafafa;
 }
 
 .donate-btn {
     font-size: 11px;
     margin-left: 5px;
     padding: 4px 8px;
-    color: #ffffff !important; /* 글씨 색상 */
-    background-color: #eca8a8 !important; /* 배경색 */
+    color: #ffffff !important;
+    background-color: #eca8a8 !important;
     border-radius: 16px;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
     text-transform: uppercase;

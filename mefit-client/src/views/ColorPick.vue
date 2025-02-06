@@ -312,7 +312,6 @@ export default {
         updateCharacterName(event) {
             this.characterName = event.target.value;
         },
-
         addColor() {
             if (
                 this.savedColors.length < 30 && // 최대 저장 개수
