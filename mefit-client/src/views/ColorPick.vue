@@ -603,12 +603,12 @@ export default {
     font-weight: bold;
     border-radius: 10px;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
-    box-shadow: 0 4px 10px rgba(255, 182, 193, 0.5);
+   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .picker-color-result:hover {
-    transform: scale(1.1) rotate(-2deg);
-    box-shadow: 0 6px 15px rgba(242, 155, 199, 0.8);
+transform: scale(1.1);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
 }
 
 .refresh-btn {
