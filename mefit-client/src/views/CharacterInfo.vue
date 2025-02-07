@@ -882,6 +882,7 @@ export default {
     padding: 4px 10px;
     border-radius: 20px;
     box-shadow: none;
+    margin-top:20px;
 }
 
 .character-info-background {
