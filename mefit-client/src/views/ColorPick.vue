@@ -275,7 +275,7 @@ export default {
             if (!this.characterName) return; // 캐릭터 이름이 없으면 중단
             try {
                 const response = await axios.get(
-                    `https://api.mefit.co.kr/api/characters/info`,
+                    `http://api.mefit.co.kr/api/characters/info`,
                     {
                         params: { name: this.characterName },
                     }
