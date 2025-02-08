@@ -1,6 +1,19 @@
 <template>
-  <div class="app-content">
-    <router-view /> <!-- 동적 콘텐츠 렌더링 -->
+  <div class="page-container">
+    <!-- 좌측 광고 영역 -->
+    <!-- <div class="ad-container ad-left">
+      <img src="광고이미지1.png" alt="광고" />
+    </div> -->
+
+    <!-- 중앙 콘텐츠 영역 -->
+    <div class="app-content">
+      <router-view /> <!-- 동적 콘텐츠 렌더링 -->
+    </div>
+
+    <!-- 우측 광고 영역 -->
+    <!-- <div class="ad-container ad-right">
+      <img src="광고이미지2.png" alt="광고" />
+    </div> -->
   </div>
 </template>
 
@@ -11,7 +24,6 @@ export default {
 </script>
 
 <style scoped>
-/* Google Fonts 및 Spoqa Han Sans Neo 추가 */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap");
 @import url("https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css");
 
@@ -19,24 +31,68 @@ export default {
   --main-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Nanum Gothic', sans-serif;
 }
 
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding-top: 5px; /* 헤더 높이만큼 여백 추가 */
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ad-container {
+  width: 150px; /* 광고 영역 너비 */
+  min-height: calc(100vh - 80px); /* 헤더 높이 제외한 전체 높이 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.ad-left {
+  margin-right: 10px;
+}
+
+.ad-right {
+  margin-left: 10px;
+}
+
 .app-content {
-  display: flex; /* Flexbox 활성화 */
-  justify-content: center; /* 가로 중앙 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
-  flex-direction: column; /* 콘텐츠를 세로로 배치 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   padding: 16px;
-  min-height: 75vh;
+  min-height: calc(100vh - 80px);
   font-size: 0.8rem;
-  font-family: var(--main-font); /* 통일된 글씨체 적용 */
-  transition: all 0.3s ease; /* 크기 변화 애니메이션 추가 */
-  max-width: 1100px; /* 최대 너비 제한 */
-  margin: 0 auto; /* 가로 여백 자동 (부모가 flex가 아니더라도) */
+  font-family: var(--main-font);
+  transition: all 0.3s ease;
+  max-width: 1100px;
+  margin: 0 auto;
+  background-color: #fff;
 }
 
 @media (max-width: 1200px) {
+  .ad-container {
+    display: none; /* 작은 화면에서는 광고 영역 숨김 */
+  }
+
   .app-content {
     padding: 12px;
-    font-size: 0.8rem; /* 글씨 크기 소폭 축소 */
+    font-size: 0.8rem;
   }
 }
 
