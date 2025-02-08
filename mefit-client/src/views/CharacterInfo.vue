@@ -589,7 +589,7 @@ export default {
 
             try {
                 const ocidResponse = await axios.get(
-                    `http://localhost:8081/api/characters/ocid`,
+                    `https://api.mefit.co.kr/api/characters/ocid`,                    
                     {
                         params: {
                             name: this.characterName,
@@ -667,7 +667,7 @@ export default {
         async loadMotionData() {
             try {
                 const response = await axios.get(
-                    `http://localhost:8081/api/characters/motions`
+                    `https://api.mefit.co.kr/api/characters/motions`
                 );
                 const motions = response.data;
 
@@ -695,7 +695,7 @@ export default {
                 const subColorString = this.characterInfo.subColors.join(",");
 
                 await axios.post(
-                    `http://localhost:8081/api/characters/colors`,
+                    `https://api.mefit.co.kr/api/characters/colors`,
                     new URLSearchParams({
                         characterImage: this.characterInfo.character_image,
                         personalColor: this.personalColorAnalysis,

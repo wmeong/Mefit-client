@@ -60,7 +60,6 @@ footer {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
 }
 
 .icon-group {
@@ -77,7 +76,6 @@ footer {
   margin-top: 7px;
 }
 
-
 .donate-btn {
   font-size: 11px;
   margin-left: 5px;
@@ -93,7 +91,6 @@ footer {
 .donate-btn:hover {
   background-color: #feb4b4 !important;
 }
-
 
 @media (max-width: 768px) {
   footer {
