@@ -230,7 +230,7 @@ export default {
         async fetchToneData() {
             try {
                 const response = await axios.get(
-                    `http://api.mefit.co.kr/api/personal/tone`,
+                    `https://api.mefit.co.kr/api/personal/tone`,
                     {
                         params: { tone: this.color },
                     }
@@ -250,7 +250,7 @@ export default {
                 this.onPopupConfirm = async () => {
                     try {
                         await axios.delete(
-                            "http://api.mefit.co.kr/api/personal/vote",
+                            "https://api.mefit.co.kr/api/personal/vote",
                             {
                                 params: {
                                     characterImage: avatar.characterImage,
@@ -276,7 +276,7 @@ export default {
 
             try {
                 await axios.post(
-                    "http://api.mefit.co.kr/api/personal/vote",
+                    "https://api.mefit.co.kr/api/personal/vote",
                     null,
                     {
                         params: {

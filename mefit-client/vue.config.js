@@ -4,7 +4,7 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       "/api": {
-        target: "http://api.mefit.co.kr", // Spring Boot 서버 URL
+        target: "https://api.mefit.co.kr", // Spring Boot 서버 URL
         changeOrigin: true,
         pathRewrite: { "^/api": "/api" }, // 필요한 경우 경로 재작성
       },

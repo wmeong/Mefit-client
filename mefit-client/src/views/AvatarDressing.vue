@@ -59,8 +59,8 @@ export default {
         // API에서 아이템 불러오기
         const fetchItems = async () => {
             try {
-                const hatsResponse = await axios.get("http://api.mefit.co.kr/api/items/hats");
-                const clothingResponse = await axios.get("http://api.mefit.co.kr/api/items/clothing");
+                const hatsResponse = await axios.get("https://api.mefit.co.kr/api/items/hats");
+                const clothingResponse = await axios.get("https://api.mefit.co.kr/api/items/clothing");
 
                 items.value.hats = hatsResponse.data;
                 items.value.clothing = clothingResponse.data;
