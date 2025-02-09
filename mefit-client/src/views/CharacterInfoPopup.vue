@@ -244,9 +244,12 @@ export default {
 
             this.loading = true;
             try {
-                const response = await axios.get(`/api/personal/popupInfo`, {
-                    params: { imageUrl: this.characterInfo.image },
-                });
+                const response = await axios.get(
+                    `http://localhost:8081/api/personal/popupInfo`,
+                    {
+                        params: { imageUrl: this.characterInfo.image },
+                    }
+                );
 
                 const itemData = response.data || {};
 

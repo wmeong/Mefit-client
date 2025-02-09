@@ -68,9 +68,12 @@ export default {
         async fetchRankings() {
             for (const season of this.seasons) {
                 try {
-                    const response = await axios.get("/api/personal/rank", {
-                        params: { season },
-                    });
+                    const response = await axios.get(
+                        "http://localhost:8081/api/personal/rank",
+                        {
+                            params: { season },
+                        }
+                    );
                     if (
                         Array.isArray(response.data) &&
                         response.data.length > 0
@@ -117,16 +120,16 @@ export default {
     text-align: center;
     position: relative;
     margin-bottom: 20px;
-    margin-top:20px;
+    margin-top: 20px;
 }
 
 .award-background {
-  position: relative;
-  background: #FFC0CB; 
-  overflow: hidden; 
-  padding: 15px;
-  border-radius: 20px;
-  box-shadow: none;
+    position: relative;
+    background: #ffc0cb;
+    overflow: hidden;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: none;
 }
 
 .color-awards-title {
@@ -139,39 +142,33 @@ export default {
     letter-spacing: 5px;
 }
 
-
-
 /* shimmer 효과*/
 .award-background::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 150%;
-  height: 100%;
-  /* 빛나는 효과 */
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transform: skewX(-25deg);
-  animation: shimmer 2s infinite;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    /* 빛나는 효과 */
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transform: skewX(-25deg);
+    animation: shimmer 2s infinite;
 }
 
 @keyframes shimmer {
-  0% {
-    left: -150%;
-  }
-  100% {
-    left: 150%;
-  }
+    0% {
+        left: -150%;
+    }
+    100% {
+        left: 150%;
+    }
 }
-
-
-
-
 
 /* 계절 섹션 */
 .season-section {
@@ -237,7 +234,7 @@ export default {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 10;
     width: 30px;
-    height: 30px; 
+    height: 30px;
 }
 
 /* 이미지 스타일 */
