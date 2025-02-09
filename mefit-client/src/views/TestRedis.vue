@@ -20,7 +20,7 @@ export default {
         async testRedisApi() {
             try {
                 // 백엔드 API 호출
-                const response = await axios.get('https://api.mefit.co.kr/test-redis');
+                const response = await axios.get('/test-redis');
                 this.responseMessage = response.data;
             } catch (error) {
                 console.error('API 호출 오류:', error);

@@ -588,15 +588,12 @@ export default {
             this.selectedWmotion = "";
 
             try {
-                const ocidResponse = await axios.get(
-                    `https://api.mefit.co.kr/api/characters/ocid`,                    
-                    {
-                        params: {
-                            name: this.characterName,
-                            personalColor: this.personalColorAnalysis,
-                        },
-                    }
-                );
+                const ocidResponse = await axios.get(`/api/characters/ocid`, {
+                    params: {
+                        name: this.characterName,
+                        personalColor: this.personalColorAnalysis,
+                    },
+                });
                 this.characterInfo = ocidResponse.data.characterInfoDTO;
                 this.characterImage = this.characterInfo.character_image;
                 this.message = "";
@@ -624,7 +621,6 @@ export default {
                     this.colorForBackground = this.characterInfo.mainColors[0];
                     this.characterInfo.subColors = subColors;
                     this.personalColorAnalysis = personalColor;
-          
 
                     this.saveColors(); // 퍼스널컬러 저장
                 };
@@ -666,9 +662,7 @@ export default {
          */
         async loadMotionData() {
             try {
-                const response = await axios.get(
-                    `https://api.mefit.co.kr/api/characters/motions`
-                );
+                const response = await axios.get(`/api/characters/motions`);
                 const motions = response.data;
 
                 // 동작과 감정 옵션을 분리하여 필터링
@@ -695,7 +689,7 @@ export default {
                 const subColorString = this.characterInfo.subColors.join(",");
 
                 await axios.post(
-                    `https://api.mefit.co.kr/api/characters/colors`,
+                    `/api/characters/colors`,
                     new URLSearchParams({
                         characterImage: this.characterInfo.character_image,
                         personalColor: this.personalColorAnalysis,
@@ -882,7 +876,7 @@ export default {
     padding: 4px 10px;
     border-radius: 20px;
     box-shadow: none;
-    margin-top:20px;
+    margin-top: 20px;
 }
 
 .character-info-background {

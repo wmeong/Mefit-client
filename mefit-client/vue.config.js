@@ -4,9 +4,9 @@ module.exports = defineConfig({
     devServer: {
         proxy: {
             "/api": {
-                target: "https://api.mefit.co.kr",
+                target: "https://mefit.co.kr",
                 changeOrigin: true,
-                pathRewrite: { "^/api": "/api" },
+                pathRewrite: { "^/api": "" },
             },
         },
     },

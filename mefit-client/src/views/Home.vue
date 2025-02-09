@@ -65,7 +65,7 @@ export default {
             this.isSearching = true;
             try {
                 const response = await axios.get(
-                    `https://api.mefit.co.kr/api/characters/ocid?name=${encodeURIComponent(trimmedQuery)}`
+                    `/api/characters/ocid?name=${encodeURIComponent(trimmedQuery)}`
                 );
                 if (response.status === 200) {
                     this.$router.push({ name: "CharacterInfo", query: { q: trimmedQuery } });
@@ -86,7 +86,7 @@ export default {
         async fetchPopularCharacters() {
             try {
                 const response = await axios.get(
-                    "https://api.mefit.co.kr/api/characters/popular?limit=10"
+                    "/api/characters/popular?limit=10"
                 );
 
                 // 데이터 구조에 맞게 매핑

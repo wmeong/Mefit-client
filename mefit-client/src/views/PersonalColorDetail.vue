@@ -213,7 +213,7 @@ export default {
         async fetchSeasonData() {
             try {
                 const response = await axios.get(
-                    "https://api.mefit.co.kr/api/personal/season",
+                    "/api/personal/season",
                     {
                         params: { season: this.seasonTitle.trim() }, // ✅ 불필요한 공백 제거
                     }
@@ -239,7 +239,7 @@ export default {
                 this.onPopupConfirm = async () => {
                     try {
                         await axios.delete(
-                            "https://api.mefit.co.kr/api/personal/vote",
+                            "/api/personal/vote",
                             {
                                 params: {
                                     characterImage: avatar.characterImage,
@@ -270,7 +270,7 @@ export default {
             try {
                 // ✅ 팝업 없이 바로 axios 요청으로 투표 진행
                 await axios.post(
-                    "https://api.mefit.co.kr/api/personal/vote",
+                    "/api/personal/vote",
                     null,
                     {
                         params: {

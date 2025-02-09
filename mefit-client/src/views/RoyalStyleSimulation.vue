@@ -456,7 +456,7 @@ export default {
             }
             try {
                 const response = await axios.get(
-                    "https://api.mefit.co.kr/api/characters/info",
+                    "/api/characters/info",
                     {
                         params: { name: this.characterName },
                     }
@@ -494,7 +494,7 @@ export default {
                 params.append("avatarUrl", this.characterImage);
 
                 await axios.post(
-                    "https://api.mefit.co.kr/api/royal-style/save-ranking",
+                    "/api/royal-style/save-ranking",
                     params
                 );
                 this.alertMessage = "랭킹이 저장되었습니다."; // 팝업 메시지 설정
@@ -510,7 +510,7 @@ export default {
         async fetchRanking() {
             try {
                 const response = await axios.get(
-                    "https://api.mefit.co.kr/api/royal-style/ranking"
+                    "/api/royal-style/ranking"
                 );
                 this.ranking = response.data; // 랭킹 데이터를 갱신
             } catch (error) {
@@ -549,7 +549,7 @@ export default {
                 if (this.isSimulationDisabled) return; // 집계 중단 조건 추가
 
                 const response = await axios.get(
-                    "https://api.mefit.co.kr/api/royal-style/random"
+                    "/api/royal-style/random"
                 );
                 this.simulationResult = response.data;
 
