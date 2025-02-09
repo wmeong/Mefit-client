@@ -11,11 +11,8 @@
           <a href="https://www.youtube.com/@wmeong" target="_blank">
             <img src="@/assets/youtube.png" width="24" height="24" alt="YouTube" class="icon" />
           </a>
-          <a href="https://open.kakao.com/o/sqy89NTe" target="_blank">
-            <img src="@/assets/kakao.png" width="24" alt="Kakao" class="icon" />
-          </a>
           <a href="https://www.instagram.com/ziho_ya?igsh=MTZxZmZldnNwZWMycA==" target="_blank">
-            <img src="@/assets/insta.jpg" width="24" alt="Instagram" class="icon" />
+            <img src="@/assets/insta.png" width="24" alt="Instagram" class="icon" />
           </a>
         </div>
       </div>
@@ -64,18 +61,22 @@ footer {
 }
 
 .icon-group {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   margin-left: 12px;
 }
 
+
 .icon {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  margin-top: 7px;
+  width: auto; 
+  max-width: 24px;
+  max-height: 24px;
+  height: auto;
+  border-radius: 0; 
 }
+
 
 
 .donate-btn {
