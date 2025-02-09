@@ -49,6 +49,7 @@ export default {
 }
 
 .character-info-background {
+    position: relative;
     background: #ffc0cb;
     padding: 15px;
     border-radius: 20px;
