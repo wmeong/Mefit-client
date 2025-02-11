@@ -1,19 +1,19 @@
-const { defineConfig } = require("@vue/cli-service");
-module.exports = defineConfig({
-    transpileDependencies: true,
-    devServer: {
-        proxy: {
-            "/api": {
-                target: "https://mefit.co.kr",
-                changeOrigin: true,
-                pathRewrite: { "^/api": "" },
-            },
-        },
-    },
-    // 소스 맵 활성화 설정
-    configureWebpack: {
-        devtool: false, // 소스맵생성 : 개발계에서 true로 변경
-    },
+const { defineConfig } = require('@vue/cli-service');
 
-    productionSourceMap: false, //소스보기 : 개발계에서 true로 변경
+module.exports = defineConfig({
+  publicPath: process.env.NODE_ENV === 'production' ? '/mefit-static-files/' : '/',
+  transpileDependencies: true,
+  devServer: process.env.NODE_ENV === 'development' ? {
+    proxy: {
+      "/api": {
+        target: "https://mefit.co.kr",
+        changeOrigin: true,
+        pathRewrite: { "^/api": "" },
+      },
+    },
+  } : {},
+  productionSourceMap: false,
+  configureWebpack: {
+    devtool: process.env.NODE_ENV === 'development' ? 'source-map' : false,
+  },
 });
