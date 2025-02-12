@@ -79,38 +79,37 @@ npm run dev
 7. 데이터 자동 삭제 기능
 - 데이터 테이블이 일정 초과 시 자동 삭제 기능 구현 (1000개, 10000개 단위)
 
+  
+
 ## 📌 프로젝트 폴더 구조
 mefit-client
 mefit-client/
 - src/
-  - assets/                    # 스타일, 이미지, 글로벌 리소스
+  - assets/                    # 스타일, 이미지
   - components/                 # 재사용 가능한 Vue 컴포넌트
-    - CustomAlert.vue           # 공통 알림창 컴포넌트
-  - layouts/                    # 레이아웃 관련 컴포넌트
-    - AppContent.vue            # 메인 콘텐츠 레이아웃
-    - AppFooter.vue             # 푸터 레이아웃
-    - AppHeader.vue             # 헤더 레이아웃
+    - CustomAlert.vue           
+  - layouts/                    # 레이아웃 컴포넌트
+    - AppContent.vue            
+    - AppFooter.vue            
+    - AppHeader.vue            
   - mixins/                     # 재사용 가능한 Vue Mixin
-    - colorAnalysisMixin.js     # 컬러 분석 기능 Mixin
+    - colorAnalysisMixin.js    
   - plugins/                    # 플러그인 설정
-    - vuetify.js                # Vuetify 설정 파일
-    - index.js                  # 플러그인 초기화
+    - vuetify.js              
+    - index.js                  
   - router/                     # Vue Router 설정
-    - index.js                  # 라우터 설정 파일
+    - index.js                
   - views/                      # 페이지 단위 Vue 컴포넌트
-    - AvatarDressing.vue        # 캐릭터 코디 뷰
-    - CharacterInfo.vue         # 캐릭터 정보 조회 페이지
+    - AvatarDressing.vue        # 캐릭터 코디 화면
+    - CharacterInfo.vue         # 캐릭터 정보 조회 화면
     - CharacterInfoPopup.vue    # 캐릭터 정보 팝업
-    - ColorAwards.vue           # 컬러 관련 어워즈 기능
+    - ColorAwards.vue           # 컬러별 랭킹 어워즈 화면
     - ColorPick.vue             # 컬러 피커 화면
     - Home.vue                  # 홈 화면
-    - PersonalColorDetail.vue   # 개인 컬러 상세 분석
-    - PersonalColorSelect.vue   # 개인 컬러 선택 페이지
-    - PersonalColorTwelve.vue   # 12가지 퍼스널 컬러 분석
-    - RoyalStyleSimulation.vue  # 로얄스타일 가챠 시뮬레이션
-  - App.vue                     # Vue 앱의 루트 컴포넌트
-  - main.js                     # Vue 앱 초기화 및 마운트
-
+    - PersonalColorDetail.vue   # 개인 컬러 상세 분석 화면
+    - PersonalColorSelect.vue   # 개인 컬러 선택 화면
+    - PersonalColorTwelve.vue   # 12가지 퍼스널 컬러 분석 화면
+    - RoyalStyleSimulation.vue  # 로얄스타일 가챠 시뮬레이션 화면
 
 
 ## 📜 라이선스
