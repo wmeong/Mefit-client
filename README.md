@@ -14,20 +14,20 @@ Vue.js 기반으로 개발되어, 부드러운 UI/UX와 빠른 반응성을 제�
 - **Axios (API 통신)
   
 ### 🎨 스타일 & 애니메이션
-- **SCSS
+- SCSS
 
 
 ## 📦 설치 및 실행 방법
 
 ### 💡 필수 환경 구성
-1. **Node.js 다운로드 페이지에서 LTS 버전 다운로드 및 설치
+1. Node.js 다운로드 페이지에서 LTS 버전 다운로드 및 설치
 2. 설치 후 node -v 및 npm -v 명령어로 정상 설치 확인
-3. **Vue CLI 설치 (필요시) - npm install -g @vue/cli
+3. Vue CLI 설치 (필요시) - npm install -g @vue/cli
 4. 패키지 설치 : npm install
    
 ### 🛠️ 프로젝트 클론 및 실행
 # GitHub에서 프로젝트 클론
-- **git clone https://github.com/KhnDev/mefit-client.git
+- git clone https://github.com/KhnDev/mefit-client.git
 
 # 개발 서버 실행
 npm run dev
@@ -81,39 +81,35 @@ npm run dev
 
 ## 📌 프로젝트 폴더 구조
 mefit-client
-│── src/                   
-│   ├── assets/                # 스타일, 이미지
-│   ├── components/     
-│   │   ├── CustomAlert.vue     # 공통 알림창 컴포넌트
-│   │
-│   ├── layouts/               # 레이아웃 관련 컴포넌트
-│   │   ├── AppContent.vue     # 메인 콘텐츠 레이아웃
-│   │   ├── AppFooter.vue      # 푸터 레이아웃
-│   │   ├── AppHeader.vue      # 헤더 레이아웃
-│   │
-│   ├── mixins/                
-│   │   ├── colorAnalysisMixin.js  # 컬러 분석 기능 Mixin
-│   │
-│   ├── plugins/             
-│   │   ├── vuetify.js         # Vuetify 설정 파일
-│   │   ├── index.js           # 플러그인 초기화
-│   │
-│   ├── router/             
-│   │   ├── index.js           # 라우터 설정 파일
-│   │
-│   ├── views/                           # 페이지 단위 Vue 컴포넌트
-│   │   ├── AvatarDressing.vue            # 캐릭터 코디 뷰
-│   │   ├── CharacterInfo.vue              # 캐릭터 정보 조회 페이지
-│   │   ├── CharacterInfoPopup.vue         # 캐릭터 정보 팝업
-│   │   ├── ColorAwards.vue                # 컬러별 랭킹 어워즈
-│   │   ├── ColorPick.vue                   # 컬러 피커 화면
-│   │   ├── Home.vue                        # 홈 화면
-│   │   ├── PersonalColorDetail.vue        # 개인 컬러 상세 분석
-│   │   ├── PersonalColorSelect.vue        # 개인 컬러 선택 페이지
-│   │   ├── PersonalColorTwelve.vue        # 12가지 퍼스널 컬러 분석
-│   │   ├── RoyalStyleSimulation.vue       # 로얄스타일 가챠 시뮬레이션
-│   │
-
+mefit-client/
+- src/
+  - assets/                    # 스타일, 이미지, 글로벌 리소스
+  - components/                 # 재사용 가능한 Vue 컴포넌트
+    - CustomAlert.vue           # 공통 알림창 컴포넌트
+  - layouts/                    # 레이아웃 관련 컴포넌트
+    - AppContent.vue            # 메인 콘텐츠 레이아웃
+    - AppFooter.vue             # 푸터 레이아웃
+    - AppHeader.vue             # 헤더 레이아웃
+  - mixins/                     # 재사용 가능한 Vue Mixin
+    - colorAnalysisMixin.js     # 컬러 분석 기능 Mixin
+  - plugins/                    # 플러그인 설정
+    - vuetify.js                # Vuetify 설정 파일
+    - index.js                  # 플러그인 초기화
+  - router/                     # Vue Router 설정
+    - index.js                  # 라우터 설정 파일
+  - views/                      # 페이지 단위 Vue 컴포넌트
+    - AvatarDressing.vue        # 캐릭터 코디 뷰
+    - CharacterInfo.vue         # 캐릭터 정보 조회 페이지
+    - CharacterInfoPopup.vue    # 캐릭터 정보 팝업
+    - ColorAwards.vue           # 컬러 관련 어워즈 기능
+    - ColorPick.vue             # 컬러 피커 화면
+    - Home.vue                  # 홈 화면
+    - PersonalColorDetail.vue   # 개인 컬러 상세 분석
+    - PersonalColorSelect.vue   # 개인 컬러 선택 페이지
+    - PersonalColorTwelve.vue   # 12가지 퍼스널 컬러 분석
+    - RoyalStyleSimulation.vue  # 로얄스타일 가챠 시뮬레이션
+  - App.vue                     # Vue 앱의 루트 컴포넌트
+  - main.js                     # Vue 앱 초기화 및 마운트
 
 
 
