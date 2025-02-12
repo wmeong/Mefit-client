@@ -23,17 +23,15 @@ Vue.js 기반으로 개발되어, 부드러운 UI/UX와 빠른 반응성을 제�
 1. **Node.js 다운로드 페이지에서 LTS 버전 다운로드 및 설치
 2. 설치 후 node -v 및 npm -v 명령어로 정상 설치 확인
 3. **Vue CLI 설치 (필요시) - npm install -g @vue/cli
+4. 패키지 설치 : npm install
    
 ### 🛠️ 프로젝트 클론 및 실행
 # GitHub에서 프로젝트 클론
 - **git clone https://github.com/KhnDev/mefit-client.git
 
-# 패키지 설치
-npm install
-
 # 개발 서버 실행
 npm run dev
-👉 기본 실행 주소: http://localhost:5173/
+👉 기본 실행 주소: http://localhost:8080/
 
 
 ## 🎯 커밋 규칙 (Commit Message Convention)
@@ -80,6 +78,43 @@ npm run dev
 - Local Storage를 활용하여 30분 내 중복 투표 방지 기능 제공
 7. 데이터 자동 삭제 기능
 - 데이터 테이블이 일정 초과 시 자동 삭제 기능 구현 (1000개, 10000개 단위)
+
+## 📌 프로젝트 폴더 구조
+mefit-client
+│── src/                   
+│   ├── assets/                # 스타일, 이미지
+│   ├── components/     
+│   │   ├── CustomAlert.vue     # 공통 알림창 컴포넌트
+│   │
+│   ├── layouts/               # 레이아웃 관련 컴포넌트
+│   │   ├── AppContent.vue     # 메인 콘텐츠 레이아웃
+│   │   ├── AppFooter.vue      # 푸터 레이아웃
+│   │   ├── AppHeader.vue      # 헤더 레이아웃
+│   │
+│   ├── mixins/                
+│   │   ├── colorAnalysisMixin.js  # 컬러 분석 기능 Mixin
+│   │
+│   ├── plugins/             
+│   │   ├── vuetify.js         # Vuetify 설정 파일
+│   │   ├── index.js           # 플러그인 초기화
+│   │
+│   ├── router/             
+│   │   ├── index.js           # 라우터 설정 파일
+│   │
+│   ├── views/                           # 페이지 단위 Vue 컴포넌트
+│   │   ├── AvatarDressing.vue            # 캐릭터 코디 뷰
+│   │   ├── CharacterInfo.vue              # 캐릭터 정보 조회 페이지
+│   │   ├── CharacterInfoPopup.vue         # 캐릭터 정보 팝업
+│   │   ├── ColorAwards.vue                # 컬러별 랭킹 어워즈
+│   │   ├── ColorPick.vue                   # 컬러 피커 화면
+│   │   ├── Home.vue                        # 홈 화면
+│   │   ├── PersonalColorDetail.vue        # 개인 컬러 상세 분석
+│   │   ├── PersonalColorSelect.vue        # 개인 컬러 선택 페이지
+│   │   ├── PersonalColorTwelve.vue        # 12가지 퍼스널 컬러 분석
+│   │   ├── RoyalStyleSimulation.vue       # 로얄스타일 가챠 시뮬레이션
+│   │
+
+
 
 
 ## 📜 라이선스
