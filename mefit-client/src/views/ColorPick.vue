@@ -225,6 +225,7 @@
 import axios from "axios";
 import CustomAlert from "@/components/CustomAlert.vue"; // 공통 알림 컴포넌트
 import colorAnalysisMixin from "@/mixins/colorAnalysisMixin"; //컬러 분석 믹스인
+import config from "@/config.js";
 
 export default {
     components: { CustomAlert },
@@ -275,7 +276,7 @@ export default {
             if (!this.characterName) return; // 캐릭터 이름이 없으면 중단
             try {
                 const response = await axios.get(
-                    `/api/characters/info`,
+                    `${config.API_BASE_URL}/api/characters/info`,
                     {
                         params: { name: this.characterName },
                     }

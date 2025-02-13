@@ -40,6 +40,7 @@
 <script>
 import axios from "axios";
 import CustomAlert from "@/components/CustomAlert.vue"; // 공통 알림 컴포넌트
+import config from "@/config.js"; 
 
 export default {
     name: "Home",
@@ -65,10 +66,10 @@ export default {
             this.isSearching = true;
             try {
                 const response = await axios.get(
-                    `/api/characters/ocid?name=${encodeURIComponent(trimmedQuery)}`
+                   `${config.API_BASE_URL}/api/characters/ocid?name=${encodeURIComponent(trimmedQuery)}`
                 );
                 if (response.status === 200) {
-                    this.$router.push({ name: "CharacterInfo", query: { q: trimmedQuery } });
+                   this.$router.push({ name: "CharacterInfo", query: { q: trimmedQuery } });
                 } else {
                     throw new Error("Character not found");
                 }
@@ -86,7 +87,7 @@ export default {
         async fetchPopularCharacters() {
             try {
                 const response = await axios.get(
-                    "/api/characters/popular?limit=10"
+                   `${config.API_BASE_URL}/api/characters/popular?limit=10`
                 );
 
                 // 데이터 구조에 맞게 매핑

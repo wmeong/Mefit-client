@@ -52,6 +52,8 @@
 <script>
 import axios from "axios";
 import CharacterInfoPopup from "./CharacterInfoPopup.vue";
+import config from "@/config.js";
+
 
 export default {
     components: { CharacterInfoPopup },
@@ -68,7 +70,7 @@ export default {
         async fetchRankings() {
             for (const season of this.seasons) {
                 try {
-                    const response = await axios.get("/api/personal/rank", {
+                    const response = await axios.get(`${config.API_BASE_URL}/api/personal/rank`, {
                         params: { season },
                     });
                     if (

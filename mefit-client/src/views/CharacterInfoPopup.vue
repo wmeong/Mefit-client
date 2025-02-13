@@ -161,6 +161,7 @@ import hairIcon from "@/assets/hair.png";
 import faceIcon from "@/assets/face.png";
 import skinIcon from "@/assets/skin.png";
 import axios from "axios";
+import config from "@/config.js"; 
 
 export default {
     props: {
@@ -244,7 +245,7 @@ export default {
 
             this.loading = true;
             try {
-                const response = await axios.get(`/api/personal/popupInfo`, {
+                const response = await axios.get(`${config.API_BASE_URL}/api/personal/popupInfo`, {
                     params: { imageUrl: this.characterInfo.image },
                 });
 

@@ -165,6 +165,7 @@ import CharacterInfoPopup from "./CharacterInfoPopup.vue";
 import axios from "axios";
 import CustomAlert from "@/components/CustomAlert.vue";
 import { ColorMockData } from "@/data/ColorMockData.js";
+import config from "@/config.js";
 export default {
     components: { CharacterInfoPopup, CustomAlert },
     props: ["color"],
@@ -230,7 +231,7 @@ export default {
         async fetchToneData() {
             try {
                 const response = await axios.get(
-                    `/api/personal/tone`,
+                    `${config.API_BASE_URL}/api/personal/tone`,
                     {
                         params: { tone: this.color },
                     }
@@ -250,7 +251,7 @@ export default {
                 this.onPopupConfirm = async () => {
                     try {
                         await axios.delete(
-                            "/api/personal/vote",
+                            "${config.API_BASE_URL}/api/personal/vote",
                             {
                                 params: {
                                     characterImage: avatar.characterImage,
@@ -276,7 +277,7 @@ export default {
 
             try {
                 await axios.post(
-                    "/api/personal/vote",
+                    `${config.API_BASE_URL}/api/personal/vote`,
                     null,
                     {
                         params: {

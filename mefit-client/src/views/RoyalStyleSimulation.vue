@@ -393,6 +393,7 @@
 import axios from "axios";
 import confetti from "canvas-confetti";
 import CustomAlert from "@/components/CustomAlert.vue";
+import config from "@/config.js";
 
 export default {
     components: {
@@ -456,7 +457,7 @@ export default {
             }
             try {
                 const response = await axios.get(
-                    "/api/characters/info",
+                    `${config.API_BASE_URL}/api/characters/info`,
                     {
                         params: { name: this.characterName },
                     }
@@ -494,7 +495,7 @@ export default {
                 params.append("avatarUrl", this.characterImage);
 
                 await axios.post(
-                    "/api/royal-style/save-ranking",
+                    `${config.API_BASE_URL}/api/royal-style/save-ranking`,
                     params
                 );
                 this.alertMessage = "랭킹이 저장되었습니다."; // 팝업 메시지 설정
@@ -510,7 +511,7 @@ export default {
         async fetchRanking() {
             try {
                 const response = await axios.get(
-                    "/api/royal-style/ranking"
+                    `${config.API_BASE_URL}/api/royal-style/ranking`
                 );
                 this.ranking = response.data; // 랭킹 데이터를 갱신
             } catch (error) {
@@ -549,7 +550,7 @@ export default {
                 if (this.isSimulationDisabled) return; // 집계 중단 조건 추가
 
                 const response = await axios.get(
-                    "/api/royal-style/random"
+                    `${config.API_BASE_URL}/api/royal-style/random`
                 );
                 this.simulationResult = response.data;
 

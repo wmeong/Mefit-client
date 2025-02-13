@@ -140,6 +140,7 @@
 import axios from "axios";
 import CharacterInfoPopup from "./CharacterInfoPopup.vue";
 import CustomAlert from "@/components/CustomAlert.vue";
+import config from "@/config.js";
 
 export default {
     components: { CharacterInfoPopup, CustomAlert },
@@ -213,7 +214,7 @@ export default {
         async fetchSeasonData() {
             try {
                 const response = await axios.get(
-                    "/api/personal/season",
+                    `${config.API_BASE_URL}/api/personal/season`,
                     {
                         params: { season: this.seasonTitle.trim() }, // ✅ 불필요한 공백 제거
                     }
@@ -239,7 +240,7 @@ export default {
                 this.onPopupConfirm = async () => {
                     try {
                         await axios.delete(
-                            "/api/personal/vote",
+                            `${config.API_BASE_URL}/api/personal/vote`,
                             {
                                 params: {
                                     characterImage: avatar.characterImage,
@@ -270,7 +271,7 @@ export default {
             try {
                 // ✅ 팝업 없이 바로 axios 요청으로 투표 진행
                 await axios.post(
-                    "/api/personal/vote",
+                    `${config.API_BASE_URL}/api/personal/vote`,
                     null,
                     {
                         params: {

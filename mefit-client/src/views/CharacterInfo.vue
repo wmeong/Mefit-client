@@ -477,6 +477,7 @@
 import axios from "axios";
 import CustomAlert from "@/components/CustomAlert.vue";
 import colorAnalysisMixin from "@/mixins/colorAnalysisMixin";
+import config from "@/config.js";
 
 export default {
     name: "CharacterInfo",
@@ -588,7 +589,7 @@ export default {
             this.selectedWmotion = "";
 
             try {
-                const ocidResponse = await axios.get(`/api/characters/ocid`, {
+                const ocidResponse = await axios.get(`${config.API_BASE_URL}/api/characters/ocid`, {
                     params: {
                         name: this.characterName,
                         personalColor: this.personalColorAnalysis,
@@ -662,7 +663,7 @@ export default {
          */
         async loadMotionData() {
             try {
-                const response = await axios.get(`/api/characters/motions`);
+                const response = await axios.get(`${config.API_BASE_URL}/api/characters/motions`);
                 const motions = response.data;
 
                 // 동작과 감정 옵션을 분리하여 필터링
@@ -689,7 +690,7 @@ export default {
                 const subColorString = this.characterInfo.subColors.join(",");
 
                 await axios.post(
-                    `/api/characters/colors`,
+                    `${config.API_BASE_URL}/api/characters/colors`,
                     new URLSearchParams({
                         characterImage: this.characterInfo.character_image,
                         personalColor: this.personalColorAnalysis,

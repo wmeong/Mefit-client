@@ -9,13 +9,10 @@
         <v-btn class="donate-btn" color="primary" @click="toggleAccount">문의&후원💰</v-btn>
         <div v-if="showAccount" class="icon-group">
           <a href="https://www.youtube.com/@wmeong" target="_blank">
-            <img src="@/assets/youtube.png" width="24" height="24" alt="YouTube" class="icon" />
-          </a>
-          <a href="https://open.kakao.com/o/sqy89NTe" target="_blank">
-            <img src="@/assets/kakao.png" width="24" alt="Kakao" class="icon" />
+            <img src="@/assets/youtube.png" width="100" height="24" alt="YouTube" class="icon" />
           </a>
           <a href="https://www.instagram.com/ziho_ya?igsh=MTZxZmZldnNwZWMycA==" target="_blank">
-            <img src="@/assets/insta.jpg" width="24" alt="Instagram" class="icon" />
+            <img src="@/assets/insta.png" width="24" alt="Instagram" class="icon" />
           </a>
         </div>
       </div>
@@ -74,7 +71,10 @@ footer {
   height: 24px;
   border-radius: 6px;
   margin-top: 7px;
+  object-fit: contain;
+  padding: 1px;
 }
+
 
 .donate-btn {
   font-size: 11px;
