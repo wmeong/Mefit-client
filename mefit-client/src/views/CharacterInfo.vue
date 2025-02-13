@@ -2,18 +2,23 @@
     <v-container class="main-container" fluid>
         <!-- 데이터가 없을 경우 -->
         <div v-if="!characterInfo.character_name">
-            <h2>닉네임을 입력하세요</h2>
+            <h2 class="title">
+                캐릭터 정보를 조회하세요
+                <img
+                    src="@/assets/job/라라.png"
+                    style="width: 24px; position: relative; top: 3px"
+                />
+            </h2>
+
             <div class="search-bar">
-                <button class="search-icon" @click="searchAndSaveCharacter">
-                    🔎
-                </button>
                 <input
                     type="text"
-                    placeholder="검색어를 입력하세요"
+                    placeholder="닉네임을 입력하세요"
                     :value="characterName"
                     @input="updateCharacterName"
                     @keydown.enter.prevent="searchAndSaveCharacter"
                 />
+                <button class="search-button" @click="search">검색</button>
             </div>
         </div>
 
@@ -23,7 +28,7 @@
             <v-row justify="center" class="mb-4">
                 <div class="character-info-banner">
                     <div class="character-info-background">
-                        <h1 class="character-info-title">Baby Info</h1>
+                        <h1 class="character-info-title">Character Info</h1>
                     </div>
                 </div>
             </v-row>
@@ -43,7 +48,7 @@
                         />
                         <button
                             @click="searchAndSaveCharacter"
-                            class="search-button"
+                            class="search-button2"
                         >
                             🔍 검색
                         </button>
@@ -589,12 +594,15 @@ export default {
             this.selectedWmotion = "";
 
             try {
-                const ocidResponse = await axios.get(`${config.API_BASE_URL}/api/characters/ocid`, {
-                    params: {
-                        name: this.characterName,
-                        personalColor: this.personalColorAnalysis,
-                    },
-                });
+                const ocidResponse = await axios.get(
+                    `${config.API_BASE_URL}/api/characters/ocid`,
+                    {
+                        params: {
+                            name: this.characterName,
+                            personalColor: this.personalColorAnalysis,
+                        },
+                    }
+                );
                 this.characterInfo = ocidResponse.data.characterInfoDTO;
                 this.characterImage = this.characterInfo.character_image;
                 this.message = "";
@@ -663,7 +671,9 @@ export default {
          */
         async loadMotionData() {
             try {
-                const response = await axios.get(`${config.API_BASE_URL}/api/characters/motions`);
+                const response = await axios.get(
+                    `${config.API_BASE_URL}/api/characters/motions`
+                );
                 const motions = response.data;
 
                 // 동작과 감정 옵션을 분리하여 필터링
@@ -864,6 +874,10 @@ export default {
 </script>
 
 <style scoped>
+.title {
+    margin-bottom: 20px;
+    color: #4d535b;
+}
 .main-container {
     max-width: 1000px;
     margin: 0 auto;
@@ -1129,6 +1143,22 @@ export default {
 .search-bar input::placeholder {
     color: #ff88aa;
 }
+.search-button {
+    background-color: #ff88aa; /* 핑크색 버튼 */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    margin-left: 8px;
+    border-radius: 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-button:hover {
+    background-color: #ff66a3; /* 진한 핑크 */
+}
 
 .badge {
     display: inline-block;
@@ -1242,7 +1272,7 @@ export default {
     margin-right: 8px;
 }
 
-.search-button {
+.search-button2 {
     background-color: #007bff51;
     color: white;
     font-weight: bold;
@@ -1253,7 +1283,7 @@ export default {
     transition: background-color 0.3s ease;
 }
 
-.search-button:hover {
+.search-button2:hover {
     background-color: #7ab5f4;
 }
 

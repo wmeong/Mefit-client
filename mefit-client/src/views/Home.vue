@@ -1,10 +1,14 @@
 <template>
     <div class="home-container">
-        <h2>닉네임을 입력하세요</h2>
         <div class="search-bar">
-            <button class="search-icon" @click="search">🔎</button>
-            <input type="text" placeholder="검색어를 입력하세요" :value="searchQuery" @input="updateQuery"
-                @keydown.enter.prevent="search" />
+            <input
+                type="text"
+                placeholder="닉네임을 입력하세요"
+                :value="searchQuery"
+                @input="updateQuery"
+                @keydown.enter.prevent="search"
+            />
+            <button class="search-button" @click="search">검색</button>
         </div>
 
         <!-- 인기 캐릭터 리스트 -->
@@ -12,15 +16,25 @@
             <v-card-title class="text-center">🌟 인기 캐릭터 🌟</v-card-title>
             <v-divider></v-divider>
             <v-list dense class="character-list">
-                <v-list-item v-for="(character, index) in popularCharacters" :key="index" class="character-item"
-                    @click="selectCharacter(character.characterName)">
+                <v-list-item
+                    v-for="(character, index) in popularCharacters"
+                    :key="index"
+                    class="character-item"
+                    @click="selectCharacter(character.characterName)"
+                >
                     <v-list-item-avatar class="avatar-container">
-                        <v-img :src="character.characterImage" alt="character avatar" max-width="90"
-                            max-height="90"></v-img>
+                        <v-img
+                            :src="character.characterImage"
+                            alt="character avatar"
+                            max-width="90"
+                            max-height="90"
+                        ></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                        <v-list-item-title>{{ index + 1 }}.
-                            {{ character.characterName }}</v-list-item-title>
+                        <v-list-item-title
+                            >{{ index + 1 }}.
+                            {{ character.characterName }}</v-list-item-title
+                        >
                         <v-list-item-subtitle>
                             Lv.{{ character.characterLevel }}
                             {{ character.characterClass }} -
@@ -32,15 +46,20 @@
         </v-card>
 
         <!-- 공통 알림 팝업 -->
-        <CustomAlert v-if="showAlert" :visible="showAlert" title="알림" message="존재하지 않는 캐릭터입니다."
-            @close="showAlert = false" />
+        <CustomAlert
+            v-if="showAlert"
+            :visible="showAlert"
+            title="알림"
+            message="존재하지 않는 캐릭터입니다."
+            @close="showAlert = false"
+        />
     </div>
 </template>
 
 <script>
 import axios from "axios";
 import CustomAlert from "@/components/CustomAlert.vue"; // 공통 알림 컴포넌트
-import config from "@/config.js"; 
+import config from "@/config.js";
 
 export default {
     name: "Home",
@@ -66,10 +85,17 @@ export default {
             this.isSearching = true;
             try {
                 const response = await axios.get(
-                   `${config.API_BASE_URL}/api/characters/ocid?name=${encodeURIComponent(trimmedQuery)}`
+                    `${
+                        config.API_BASE_URL
+                    }/api/characters/ocid?name=${encodeURIComponent(
+                        trimmedQuery
+                    )}`
                 );
                 if (response.status === 200) {
-                   this.$router.push({ name: "CharacterInfo", query: { q: trimmedQuery } });
+                    this.$router.push({
+                        name: "CharacterInfo",
+                        query: { q: trimmedQuery },
+                    });
                 } else {
                     throw new Error("Character not found");
                 }
@@ -79,7 +105,7 @@ export default {
             } finally {
                 this.isSearching = false;
             }
-        },     
+        },
 
         /**
          * 인기 캐릭터 목록 가져오기
@@ -87,7 +113,7 @@ export default {
         async fetchPopularCharacters() {
             try {
                 const response = await axios.get(
-                   `${config.API_BASE_URL}/api/characters/popular?limit=10`
+                    `${config.API_BASE_URL}/api/characters/popular?limit=10`
                 );
 
                 // 데이터 구조에 맞게 매핑
@@ -159,6 +185,22 @@ h2 {
 
 .search-bar input::placeholder {
     color: #ff88aa;
+}
+.search-button {
+    background-color: #ff88aa; /* 핑크색 버튼 */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    margin-left: 8px;
+    border-radius: 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-button:hover {
+    background-color: #ff66a3; /* 진한 핑크 */
 }
 
 .ranking-card {

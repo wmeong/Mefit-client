@@ -54,7 +54,6 @@ import axios from "axios";
 import CharacterInfoPopup from "./CharacterInfoPopup.vue";
 import config from "@/config.js";
 
-
 export default {
     components: { CharacterInfoPopup },
     name: "SeasonRanking",
@@ -70,9 +69,12 @@ export default {
         async fetchRankings() {
             for (const season of this.seasons) {
                 try {
-                    const response = await axios.get(`${config.API_BASE_URL}/api/personal/rank`, {
-                        params: { season },
-                    });
+                    const response = await axios.get(
+                        `${config.API_BASE_URL}/api/personal/rank`,
+                        {
+                            params: { season },
+                        }
+                    );
                     if (
                         Array.isArray(response.data) &&
                         response.data.length > 0
@@ -102,7 +104,6 @@ export default {
     },
 };
 </script>
-
 <style scoped>
 /* 컨테이너 스타일 */
 .ranking-container {
@@ -119,16 +120,16 @@ export default {
     text-align: center;
     position: relative;
     margin-bottom: 20px;
-    margin-top:20px;
+    margin-top: 20px;
 }
 
 .award-background {
-  position: relative;
-  background: #FFC0CB; 
-  overflow: hidden; 
-  padding: 15px;
-  border-radius: 20px;
-  box-shadow: none;
+    position: relative;
+    background: #ffc0cb;
+    overflow: hidden;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: none;
 }
 
 .color-awards-title {
@@ -141,39 +142,33 @@ export default {
     letter-spacing: 5px;
 }
 
-
-
 /* shimmer 효과*/
 .award-background::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 150%;
-  height: 100%;
-  /* 빛나는 효과 */
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transform: skewX(-25deg);
-  animation: shimmer 2s infinite;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    /* 빛나는 효과 */
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transform: skewX(-25deg);
+    animation: shimmer 2s infinite;
 }
 
 @keyframes shimmer {
-  0% {
-    left: -150%;
-  }
-  100% {
-    left: 150%;
-  }
+    0% {
+        left: -150%;
+    }
+    100% {
+        left: 150%;
+    }
 }
-
-
-
-
 
 /* 계절 섹션 */
 .season-section {
@@ -239,7 +234,7 @@ export default {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 10;
     width: 30px;
-    height: 30px; 
+    height: 30px;
 }
 
 /* 이미지 스타일 */
@@ -264,50 +259,6 @@ export default {
     font-weight: bold;
     color: #555;
     margin-top: 8px;
-}
-
-/* 반응형 스타일 */
-@media (max-width: 768px) {
-    .ranking-container {
-        gap: 20px;
-    }
-
-    .season-section {
-        width: 160px;
-    }
-
-    .rank-image {
-        width: 70px;
-        height: 70px;
-    }
-
-    .rank-badge {
-        font-size: 0.8rem;
-    }
-
-    .character-name {
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .season-section {
-        width: 100%;
-        max-width: 300px;
-    }
-
-    .rank-image {
-        width: 60px;
-        height: 60px;
-    }
-
-    .rank-badge {
-        font-size: 0.7rem;
-    }
-
-    .character-name {
-        font-size: 0.7rem;
-    }
 }
 
 /* 애니메이션 효과 */
@@ -340,6 +291,134 @@ export default {
     }
     to {
         opacity: 1;
+    }
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+    .ranking-container {
+        display: flex;
+        flex-direction: row; /* 가로 정렬 유지 */
+        justify-content: center; /* 중앙 정렬 */
+        flex-wrap: nowrap; /* 자동 줄바꿈 방지 */
+        overflow-x: auto; /* 가로 스크롤 허용 */
+        gap: 10px; /* 간격 최소화 */
+        padding: 10px; /* 좌우 여백 추가 */
+    }
+
+    .season-section {
+        flex: 1;
+        min-width: 140px; /* 너무 좁아지지 않도록 최소 너비 설정 */
+        max-width: 180px;
+        padding: 10px;
+        transform: scale(0.9); /* 전체 크기 축소 */
+    }
+
+    .rank-image {
+        width: 65px;
+        height: 65px;
+    }
+
+    .rank-badge {
+        font-size: 0.8rem;
+        width: 25px;
+        height: 25px;
+    }
+
+    .character-name {
+        font-size: 0.8rem;
+    }
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+    .ranking-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 10px !important;
+        padding: 0 !important;
+    }
+
+    .season-section {
+        background: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: auto !important;
+        flex: 1 !important;
+        min-width: 55px !important;
+        max-width: 75px !important;
+    }
+
+    .season-column {
+        width: 70px !important;
+        border-radius: 8px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .rank-image {
+        width: 65px !important;
+        height: 65px !important;
+    }
+
+    .rank-badge {
+        font-size: 0.65rem !important;
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    .character-name {
+        font-size: 0.6rem !important;
+    }
+}
+
+/* 더 작은 화면에서도 유지 */
+@media (max-width: 480px) {
+    .ranking-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 3px !important;
+        padding: 0 !important;
+    }
+
+    .season-section {
+        background: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: auto !important;
+        flex: 1 !important;
+        min-width: 55px !important;
+        max-width: 65px !important;
+    }
+
+    .season-column {
+        width: 60px !important;
+        border-radius: 6px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .rank-image {
+        width: 50px !important;
+        height: 50px !important;
+    }
+
+    .rank-badge {
+        font-size: 0.5rem !important;
+        width: 15px !important;
+        height: 15px !important;
+    }
+
+    .character-name {
+        font-size: 0.5rem !important;
     }
 }
 </style>

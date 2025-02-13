@@ -1246,4 +1246,89 @@ input {
         transform: scale(1);
     }
 }
+
+@media screen and (max-width: 768px) {
+    .ranking-section,
+    .royal-fortune {
+        display: none !important;
+    }
+
+    .v-row {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .royal-style-result,
+    .royal-style-pick,
+    .pick-result {
+        width: 100% !important;
+        max-width: 500px;
+        margin-bottom: 20px;
+    }
+
+    .royal-style-result .v-row {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .result-item {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 5px 0;
+    }
+
+    .royal-input-wrapper {
+        flex: 1;
+        max-width: 180px;
+        margin-right: 10px;
+    }
+
+    .royal-style-pick .v-row {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .custom-btn {
+        min-width: 40px;
+        font-size: 14px;
+    }
+
+    .royal-style-pick .v-row {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+/* 너무 작은 화면은 이렇게... 확인해보고 이상하면 지우기 */
+@media screen and (max-width: 480px) {
+    .royal-input-wrapper {
+        max-width: 160px;
+        margin-right: 5px;
+    }
+
+    .custom-btn {
+        min-width: 35px;
+        padding: 4px 8px;
+        font-size: 13px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .royal-input-wrapper {
+        max-width: 140px;
+        margin-right: 4px;
+    }
+
+    .custom-btn {
+        min-width: 30px;
+        padding: 3px 6px;
+        font-size: 12px;
+    }
+}
 </style>

@@ -5,33 +5,34 @@
                 <img alt="Vue logo" src="../assets/mefit.png" width="130" />
             </router-link>
         </h1>
-        <div class="menuWrap">
+
+        <!-- 햄버거 버튼 (모바일) -->
+        <div class="hamburger-menu" @click="toggleMenu">
+            {{ isMenuOpen ? "✖" : "☰" }}
+        </div>
+
+        <div :class="['menuWrap', { 'menu-open': isMenuOpen }]">
             <ul class="menu">
-                <li>
+                <li @click="closeMenu">
                     <router-link to="/">홈</router-link>
                 </li>
-                <li>
+                <li @click="closeMenu">
                     <router-link to="/characterinfo">캐릭터정보</router-link>
                 </li>
-                <li>
+                <li @click="closeMenu">
                     <router-link to="/personalcolor-select"
                         >퍼스널컬러</router-link
                     >
                 </li>
-                <li>
+                <li @click="closeMenu">
                     <router-link to="/colorAwards">컬러어워즈</router-link>
                 </li>
-                <li>
+                <li @click="closeMenu">
                     <router-link to="/color-pick">컬러픽</router-link>
                 </li>
-                <li>
+                <li @click="closeMenu">
                     <router-link to="/royal-simulation">로얄스타일</router-link>
                 </li>
-                <!-- <li>
-                    <router-link to="/personal-colorTest"
-                        >퍼스널테스트</router-link
-                    >
-                </li> -->
             </ul>
         </div>
     </header>
@@ -42,14 +43,22 @@ export default {
     name: "AppHeader",
     data() {
         return {
-            isDarkMode: false, // 초기 모드는 라이트 모드
+            isMenuOpen: false,
         };
     },
-    methods: {},
+    methods: {
+        toggleMenu() {
+            this.isMenuOpen = !this.isMenuOpen;
+        },
+        closeMenu() {
+            this.isMenuOpen = false;
+        },
+    },
 };
 </script>
 
 <style>
+/* 기존 스타일 유지 */
 header {
     display: flex;
     align-items: center;
@@ -64,7 +73,7 @@ header h1 {
     display: flex;
     align-items: center;
 }
-/*로고*/
+
 header h1 .logo img {
     margin-top: 10px;
     width: 130px;
@@ -74,8 +83,9 @@ header h1 .logo img {
 .menuWrap {
     display: flex;
     align-items: center;
-    gap: 30px; /* 로고와 메뉴 사이 간격 */
+    gap: 30px;
 }
+
 .menu {
     display: flex;
     gap: 20px;
@@ -90,7 +100,7 @@ header h1 .logo img {
 
 .menu a {
     text-decoration: none;
-    color: #333; /* 글자색을 진한 회색으로 */
+    color: #333;
     font-weight: bold;
     font-size: 16px;
     padding: 10px 15px;
@@ -103,31 +113,66 @@ header h1 .logo img {
     color: #333;
 }
 
-/* 모바일 환경을 위한 스타일 */
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        padding: 20px;
-    }
+/* 햄버거 버튼 (기본: 숨김) */
+.hamburger-menu {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+}
 
-    header h1 {
-        margin-bottom: 15px;
+/* 모바일에서 햄버거 버튼 활성화 */
+@media (max-width: 768px) {
+    .hamburger-menu {
+        display: block;
+        position: absolute;
+        right: 20px;
+        top: 20px;
     }
 
     .menuWrap {
-        width: 100%;
-        justify-content: center;
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        width: 200px;
+        background: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .menuWrap.menu-open {
+        display: flex;
     }
 
     .menu {
         flex-direction: column;
         gap: 10px;
+        padding: 10px 0;
+        list-style: none;
+        text-align: center;
     }
-    /* 활성 메뉴 스타일 추가 */
+
+    .menu li {
+        padding: 10px 0;
+    }
+
+    .menu a {
+        display: block;
+        padding: 10px;
+        font-size: 16px;
+        color: #333;
+        text-decoration: none;
+    }
+
     .menu a.router-link-active {
         background-color: #007bff;
         color: white;
         font-weight: bold;
+        border-radius: 5px;
     }
 }
 </style>

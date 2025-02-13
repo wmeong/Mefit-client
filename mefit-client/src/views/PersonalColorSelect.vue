@@ -145,4 +145,26 @@ export default {
     background-color: #673ab7;
     color: #fff;
 }
+
+@media (max-width: 768px) {
+    .season-grid {
+        grid-template-columns: 150px 150px;
+        gap: 10px; 
+    }
+
+    .season-item {
+        width: 150px; 
+        height: 150px;
+        font-size: 1rem; 
+    }
+
+    .character-info-banner {
+        padding: 2px 8px; 
+    }
+
+    .character-info-title {
+        font-size: 1.2rem; 
+        letter-spacing: 3px;
+    }
+}
 </style>

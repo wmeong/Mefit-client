@@ -374,7 +374,7 @@ export default {
 
 <style scoped>
 .main-container {
-    max-width: 1100px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 16px;
 }
@@ -604,11 +604,11 @@ export default {
     font-weight: bold;
     border-radius: 10px;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
-   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .picker-color-result:hover {
-transform: scale(1.1);
+    transform: scale(1.1);
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -634,5 +634,14 @@ transform: scale(1.1);
 
 .refresh-btn .v-icon {
     font-size: 16px !important;
+}
+
+@media (max-width: 600px) {
+    :deep(.v-container),
+    :deep(.v-row),
+    :deep(.v-col) {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
 }
 </style>
