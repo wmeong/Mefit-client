@@ -5,6 +5,7 @@ module.exports = defineConfig({
   publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
   transpileDependencies: true,
   devServer: process.env.NODE_ENV === 'development' ? {
+    historyApiFallback: true,
     proxy: {
       "/api": {
         target: config.API_BASE_URL, 
