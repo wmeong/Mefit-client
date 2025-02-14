@@ -344,6 +344,8 @@
         >
             <transition name="popup-animation">
                 <div class="popup-result-content">
+                    <button class="close-button" @click="closePopup">×</button>
+
                     <!-- 폭죽 효과 -->
                     <div v-if="isSpecialLabel" class="firework-container">
                         <div class="firework"></div>
@@ -1303,11 +1305,116 @@ input {
 }
 /* 계속 뽑기 버튼 */
 .continue-button {
-    width: 50%;
+    width: 35%;
     margin-bottom: 0px;
-    font-size: 12px;
+    font-size: 13px;
     padding: 0 !important;
     font-weight: bold;
-    background-color: #afacac !important;
+    background-color: #82b6eb !important;
+}
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+}
+.close-button:hover {
+    color: #333;
+}
+
+@media screen and (max-width: 768px) {
+    /* 실시간 랭킹, 운세 영역 숨김 */
+    .ranking-section,
+    .royal-fortune {
+        display: none !important;
+    }
+
+    /* 3개 영역을 수직 정렬 */
+    .v-row {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .royal-style-result,
+    .royal-style-pick,
+    .pick-result {
+        width: 100% !important;
+        max-width: 500px; /* 너무 커지지 않도록 제한 */
+        margin-bottom: 20px;
+    }
+
+    /* ✅ 로얄스타일 결산 영역 - 원래대로 유지 */
+    .royal-style-result .v-row {
+        flex-direction: row; /* 원래의 배치를 유지 */
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .result-item {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 5px 0;
+    }
+
+    /* ✅ 뽑기 영역 - 검색창과 버튼 정렬 */
+    .royal-input-wrapper {
+        flex: 1;
+        max-width: 180px;
+        margin-right: 10px;
+    }
+
+    .royal-style-pick .v-row {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* 뽑기/저장 버튼 정렬 */
+    .custom-btn {
+        min-width: 40px;
+        font-size: 14px;
+    }
+
+    /* ✅ 검색창과 버튼을 한 줄로 배치 */
+    .royal-style-pick .v-row {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+/* ✅ 작은 모바일 화면 대응 (max-width: 480px) */
+@media screen and (max-width: 480px) {
+    .royal-input-wrapper {
+        max-width: 160px; /* 검색창 크기 줄이기 */
+        margin-right: 5px;
+    }
+
+    .custom-btn {
+        min-width: 35px; /* 버튼 크기 축소 */
+        padding: 4px 8px;
+        font-size: 13px;
+    }
+}
+
+/* ✅ 초소형 화면 대응 (max-width: 360px) */
+@media screen and (max-width: 360px) {
+    .royal-input-wrapper {
+        max-width: 140px; /* 검색창 더 줄이기 */
+        margin-right: 4px;
+    }
+
+    .custom-btn {
+        min-width: 30px; /* 버튼 크기 최소화 */
+        padding: 3px 6px;
+        font-size: 12px;
+    }
 }
 </style>
