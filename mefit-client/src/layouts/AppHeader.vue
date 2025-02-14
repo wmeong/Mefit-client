@@ -136,9 +136,9 @@ header h1 .logo img {
         position: absolute;
         top: 60px;
         right: 0;
-        width: 200px;
+        width: 160px;
         background: white;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ddd;
         z-index: 100;
         border-radius: 10px;
         padding: 10px;
@@ -162,8 +162,8 @@ header h1 .logo img {
 
     .menu a {
         display: block;
-        padding: 10px;
-        font-size: 16px;
+        padding: 5px;
+        font-size: 14px;
         color: #333;
         text-decoration: none;
     }

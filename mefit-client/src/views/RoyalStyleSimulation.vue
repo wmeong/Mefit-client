@@ -816,7 +816,7 @@ input {
     position: relative;
     background: #ffc0cb;
     overflow: hidden;
-    padding: 4px 10px;
+    padding: 0px 10px;
     border-radius: 20px;
     box-shadow: none;
 }

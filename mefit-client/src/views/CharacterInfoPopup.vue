@@ -13,138 +13,145 @@
                 </v-card-title>
 
                 <v-card-text>
-                    <v-container class="character-popup">
-                        <v-row>
-                            <!-- 캐릭터 이미지 왼쪽 배치 (중앙 정렬 유지) -->
-                            <v-col
-                                cols="4"
-                                class="text-center d-flex justify-center align-center"
-                            >
-                                <img
-                                    v-if="characterInfo.image"
-                                    :src="characterInfo.image"
-                                    alt="Character"
-                                    class="character-img"
-                                />
-                            </v-col>
-                            <v-col cols="2" class="text-center"> </v-col>
-
-                            <!-- 퍼스널컬러, 메인컬러, 서브컬러 오른쪽 배치 -->
-                            <v-col
-                                cols="5"
-                                class="color-container d-flex flex-column justify-center"
-                            >
-                                <!-- 퍼스널컬러 표시 -->
-                                <div
-                                    :class="[
-                                        'personal-color-result',
-                                        personalColorGroup,
-                                    ]"
-                                    class=""
+                    <v-card-text class="popup-content">
+                        <v-container class="character-popup">
+                            <v-row>
+                                <!-- 1. 캐릭터 이미지 -->
+                                <v-col
+                                    :cols="isMobile ? 6 : 4"
+                                    class="text-center d-flex justify-center align-center"
                                 >
-                                    {{ characterInfo.personalColor }}
-                                </div>
+                                    <img
+                                        v-if="characterInfo.image"
+                                        :src="characterInfo.image"
+                                        alt="Character"
+                                        class="character-img"
+                                    />
+                                </v-col>
+                                <v-col cols="2"></v-col>
 
-                                <!-- 컬러 박스 (메인, 서브컬러 통합) -->
-                                <v-row
-                                    :class="['color-box', personalColorGroup]"
-                                    class="align-items-center justify-center"
+                                <!-- 2. 퍼스널 컬러 -->
+                                <v-col
+                                    :cols="isMobile ? 6 : 4"
+                                    class="color-container d-flex flex-column justify-center"
                                 >
-                                    <v-col cols="12" class="text-center">
-                                        <h4 class="color-label">메인컬러</h4>
-                                        <div class="d-flex justify-center">
-                                            <v-avatar
-                                                v-for="(
-                                                    color, index
-                                                ) in characterInfo.mainColors"
-                                                :key="'main-color-' + index"
-                                                :color="color"
-                                                size="33"
-                                                class="mr-2"
-                                            ></v-avatar>
-                                        </div>
-                                    </v-col>
-                                    <v-col cols="12" class="text-center">
-                                        <h4 class="color-label">서브컬러</h4>
-                                        <div class="d-flex justify-center">
-                                            <v-avatar
-                                                v-for="(
-                                                    color, index
-                                                ) in characterInfo.subColors"
-                                                :key="'sub-color-' + index"
-                                                :color="color"
-                                                size="33"
-                                                class="mr-2"
-                                            ></v-avatar>
-                                        </div>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                        </v-row>
+                                    <div
+                                        :class="[
+                                            'personal-color-result',
+                                            personalColorGroup,
+                                        ]"
+                                    >
+                                        {{ characterInfo.personalColor }}
+                                    </div>
 
-                        <v-row dense>
-                            <v-col
-                                v-for="(item, index) in characterInfo.items"
-                                :key="index"
-                                cols="4"
+                                    <v-row
+                                        :class="[
+                                            'color-box',
+                                            personalColorGroup,
+                                        ]"
+                                        class="align-items-center justify-center"
+                                    >
+                                        <v-col cols="12" class="text-center">
+                                            <h4 class="color-label">
+                                                메인컬러
+                                            </h4>
+                                            <div class="d-flex justify-center">
+                                                <v-avatar
+                                                    v-for="(
+                                                        color, index
+                                                    ) in characterInfo.mainColors"
+                                                    :key="'main-color-' + index"
+                                                    :color="color"
+                                                    size="33"
+                                                    class="mr-2"
+                                                ></v-avatar>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="12" class="text-center">
+                                            <h4 class="color-label">
+                                                서브컬러
+                                            </h4>
+                                            <div class="d-flex justify-center">
+                                                <v-avatar
+                                                    v-for="(
+                                                        color, index
+                                                    ) in characterInfo.subColors"
+                                                    :key="'sub-color-' + index"
+                                                    :color="color"
+                                                    size="33"
+                                                    class="mr-2"
+                                                ></v-avatar>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-row>
+
+                            <!-- 3. 장비 영역 -->
+                            <v-row
+                                :class="{ 'mobile-item-container': isMobile }"
                             >
-                                <v-card class="item-card">
-                                    <v-card-text class="item-content">
-                                        <!-- ✅ 아이템 아이콘 -->
-                                        <img
-                                            v-if="item.item_icon"
-                                            :src="item.item_icon"
-                                            alt="Item Icon"
-                                            class="item-icon"
-                                        />
-                                        <div class="item-info">
-                                            <div class="item-name">
-                                                {{ item.item_name }}
-                                            </div>
-                                            <div class="item-type">
-                                                {{ item.item_type }}
-                                            </div>
+                                <v-col
+                                    v-for="(item, index) in characterInfo.items"
+                                    :key="index"
+                                    :cols="isMobile ? 12 : 4"
+                                >
+                                    <v-card class="item-card">
+                                        <v-card-text class="item-content">
+                                            <img
+                                                v-if="item.item_icon"
+                                                :src="item.item_icon"
+                                                alt="Item Icon"
+                                                class="item-icon"
+                                            />
+                                            <div class="item-info">
+                                                <div class="item-name">
+                                                    {{ item.item_name }}
+                                                </div>
+                                                <div class="item-type">
+                                                    {{ item.item_type }}
+                                                </div>
 
-                                            <!-- ✅ 색상 정보 (색, 채, 명) - 헤어, 성형, 피부는 제외 -->
-                                            <div
-                                                v-if="
-                                                    item.color_hue !== null &&
-                                                    ![
-                                                        '헤어',
-                                                        '성형',
-                                                        '피부',
-                                                    ].includes(item.item_type)
-                                                "
-                                                class="color-info"
-                                            >
-                                                <span
-                                                    class="color-label"
-                                                ></span>
-                                                계열: {{ item.color_range }}
-                                                <br />
-                                                색: {{ item.color_hue }}, 채:
-                                                {{ item.color_saturation }}, 명:
-                                                {{ item.color_value }}
-                                            </div>
+                                                <div
+                                                    v-if="
+                                                        item.color_hue !==
+                                                            null &&
+                                                        ![
+                                                            '헤어',
+                                                            '성형',
+                                                            '피부',
+                                                        ].includes(
+                                                            item.item_type
+                                                        )
+                                                    "
+                                                    class="color-info"
+                                                >
+                                                    계열: {{ item.color_range }}
+                                                    <br />
+                                                    색: {{ item.color_hue }},
+                                                    채:
+                                                    {{ item.color_saturation }},
+                                                    명:
+                                                    {{ item.color_value }}
+                                                </div>
 
-                                            <!-- ✅ 믹스 컬러 정보 -->
-                                            <div
-                                                v-if="item.mix_color"
-                                                class="mix-color-info"
-                                            >
-                                                {{ item.base_color }}
-                                                {{ 100 - item.mix_rate }}%
-                                                {{ item.mix_color }}
-                                                {{ item.mix_rate }}%
+                                                <div
+                                                    v-if="item.mix_color"
+                                                    class="mix-color-info"
+                                                >
+                                                    {{ item.base_color }}
+                                                    {{ 100 - item.mix_rate }}%
+                                                    {{ item.mix_color }}
+                                                    {{ item.mix_rate }}%
+                                                </div>
                                             </div>
-                                        </div>
-                                    </v-card-text>
-                                </v-card>
-                            </v-col>
-                        </v-row>
-                    </v-container>
+                                        </v-card-text>
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
 
-                    <!-- 로딩 상태 표시 -->
                     <v-progress-circular
                         v-if="loading"
                         indeterminate
@@ -186,7 +193,14 @@ export default {
                 subColor: "",
             },
             loading: false,
+            isMobile: window.innerWidth <= 600,
         };
+    },
+    mounted() {
+        window.addEventListener("resize", this.checkMobile);
+    },
+    beforeUnmount() {
+        window.removeEventListener("resize", this.checkMobile);
     },
     computed: {
         visible: {
@@ -237,6 +251,9 @@ export default {
         },
     },
     methods: {
+        checkMobile() {
+            this.isMobile = window.innerWidth <= 600; // ✅ 창 크기 변경 시 모바일 여부 업데이트
+        },
         async loadcharacterInfo() {
             if (!this.characterInfo.image) {
                 console.warn("❗ 캐릭터 이미지가 없습니다.");
@@ -308,6 +325,7 @@ export default {
                 this.loading = false;
             }
         },
+
         closeDialog() {
             this.$emit("update:modelValue", false);
         },
@@ -536,5 +554,46 @@ export default {
     display: flex;
     justify-content: flex-end;
     padding-top: 10px;
+}
+.popup-content {
+    max-height: 65vh; /* 카드 내부 높이 설정 */
+    overflow-y: auto; /* 넘칠 경우 스크롤 */
+    padding-right: 8px; /* 스크롤바 공간 확보 */
+}
+/* 모바일 반응형 (max-width: 600px) */
+@media (max-width: 600px) {
+    .mobile-item-container {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .mobile-item-container .v-col {
+        width: 100% !important;
+        max-width: none;
+    }
+
+    .mobile-item-container .item-card {
+        width: 100% !important;
+    }
+    .character-img {
+        max-height: 120px;
+        max-width: 120px; /* 모바일에서 크기 축소 */
+    }
+    .color-container {
+        margin-left: -60px; /* 모바일에서만 왼쪽으로 이동 */
+        flex-basis: 40% !important; /* 너비 조정 */
+        max-width: 40% !important;
+    }
+    .personal-color-result {
+        width: 180px;
+    }
+    .color-box {
+        width: 180px;
+    }
+    .popup-content {
+        max-height: 65vh; /* 모바일에서 조금 더 낮게 조정 */
+    }
 }
 </style>
