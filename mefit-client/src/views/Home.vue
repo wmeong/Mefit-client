@@ -13,7 +13,24 @@
 
         <!-- 인기 캐릭터 리스트 -->
         <v-card class="ranking-card mt-5">
-            <v-card-title class="text-center">🌟 인기 캐릭터 🌟</v-card-title>
+            <v-card-title class="title-container">
+                <span class="title">🌟 인기 캐릭터 🌟</span>
+                <v-btn
+                    icon
+                    color="grey darken-2"
+                    class="help-btn mb-1"
+                    style="width: 20px; height: 20px"
+                >
+                    <v-tooltip bottom>
+                        <template #activator="{ props }">
+                            <v-icon v-bind="props" class="help-icon">
+                                mdi-help-circle-outline
+                            </v-icon>
+                        </template>
+                        <span> 랭킹은 3시간마다 갱신됩니다. </span>
+                    </v-tooltip>
+                </v-btn>
+            </v-card-title>
             <v-divider></v-divider>
             <v-list dense class="character-list">
                 <v-list-item
@@ -118,12 +135,12 @@ export default {
 
                 // 데이터 구조에 맞게 매핑
                 this.popularCharacters = response.data.map((character) => ({
-                    characterName: character.character_name,
-                    characterLevel: character.character_level,
-                    characterClass: character.character_class,
-                    worldName: character.world_name,
+                    characterName: character.characterName,
+                    characterLevel: character.characterLevel,
+                    characterClass: character.characterJob,
+                    worldName: character.characterWorld,
                     characterImage:
-                        character.character_image ||
+                        character.characterImage ||
                         "https://via.placeholder.com/150", // 디폴트 이미지 추가
                 }));
             } catch (error) {
@@ -260,5 +277,25 @@ h2 {
 .v-btn {
     color: #ff88aa;
     font-weight: bold;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff88aa;
+    margin-left: 25px;
+    margin-right: 8px;
+}
+
+.help-icon {
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
 }
 </style>
