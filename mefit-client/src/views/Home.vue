@@ -3,8 +3,13 @@
         <h2>닉네임을 입력하세요</h2>
         <div class="search-bar">
             <button class="search-icon" @click="search">🔎</button>
-            <input type="text" placeholder="검색어를 입력하세요" :value="searchQuery" @input="updateQuery"
-                @keydown.enter.prevent="search" />
+            <input
+                type="text"
+                placeholder="검색어를 입력하세요"
+                :value="searchQuery"
+                @input="updateQuery"
+                @keydown.enter.prevent="search"
+            />
         </div>
 
         <!-- 인기 캐릭터 리스트 -->
@@ -12,15 +17,25 @@
             <v-card-title class="text-center">🌟 인기 캐릭터 🌟</v-card-title>
             <v-divider></v-divider>
             <v-list dense class="character-list">
-                <v-list-item v-for="(character, index) in popularCharacters" :key="index" class="character-item"
-                    @click="selectCharacter(character.characterName)">
+                <v-list-item
+                    v-for="(character, index) in popularCharacters"
+                    :key="index"
+                    class="character-item"
+                    @click="selectCharacter(character.characterName)"
+                >
                     <v-list-item-avatar class="avatar-container">
-                        <v-img :src="character.characterImage" alt="character avatar" max-width="90"
-                            max-height="90"></v-img>
+                        <v-img
+                            :src="character.characterImage"
+                            alt="character avatar"
+                            max-width="90"
+                            max-height="90"
+                        ></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                        <v-list-item-title>{{ index + 1 }}.
-                            {{ character.characterName }}</v-list-item-title>
+                        <v-list-item-title
+                            >{{ index + 1 }}.
+                            {{ character.characterName }}</v-list-item-title
+                        >
                         <v-list-item-subtitle>
                             Lv.{{ character.characterLevel }}
                             {{ character.characterClass }} -
@@ -32,8 +47,13 @@
         </v-card>
 
         <!-- 공통 알림 팝업 -->
-        <CustomAlert v-if="showAlert" :visible="showAlert" title="알림" message="존재하지 않는 캐릭터입니다."
-            @close="showAlert = false" />
+        <CustomAlert
+            v-if="showAlert"
+            :visible="showAlert"
+            title="알림"
+            message="존재하지 않는 캐릭터입니다."
+            @close="showAlert = false"
+        />
     </div>
 </template>
 
@@ -65,10 +85,15 @@ export default {
             this.isSearching = true;
             try {
                 const response = await axios.get(
-                    `http://localhost:8081/api/characters/ocid?name=${encodeURIComponent(trimmedQuery)}`
+                    `http://localhost:8081/api/characters/ocid?name=${encodeURIComponent(
+                        trimmedQuery
+                    )}`
                 );
                 if (response.status === 200) {
-                    this.$router.push({ name: "CharacterInfo", query: { q: trimmedQuery } });
+                    this.$router.push({
+                        name: "CharacterInfo",
+                        query: { q: trimmedQuery },
+                    });
                 } else {
                     throw new Error("Character not found");
                 }
@@ -78,25 +103,25 @@ export default {
             } finally {
                 this.isSearching = false;
             }
-        },     
+        },
 
         /**
          * 인기 캐릭터 목록 가져오기
          */
         async fetchPopularCharacters() {
+            console.log("fetchPopularCharacters 이거타?");
             try {
                 const response = await axios.get(
                     "http://localhost:8081/api/characters/popular?limit=10"
                 );
-
                 // 데이터 구조에 맞게 매핑
                 this.popularCharacters = response.data.map((character) => ({
-                    characterName: character.character_name,
-                    characterLevel: character.character_level,
-                    characterClass: character.character_class,
-                    worldName: character.world_name,
+                    characterName: character.characterName,
+                    characterLevel: character.characterLevel,
+                    characterClass: character.characterJob,
+                    worldName: character.characterWorld,
                     characterImage:
-                        character.character_image ||
+                        character.characterImage ||
                         "https://via.placeholder.com/150", // 디폴트 이미지 추가
                 }));
             } catch (error) {
