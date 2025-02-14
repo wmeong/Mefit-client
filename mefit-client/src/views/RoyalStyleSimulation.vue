@@ -1,12 +1,5 @@
 <template>
     <v-container class="pa-4">
-        <!-- CustomAlert 컴포넌트 -->
-        <CustomAlert
-            v-if="showAlert"
-            :message="alertMessage"
-            :visible="showAlert"
-            @close="closeCustomAlert"
-        />
         <v-row justify="center" class="mb-4">
             <div class="royal-style-banner">
                 <div class="royal-style-background">
@@ -383,10 +376,36 @@
                     <p class="item-probability">
                         {{ simulationResult.probability }}
                     </p>
+                    <v-btn
+                        @click="startSimulation"
+                        color="primary"
+                        class="continue-button"
+                        fab
+                        small
+                    >
+                        계속 뽑기
+                    </v-btn>
                 </div>
             </transition>
         </div>
     </v-container>
+    <!-- CustomAlert 컴포넌트 -->
+    <CustomAlert
+        v-if="showAlert"
+        :message="alertMessage"
+        :visible="showAlert"
+        @close="closeCustomAlert"
+    />
+
+    <!-- CustomAlert 컴포넌트: 저장 확인 팝업 -->
+    <CustomAlert
+        v-if="showConfirmDialog"
+        :title="'3시간 내로 다시 저장이 불가합니다. 저장하시겠습니까?'"
+        :message="alertMessage"
+        :visible="showConfirmDialog"
+        @confirm="confirmSave"
+        @close="closeConfirmDialog"
+    />
 </template>
 
 <script>
@@ -416,6 +435,7 @@ export default {
             ranking: [],
             showAlert: false, // 알림 팝업 표시 여부
             alertMessage: "", // 알림 팝업 메시지
+            showConfirmDialog: false, // 저장 확인 팝업
         };
     },
     computed: {
@@ -469,19 +489,55 @@ export default {
                 console.error("캐릭터 정보 조회 실패:", error);
             }
         },
+        // 랭킹 저장 함수
         async saveRanking() {
             if (!this.characterName || !this.characterImage) {
                 this.alertMessage = "닉네임을 검색한 후 저장하세요.";
-                this.showAlert = true; // 팝업 표시
-                return;
-            }
-            if (this.couponCount < 10) {
-                this.alertMessage =
-                    "쿠폰을 10개 이상 소모해야 저장할 수 있습니다.";
-                this.showAlert = true; // CustomAlert 표시
+                this.showAlert = true; // 닉네임을 검색한 후 저장해야 한다는 팝업 표시
                 return;
             }
 
+            if (this.couponCount < 30) {
+                this.alertMessage =
+                    "쿠폰을 30개 이상 소모해야 저장할 수 있습니다.";
+                this.showAlert = true; // 쿠폰 수가 부족할 경우 팝업 표시
+                return;
+            }
+
+            const lastSavedTime = localStorage.getItem("lastSaveTime");
+            const now = Date.now();
+            const limitTime = 3 * 60 * 60 * 1000; // 3시간 제한
+
+            if (!lastSavedTime) {
+                // 첫 저장: 저장 여부 확인 팝업 띄우기
+                this.alertMessage = "저장하시겠습니까?";
+                this.showConfirmDialog = true;
+            } else if (now - lastSavedTime < limitTime) {
+                // 3시간 이내 중복 저장 시도
+                this.alertMessage = "3시간 이내 중복 저장이 불가능합니다.";
+                this.showAlert = true; // 중복 저장 방지 팝업 띄우기
+            } else {
+                // 3시간 이상 지난 경우, 바로 저장
+                await this.storeRankingData();
+                localStorage.setItem("lastSaveTime", now); // 저장 시간 기록
+            }
+        },
+
+        // 저장 확인 후 저장 진행
+        confirmSave() {
+            this.showConfirmDialog = false; // 팝업 닫기
+            this.storeRankingData(); // 랭킹 저장 api
+            const now = Date.now();
+            localStorage.setItem("lastSaveTime", now); // 저장 시간 기록
+        },
+
+        // 팝업 취소
+        closeConfirmDialog() {
+            this.showConfirmDialog = false;
+        },
+
+        // 랭킹 저장 api
+        async storeRankingData() {
             try {
                 const percentage = Number(this.formattedRatio);
                 if (isNaN(percentage)) {
@@ -497,16 +553,16 @@ export default {
                     "http://localhost:8081/api/royal-style/save-ranking",
                     params
                 );
-                this.alertMessage = "랭킹이 저장되었습니다."; // 팝업 메시지 설정
-                this.showAlert = true; // 팝업 표시
-                this.fetchRanking(); // 최신 랭킹 데이터 갱신
+
+                this.fetchRanking();
                 this.resetSimulation();
             } catch (error) {
-                this.alertMessage = "랭킹 저장 실패. 다시 시도해주세요."; // 실패 메시지
-                this.showAlert = true;
+                this.alertMessage = "랭킹 저장 실패. 다시 시도해주세요.";
+                this.showAlert = true; // 저장 실패 팝업
                 console.error("랭킹 저장 실패:", error);
             }
         },
+
         async fetchRanking() {
             try {
                 const response = await axios.get(
@@ -1244,5 +1300,14 @@ input {
     100% {
         transform: scale(1);
     }
+}
+/* 계속 뽑기 버튼 */
+.continue-button {
+    width: 50%;
+    margin-bottom: 0px;
+    font-size: 12px;
+    padding: 0 !important;
+    font-weight: bold;
+    background-color: #afacac !important;
 }
 </style>
