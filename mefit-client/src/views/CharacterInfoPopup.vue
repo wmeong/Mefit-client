@@ -15,7 +15,7 @@
                 <v-card-text>
                     <v-container class="character-popup">
                         <v-row>
-                            <!-- 캐릭터 이미지 왼쪽 배치 (중앙 정렬 유지) -->
+                            <!-- 1. 캐릭터 이미지 -->
                             <v-col
                                 cols="4"
                                 class="text-center d-flex justify-center align-center"
@@ -27,25 +27,22 @@
                                     class="character-img"
                                 />
                             </v-col>
-                            <v-col cols="2" class="text-center"> </v-col>
+                            <v-col cols="2"></v-col>
 
-                            <!-- 퍼스널컬러, 메인컬러, 서브컬러 오른쪽 배치 -->
+                            <!-- 2. 퍼스널 컬러 -->
                             <v-col
                                 cols="5"
                                 class="color-container d-flex flex-column justify-center"
                             >
-                                <!-- 퍼스널컬러 표시 -->
                                 <div
                                     :class="[
                                         'personal-color-result',
                                         personalColorGroup,
                                     ]"
-                                    class=""
                                 >
                                     {{ characterInfo.personalColor }}
                                 </div>
 
-                                <!-- 컬러 박스 (메인, 서브컬러 통합) -->
                                 <v-row
                                     :class="['color-box', personalColorGroup]"
                                     class="align-items-center justify-center"
@@ -82,15 +79,15 @@
                             </v-col>
                         </v-row>
 
-                        <v-row dense>
+                        <!-- 3. 장비 영역 -->
+                        <v-row :class="{ 'mobile-item-container': isMobile }">
                             <v-col
                                 v-for="(item, index) in characterInfo.items"
                                 :key="index"
-                                cols="4"
+                                :cols="isMobile ? 12 : 4"
                             >
                                 <v-card class="item-card">
                                     <v-card-text class="item-content">
-                                        <!-- ✅ 아이템 아이콘 -->
                                         <img
                                             v-if="item.item_icon"
                                             :src="item.item_icon"
@@ -105,7 +102,6 @@
                                                 {{ item.item_type }}
                                             </div>
 
-                                            <!-- ✅ 색상 정보 (색, 채, 명) - 헤어, 성형, 피부는 제외 -->
                                             <div
                                                 v-if="
                                                     item.color_hue !== null &&
@@ -117,9 +113,6 @@
                                                 "
                                                 class="color-info"
                                             >
-                                                <span
-                                                    class="color-label"
-                                                ></span>
                                                 계열: {{ item.color_range }}
                                                 <br />
                                                 색: {{ item.color_hue }}, 채:
@@ -127,7 +120,6 @@
                                                 {{ item.color_value }}
                                             </div>
 
-                                            <!-- ✅ 믹스 컬러 정보 -->
                                             <div
                                                 v-if="item.mix_color"
                                                 class="mix-color-info"
@@ -144,7 +136,6 @@
                         </v-row>
                     </v-container>
 
-                    <!-- 로딩 상태 표시 -->
                     <v-progress-circular
                         v-if="loading"
                         indeterminate
@@ -185,7 +176,14 @@ export default {
                 subColor: "",
             },
             loading: false,
+            isMobile: window.innerWidth <= 600,
         };
+    },
+    mounted() {
+        window.addEventListener("resize", this.checkMobile);
+    },
+    beforeUnmount() {
+        window.removeEventListener("resize", this.checkMobile);
     },
     computed: {
         visible: {
@@ -236,6 +234,9 @@ export default {
         },
     },
     methods: {
+        checkMobile() {
+            this.isMobile = window.innerWidth <= 600; // ✅ 창 크기 변경 시 모바일 여부 업데이트
+        },
         async loadcharacterInfo() {
             if (!this.characterInfo.image) {
                 console.warn("❗ 캐릭터 이미지가 없습니다.");
@@ -536,5 +537,36 @@ export default {
     display: flex;
     justify-content: flex-end;
     padding-top: 10px;
+}
+
+/* 모바일 반응형 (max-width: 600px) */
+@media (max-width: 600px) {
+    .mobile-item-container {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .mobile-item-container .v-col {
+        width: 100% !important;
+        max-width: none;
+    }
+
+    .mobile-item-container .item-card {
+        width: 100% !important;
+    }
+
+    .color-container {
+        margin-left: -60px; /* 모바일에서만 왼쪽으로 이동 */
+        flex-basis: 40% !important; /* 너비 조정 */
+        max-width: 40% !important;
+    }
+    .personal-color-result {
+        width: 200px;
+    }
+    .color-box {
+        width: 200px;
+    }
 }
 </style>
