@@ -161,7 +161,7 @@ import hairIcon from "@/assets/hair.png";
 import faceIcon from "@/assets/face.png";
 import skinIcon from "@/assets/skin.png";
 import axios from "axios";
-import config from "@/config.js"; 
+import config from "@/config.js";
 
 export default {
     props: {
@@ -245,9 +245,12 @@ export default {
 
             this.loading = true;
             try {
-                const response = await axios.get(`${config.API_BASE_URL}/api/personal/popupInfo`, {
-                    params: { imageUrl: this.characterInfo.image },
-                });
+                const response = await axios.get(
+                    `${config.API_BASE_URL}/api/personal/popupInfo`,
+                    {
+                        params: { imageUrl: this.characterInfo.image },
+                    }
+                );
 
                 const itemData = response.data || {};
 
@@ -305,7 +308,6 @@ export default {
                 this.loading = false;
             }
         },
-
         closeDialog() {
             this.$emit("update:modelValue", false);
         },
