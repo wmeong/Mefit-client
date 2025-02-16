@@ -575,15 +575,22 @@ export default {
     }
 
     .mobile-item-container .item-card {
-        width: 100% !important;
+        width: 90% !important;
+        margin: 0 auto !important; /* 가로 중앙 정렬 */
+    }
+    .center-title {
+        margin-left: 50px;
+        font-size: 1.1rem;
+        font-weight: bold;
     }
     .character-img {
         max-height: 120px;
-        max-width: 120px; /* 모바일에서 크기 축소 */
+        max-width: 120px;
+        margin-left: -100px !important;
     }
     .color-container {
-        margin-left: -60px; /* 모바일에서만 왼쪽으로 이동 */
-        flex-basis: 40% !important; /* 너비 조정 */
+        margin-left: -80px;
+        flex-basis: 40% !important;
         max-width: 40% !important;
     }
     .personal-color-result {
@@ -593,7 +600,7 @@ export default {
         width: 180px;
     }
     .popup-content {
-        max-height: 65vh; /* 모바일에서 조금 더 낮게 조정 */
+        max-height: 65vh;
     }
 }
 </style>

@@ -298,42 +298,6 @@ export default {
 @media (max-width: 768px) {
     .ranking-container {
         display: flex;
-        flex-direction: row; /* 가로 정렬 유지 */
-        justify-content: center; /* 중앙 정렬 */
-        flex-wrap: nowrap; /* 자동 줄바꿈 방지 */
-        overflow-x: auto; /* 가로 스크롤 허용 */
-        gap: 10px; /* 간격 최소화 */
-        padding: 10px; /* 좌우 여백 추가 */
-    }
-
-    .season-section {
-        flex: 1;
-        min-width: 140px; /* 너무 좁아지지 않도록 최소 너비 설정 */
-        max-width: 180px;
-        padding: 10px;
-        transform: scale(0.9); /* 전체 크기 축소 */
-    }
-
-    .rank-image {
-        width: 65px;
-        height: 65px;
-    }
-
-    .rank-badge {
-        font-size: 0.8rem;
-        width: 25px;
-        height: 25px;
-    }
-
-    .character-name {
-        font-size: 0.8rem;
-    }
-}
-
-/* 모바일 */
-@media (max-width: 768px) {
-    .ranking-container {
-        display: flex;
         flex-direction: row;
         justify-content: center;
         flex-wrap: nowrap;
@@ -343,14 +307,14 @@ export default {
     }
 
     .season-section {
+        flex: unset !important; /* flex 비활성화 */
         background: none !important;
         box-shadow: none !important;
         padding: 0 !important;
         margin: 0 !important;
-        width: auto !important;
-        flex: 1 !important;
         min-width: 55px !important;
-        max-width: 75px !important;
+        max-width: 85px !important;
+        width: 1000px;
     }
 
     .season-column {
@@ -361,64 +325,20 @@ export default {
     }
 
     .rank-image {
-        width: 65px !important;
-        height: 65px !important;
+        width: 70px !important;
+        height: 70px !important;
     }
-
     .rank-badge {
-        font-size: 0.65rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
         width: 18px !important;
         height: 18px !important;
+        font-size: 0.65rem !important;
+        line-height: 18px !important;
     }
-
     .character-name {
         font-size: 0.6rem !important;
-    }
-}
-
-/* 더 작은 화면에서도 유지 */
-@media (max-width: 480px) {
-    .ranking-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        gap: 3px !important;
-        padding: 0 !important;
-    }
-
-    .season-section {
-        background: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        width: auto !important;
-        flex: 1 !important;
-        min-width: 55px !important;
-        max-width: 65px !important;
-    }
-
-    .season-column {
-        width: 60px !important;
-        border-radius: 6px !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .rank-image {
-        width: 50px !important;
-        height: 50px !important;
-    }
-
-    .rank-badge {
-        font-size: 0.5rem !important;
-        width: 15px !important;
-        height: 15px !important;
-    }
-
-    .character-name {
-        font-size: 0.5rem !important;
     }
 }
 </style>

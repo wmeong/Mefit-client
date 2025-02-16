@@ -249,12 +249,7 @@
                             v-for="(result, index) in recentResults"
                             :key="index"
                             cols="auto"
-                            class="d-flex flex-column align-center"
-                            style="
-                                flex: 0 0 calc(20%);
-                                max-width: calc(20%);
-                                position: relative;
-                            "
+                            class="d-flex flex-column align-center royal-style-item"
                         >
                             <!-- Special Label 표시 -->
                             <img
@@ -872,6 +867,11 @@ input {
     display: flex;
     align-items: center;
 }
+.royal-style-item {
+    flex: 0 0 calc(20%);
+    max-width: calc(20%);
+    position: relative;
+}
 
 /* 2번: 실시간 랭킹 */
 .ranking-section {
@@ -1333,24 +1333,26 @@ input {
         display: none !important;
     }
 
-    /* 3개 영역을 수직 정렬 */
     .v-row {
+        display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         width: 100%;
+        margin: 0 auto; /* 중앙 정렬 */
     }
 
     .royal-style-result,
     .royal-style-pick,
     .pick-result {
         width: 100% !important;
-        max-width: 500px; /* 너무 커지지 않도록 제한 */
+        max-width: 500px;
         margin-bottom: 20px;
     }
 
-    /* ✅ 로얄스타일 결산 영역 - 원래대로 유지 */
+    /* 로얄스타일 결산 영역*/
     .royal-style-result .v-row {
-        flex-direction: row; /* 원래의 배치를 유지 */
+        flex-direction: row;
         justify-content: space-between;
         width: 100%;
     }
@@ -1401,20 +1403,6 @@ input {
         min-width: 35px; /* 버튼 크기 축소 */
         padding: 4px 8px;
         font-size: 13px;
-    }
-}
-
-/* ✅ 초소형 화면 대응 (max-width: 360px) */
-@media screen and (max-width: 360px) {
-    .royal-input-wrapper {
-        max-width: 140px; /* 검색창 더 줄이기 */
-        margin-right: 4px;
-    }
-
-    .custom-btn {
-        min-width: 30px; /* 버튼 크기 최소화 */
-        padding: 3px 6px;
-        font-size: 12px;
     }
 }
 </style>

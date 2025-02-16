@@ -251,7 +251,7 @@ export default {
                 this.onPopupConfirm = async () => {
                     try {
                         await axios.delete(
-                            "${config.API_BASE_URL}/api/personal/vote",
+                            `${config.API_BASE_URL}/api/personal/vote`,
                             {
                                 params: {
                                     characterImage: avatar.characterImage,
