@@ -585,4 +585,119 @@ export default {
     line-height: 1;
     cursor: pointer;
 }
+
+
+@media screen and (max-width: 768px) {
+    /* ✅ 네비게이션: 모바일에서는 폰트 크기 조정 및 정렬 */
+    .upper-navi {
+        font-size: 12px;
+        top: 10px;
+    }
+
+    /* ✅ 제목 크기 조정 */
+    .page-title {
+        font-size: 1.8rem;
+    }
+
+    /* ✅ 새로고침 버튼 위치 조정 */
+    .refresh-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 25px !important;
+        height: 25px !important;
+        font-size: 12px;
+    }
+
+    /* ✅ 팔레트 섹션: 모바일에서 여백 줄이기 */
+    .palette-section {
+        margin-top: 10px;
+        max-width: 95%;
+    }
+
+    /* ✅ 팔레트 레이아웃: 모바일에서 2열 배치 */
+    .palette-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: nowrap; /* 한 줄 유지 */
+        overflow-x: auto; /* 가로 스크롤 활성화 */
+        scroll-behavior: smooth; /* 부드러운 스크롤 */
+        white-space: nowrap;
+        padding-bottom: 10px;
+        max-width: 100%; /* 부모 컨테이너 기준으로 크기 제한 */
+        justify-content: center;
+    }
+
+    .color-box {
+        width: 80px;
+        height: 80px;
+    }
+
+    .color-box-wrapper {
+        width: 80px;
+    }
+
+    .color-label {
+        font-size: 8px;
+        width: 80px; /* ✅ 컬러 박스 크기와 동일하게 조정 */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: center;
+        display: block;
+    }
+
+
+    /* ✅ 아바타 이미지 크기 조정 */
+    .avatar-img {
+        width: 90px; 
+        height: 90px;
+    }
+
+
+    .vote-container {
+        margin-top: 3px;
+    }
+
+    /* ✅ 투표 아이콘 크기 조정 */
+    .heart-icon {
+        font-size: 18px;
+    }
+
+    /* ✅ 캐릭터 그리드 2열 배치 */
+    .avatar-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .avatar-container {
+        width: 50%; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ✅ 도움말 아이콘 크기 조정 */
+    .help-icon {
+        font-size: 14px;
+    }
+
+    /* ✅ 모바일에서만 스크롤바 스타일 적용 (마지막 부분에 추가) */
+    .palette-row::-webkit-scrollbar {
+    height: 5px;
+    }
+
+    .palette-row::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+    }
+
+    .palette-row::-webkit-scrollbar-track {
+        background: transparent;
+    }
+}
+
 </style>

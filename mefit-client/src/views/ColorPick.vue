@@ -124,7 +124,7 @@
                     />
                     <img
                         v-else
-                        src="@/assets/avatar.png"
+                        src="@/assets/avatar.webp"
                         alt="Default Image"
                         class="character-image"
                         :style="{

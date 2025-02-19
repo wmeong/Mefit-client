@@ -540,4 +540,78 @@ export default {
     line-height: 1;
     cursor: pointer;
 }
+
+@media screen and (max-width: 768px) {
+    /* ✅ 하위 색상 아이템 */
+    .sub-tone-row {
+        display: flex;
+        flex-wrap: nowrap; /* 한 줄 유지 */
+        overflow-x: auto; /* 가로 스크롤 활성화 */
+        scroll-behavior: smooth; /* 부드러운 스크롤 */
+        white-space: nowrap;
+        padding-bottom: 10px;
+        max-width: 100%; /* 부모 컨테이너 기준으로 크기 제한 */
+    }
+
+    /* ✅ 하위 색상 원 크기 줄이기 */
+    .tone-circle {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 5px;
+    }
+
+    /* ✅ 라벨 크기 줄이고 두 줄 방지 */
+    .tone-label {
+        font-size: 10px; /* 글자 크기 줄이기 */
+        font-weight: bold;
+        width: 80px; /* 고정 너비 설정 */
+        overflow: hidden; /* 넘치는 글자는 숨김 */
+        text-overflow: ellipsis; /* 말줄임표(...) 적용 */
+        white-space: nowrap; /* 두 줄로 내려가지 않도록 설정 */
+        text-align: center;
+    }
+
+    /* ✅ 모바일에서만 스크롤바 스타일 적용 */
+    .sub-tone-row::-webkit-scrollbar {
+        height: 5px;
+    }
+
+    .sub-tone-row::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+    }
+
+    .sub-tone-row::-webkit-scrollbar-track {
+        background: transparent;
+    }
+     
+    .avatar-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    }
+
+    .avatar-img {
+        width: 90px; /* 모바일에서 크기 줄이기 */
+        height: 90px;
+    }
+
+    .avatar-container {
+        width: 50%; /* 2개씩 정렬 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .heart-icon {
+        font-size: 18px; /* 모바일에서 아이콘 크기 줄이기 */
+    }
+
+    .vote-container {
+        margin-top: 3px;
+    }
+}
+
 </style>

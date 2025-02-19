@@ -12,7 +12,7 @@
                 <div v-if="showAccount" class="icon-group">
                     <a href="https://www.youtube.com/@wmeong" target="_blank">
                         <img
-                            src="@/assets/youtube.png"
+                            src="@/assets/youtube.webp"
                             width="100"
                             height="24"
                             alt="YouTube"
@@ -24,7 +24,7 @@
                         target="_blank"
                     >
                         <img
-                            src="@/assets/insta.png"
+                            src="@/assets/insta.webp"
                             width="24"
                             alt="Instagram"
                             class="icon"
@@ -32,7 +32,7 @@
                     </a>
                     <a href="https://open.kakao.com/o/sqy89NTe" target="_blank">
                         <img
-                            src="@/assets/kakao.png"
+                            src="@/assets/kakao.webp"
                             width="24"
                             alt="KakaoTalk"
                             class="icon"

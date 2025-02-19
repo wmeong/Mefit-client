@@ -5,7 +5,7 @@
             <h2 class="title">
                 캐릭터 정보를 조회하세요
                 <img
-                    src="@/assets/job/라라.png"
+                    src="@/assets/job/라라.webp"
                     style="width: 24px; position: relative; top: 3px"
                 />
             </h2>
@@ -501,9 +501,9 @@ export default {
             personalColorAnalysis: "",
             exceptWeapon: false,
             REQUIRED_ITEM_TYPES: [
-                { type: "헤어", icon: require("@/assets/hair.png"), name: "" },
-                { type: "성형", icon: require("@/assets/face.png"), name: "" },
-                { type: "피부", icon: require("@/assets/skin.png"), name: "" },
+                { type: "헤어", icon: require("@/assets/hair.webp"), name: "" },
+                { type: "성형", icon: require("@/assets/face.webp"), name: "" },
+                { type: "피부", icon: require("@/assets/skin.webp"), name: "" },
                 { type: "모자", icon: "", name: "" },
                 { type: "얼장", icon: "", name: "" },
                 { type: "눈장", icon: "", name: "" },
@@ -527,6 +527,9 @@ export default {
         };
     },
     methods: {
+        search() {
+        this.searchAndSaveCharacter();
+        },
         resetValues() {
             this.characterName = ""; // 검색어 초기화
             this.characterInfo = {}; // 캐릭터 정보 초기화
@@ -557,7 +560,7 @@ export default {
                 제니스: "zenith",
             };
             const fileName = worldNameMap[worldName] || "default";
-            return require(`@/assets/world/${fileName}.png`);
+            return require(`@/assets/world/${fileName}.webp`);
         },
         /**
          * 캐릭터 이미지를 확대/축소하는 메서드
@@ -574,7 +577,7 @@ export default {
                 const blob = await response.blob();
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(blob);
-                link.download = "character_image.png"; // 다운로드 파일 이름
+                link.download = "character_image.webp"; // 다운로드 파일 이름
                 link.click();
                 URL.revokeObjectURL(link.href); // 메모리 해제
             } catch (error) {
@@ -720,7 +723,7 @@ export default {
 
         getJobIcon(jobName) {
             try {
-                return require(`@/assets/job/${jobName}.png`);
+                return require(`@/assets/job/${jobName}.webp`);
             } catch (e) {
                 return null;
             }
@@ -1091,8 +1094,8 @@ export default {
 }
 
 .equipment-item:hover {
-    border: 1px solid #ff88aa;
-    box-shadow: 0px 4px 10px rgba(255, 136, 170, 0.3);
+    border: 1px solid #AEEEEE; /* 부드러운 파스텔 민트 */
+    box-shadow: 0px 4px 10px rgba(174, 238, 238, 0.3); /* RGBA 변환 */
 }
 
 .equipment-details {

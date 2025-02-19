@@ -241,6 +241,7 @@ export const ColorMockData = {
         { name: "다크 올리브 브라운", hex: "#4F3A28" },
     ],
     "겨울쿨 브라이트": [
+        { name: "크리미 옐로우", "hex": "#FFF04D" },
         { name: "브릴리언트 블루", hex: "#007FFF" },
         { name: "아이시 핑크", hex: "#FFD1DC" },
         { name: "라임 그린", hex: "#32CD32" },
@@ -264,7 +265,6 @@ export const ColorMockData = {
         { name: "하늘빛 아이시 화이트", hex: "#EFF7FC" },
         { name: "아이시 민트 블루", hex: "#B2F2E6" },
         { name: "페일 브라이트 바이올렛", hex: "#C8A9DC" },
-        { name: "아이스 티파니 블루", hex: "#81D8D0" },
     ],
 
     "겨울쿨 스트롱": [

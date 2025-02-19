@@ -164,9 +164,9 @@
 </template>
 
 <script>
-import hairIcon from "@/assets/hair.png";
-import faceIcon from "@/assets/face.png";
-import skinIcon from "@/assets/skin.png";
+import hairIcon from "@/assets/hair.webp";
+import faceIcon from "@/assets/face.webp";
+import skinIcon from "@/assets/skin.webp";
 import axios from "axios";
 import config from "@/config.js";
 

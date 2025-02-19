@@ -2,7 +2,7 @@
     <header>
         <h1>
             <router-link to="/" class="logo">
-                <img alt="Vue logo" src="../assets/mefit.png" width="130" />
+                <img alt="Vue logo" src="../assets/mefit.webp" width="130" />
             </router-link>
         </h1>
 

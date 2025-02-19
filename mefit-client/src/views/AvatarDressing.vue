@@ -37,7 +37,7 @@ export default {
     name: "AvatarDressing",
     setup() {
         // 아바타 기본 이미지
-        const avatarBase = "path/to/avatar_base.png"; // 실제 API로 받은 아바타 이미지로 대체 가능
+        const avatarBase = "path/to/avatar_base.webp"; // 실제 API로 받은 아바타 이미지로 대체 가능
 
         // 선택된 아이템
         const selectedItems = ref({

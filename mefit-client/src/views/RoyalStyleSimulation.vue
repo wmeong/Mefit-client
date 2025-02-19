@@ -96,7 +96,7 @@
                     <!-- characterImage가 없을 때 (blare 이미지) -->
                     <v-img
                         v-else
-                        :src="require('@/assets/royalstyle/blare.png')"
+                        :src="require('@/assets/royalstyle/blare.webp')"
                         contain
                         width="70"
                         height="70"
@@ -151,7 +151,7 @@
                     <!-- 운세 메시지가 없을 때 -->
                     <div v-if="!fortuneMessage" class="fortune-container">
                         <img
-                            src="@/assets/fortune.png"
+                            src="@/assets/fortune.webp"
                             alt="fortune"
                             class="fortune-image"
                         />
@@ -237,7 +237,7 @@
                         class="no-results-container"
                     >
                         <img
-                            src="@/assets/style.png"
+                            src="@/assets/style.webp"
                             alt="No Results"
                             class="no-results-image"
                         />
@@ -254,7 +254,7 @@
                             <!-- Special Label 표시 -->
                             <img
                                 v-if="result.isSpecial"
-                                :src="require('@/assets/special.png')"
+                                :src="require('@/assets/special.webp')"
                                 alt="Special Label"
                                 class="special-label"
                             />
@@ -362,7 +362,7 @@
                             <!-- Special Label 이미지 표시 -->
                             <img
                                 v-if="isSpecialLabel"
-                                :src="require('@/assets/special.png')"
+                                :src="require('@/assets/special.webp')"
                                 alt="Special Label"
                             />
                         </div>
@@ -437,10 +437,10 @@ export default {
     },
     computed: {
         royalIcon() {
-            return require("@/assets/royalstyle/blare.png");
+            return require("@/assets/royalstyle/blare.webp");
         },
         shupiImage() {
-            return require("@/assets/shupi.png");
+            return require("@/assets/shupi.webp");
         },
         usedCash() {
             return this.couponCount * 2200;
@@ -730,10 +730,10 @@ export default {
                 return imageNames.map((imageName) => {
                     try {
                         // 이미지가 있으면 해당 이미지를 로드
-                        return require(`@/assets/royalstyle/${imageName}.png`);
+                        return require(`@/assets/royalstyle/${imageName}.webp`);
                     } catch (error) {
                         // 이미지가 없으면 디폴트 이미지를 로드
-                        return require("@/assets/royalstyle/bomb.png");
+                        return require("@/assets/royalstyle/bomb.webp");
                     }
                 });
             } catch (error) {
