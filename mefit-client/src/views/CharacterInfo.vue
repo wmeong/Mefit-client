@@ -19,7 +19,7 @@
                         <input
                             type="text"
                             placeholder="닉네임을 입력하세요"
-                            :value="characterName"
+                            :value="displayedCharacterName"
                             class="search-input"
                             @input="updateCharacterName"
                             @keydown.enter.prevent="searchAndSaveCharacter"
@@ -234,8 +234,7 @@
                         <!-- 동작(action)과 감정(emotion) 선택 셀렉트 박스 -->
                         <img
                             :src="
-                                characterImage ||
-                                'https://via.placeholder.com/150'
+                                characterImage || require('@/assets/basic.png')
                             "
                             alt="Character Image"
                             class="character-image"
@@ -467,6 +466,7 @@ export default {
     mixins: [colorAnalysisMixin],
     data() {
         return {
+            isLoading: false,
             scale: 0.7, // 초기 확대 배율
             characterName: "", // 검색어
             characterInfo: {}, // 캐릭터 정보 데이터
@@ -505,7 +505,7 @@ export default {
     },
     methods: {
         search() {
-        this.searchAndSaveCharacter();
+            this.searchAndSaveCharacter();
         },
         resetValues() {
             this.characterName = ""; // 검색어 초기화
@@ -580,6 +580,9 @@ export default {
                         params: {
                             name: this.characterName,
                             personalColor: this.personalColorAnalysis,
+                            isAutoSearch:
+                                this.characterName === "우멍" &&
+                                this.$route.query.q !== "우멍",
                         },
                     }
                 );
@@ -612,6 +615,7 @@ export default {
                     this.personalColorAnalysis = personalColor;
 
                     this.saveColors(); // 퍼스널컬러 저장
+                    this.isLoading = false;
                 };
 
                 this.message = "";
@@ -622,6 +626,7 @@ export default {
                 );
                 this.showAlert = true; // 오류 발생 시 알림 팝업 표시
                 this.message = "캐릭터 정보를 불러오는 중 오류가 발생했습니다.";
+                this.isLoading = false;
             }
         },
         /**
@@ -763,13 +768,11 @@ export default {
         },
     },
     created() {
-        this.resetValues(); // 재검색 시 값 초기화
-        // 라우터의 쿼리에서 캐릭터 이름 가져오기
-        this.characterName = this.$route.query.q || "";
-        if (this.characterName) {
-            // 캐릭터 이름이 있을 경우 API 호출
-            this.searchAndSaveCharacter();
-        }
+        this.resetValues();
+        this.characterName = this.$route.query.q || "우멍"; // 기본값 설정
+        this.isAutoSearch = !this.$route.query.q;
+
+        this.searchAndSaveCharacter();
     },
     computed: {
         filteredItems() {
@@ -848,6 +851,13 @@ export default {
             };
 
             return colorMap[this.personalColorAnalysis] || "default";
+        },
+        displayedCharacterName() {
+            // 자동 검색으로 설정된 우멍이면 빈 문자열로
+            if (this.isAutoSearch && this.characterName === "우멍") {
+                return "";
+            }
+            return this.characterName;
         },
     },
 };
@@ -1071,7 +1081,7 @@ export default {
 }
 
 .equipment-item:hover {
-    border: 1px solid #AEEEEE; /* 부드러운 파스텔 민트 */
+    border: 1px solid #aeeeee; /* 부드러운 파스텔 민트 */
     box-shadow: 0px 4px 10px rgba(174, 238, 238, 0.3); /* RGBA 변환 */
 }
 
@@ -1098,7 +1108,6 @@ export default {
     color: #666;
     line-height: 1.4;
 }
-
 
 .badge {
     display: inline-block;
