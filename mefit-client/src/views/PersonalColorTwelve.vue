@@ -47,34 +47,6 @@
         <div class="palette-section" v-if="palette.length">
             <v-row justify="center" align="center">
                 <h3 class="palette-text">🎨 색상 팔레트</h3>
-                <!-- 도움말 아이콘 버튼 -->
-                <v-btn
-                    icon
-                    color="grey darken-2"
-                    class="help-btn ml-2"
-                    style="width: 20px; height: 20px"
-                >
-                    <v-tooltip bottom>
-                        <template #activator="{ props }">
-                            <v-icon v-bind="props" class="help-icon">
-                                mdi-help-circle-outline
-                            </v-icon>
-                        </template>
-                        <span>
-                            퍼스널컬러 분석은 캐릭터 색상을
-                            <br />
-                            기반으로 제공됩니다.
-                            <br />
-                            기술적 처리 방식과 이미지의 특성상
-                            <br />
-                            일부 색상 정보가 왜곡될 수 있으며,
-                            <br />
-                            화면 환경에 따라 차이가 발생할 수 있습니다.
-                            <br />
-                            분석 결과는 참고용으로 활용해 주세요.
-                        </span>
-                    </v-tooltip>
-                </v-btn>
             </v-row>
             <div class="palette-row">
                 <v-carousel
@@ -104,11 +76,39 @@
             </div>
         </div>
         <div class="divider-line"></div>
+                <v-row justify="center" class="showcase-container">
+            <h4>🌟 Character Showcase 🌟</h4>
+            <!-- 도움말 아이콘 버튼 -->
+            <v-btn
+                icon
+                color="grey darken-2"
+                class="help-btn ml-2"
+                style="width: 20px; height: 20px"
+            >
+                <v-tooltip bottom>
+                    <template #activator="{ props }">
+                        <v-icon v-bind="props" class="help-icon">
+                            mdi-help-circle-outline
+                        </v-icon>
+                    </template>
+                    <span>
+                        퍼스널컬러 분석은 캐릭터 색상을
+                        <br />
+                        기반으로 제공됩니다.
+                        <br />
+                        기술적 처리 방식과 이미지의 특성상
+                        <br />
+                        일부 색상 정보가 왜곡될 수 있으며,
+                        <br />
+                        화면 환경에 따라 차이가 발생할 수 있습니다.
+                        <br />
+                        분석 결과는 참고용으로 활용해 주세요.
+                    </span>
+                </v-tooltip>
+            </v-btn>
+        </v-row>
         <!-- 캐릭터 아바타 그리드 -->
         <v-row justify="center" class="avatar-grid">
-            <v-col cols="12" class="text-center">
-                <h4>🌟 Character Showcase 🌟</h4>
-            </v-col>
             <v-col
                 v-for="(avatar, index) in avatars"
                 :key="index"
@@ -484,8 +484,7 @@ export default {
     height: 1px;
     background-color: #d3d3d3;
     width: 90%;
-    margin-top: 20px;
-    margin-left: 50px;
+    margin: 25px auto;
 }
 
 /* 아바타 그리드 */

@@ -1,29 +1,7 @@
 <template>
     <v-container class="main-container" fluid>
-        <!-- 데이터가 없을 경우 -->
-        <div v-if="!characterInfo.character_name">
-            <h2 class="title">
-                캐릭터 정보를 조회하세요
-                <img
-                    src="@/assets/job/라라.webp"
-                    style="width: 24px; position: relative; top: 3px"
-                />
-            </h2>
-
-            <div class="search-bar">
-                <input
-                    type="text"
-                    placeholder="닉네임을 입력하세요"
-                    :value="characterName"
-                    @input="updateCharacterName"
-                    @keydown.enter.prevent="searchAndSaveCharacter"
-                />
-                <button class="search-button" @click="search">검색</button>
-            </div>
-        </div>
-
         <!-- 데이터가 있을 경우 -->
-        <div v-else>
+        <div>
             <!-- 타이틀 영역 -->
             <v-row justify="center" class="mb-4">
                 <div class="character-info-banner">
@@ -218,8 +196,7 @@
                                     <td class="data-cell">
                                         <span class="badge">
                                             {{
-                                                characterInfo.character_guild_name ||
-                                                "길드명"
+                                                characterInfo.character_guild_name
                                             }}
                                         </span>
                                     </td>
@@ -1122,46 +1099,6 @@ export default {
     line-height: 1.4;
 }
 
-.search-bar {
-    display: flex;
-    align-items: center;
-    border: 2px solid #ffccff;
-    border-radius: 20px;
-    padding: 8px 12px;
-    width: 300px;
-    margin: 0 auto;
-    box-shadow: 0 0 8px #ffccff;
-    transition: box-shadow 0.3s ease;
-    background-color: #fff5ff;
-}
-
-.search-bar input {
-    border: none;
-    outline: none;
-    font-size: 14px;
-    flex: 1;
-    background: none;
-}
-
-.search-bar input::placeholder {
-    color: #ff88aa;
-}
-.search-button {
-    background-color: #ff88aa; /* 핑크색 버튼 */
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    margin-left: 8px;
-    border-radius: 15px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.search-button:hover {
-    background-color: #ff66a3; /* 진한 핑크 */
-}
 
 .badge {
     display: inline-block;
