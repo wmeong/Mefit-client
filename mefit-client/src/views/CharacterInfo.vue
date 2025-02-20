@@ -1,24 +1,7 @@
 <template>
     <v-container class="main-container" fluid>
-        <!-- 데이터가 없을 경우 -->
-        <div v-if="!characterInfo.character_name">
-            <h2>닉네임을 입력하세요</h2>
-            <div class="search-bar">
-                <button class="search-icon" @click="searchAndSaveCharacter">
-                    🔎
-                </button>
-                <input
-                    type="text"
-                    placeholder="검색어를 입력하세요"
-                    :value="characterName"
-                    @input="updateCharacterName"
-                    @keydown.enter.prevent="searchAndSaveCharacter"
-                />
-            </div>
-        </div>
-
         <!-- 데이터가 있을 경우 -->
-        <div v-else>
+        <div>
             <!-- 타이틀 영역 -->
             <v-row justify="center" class="mb-4">
                 <div class="character-info-banner">
@@ -36,7 +19,7 @@
                         <input
                             type="text"
                             placeholder="닉네임을 입력하세요"
-                            :value="characterName"
+                            :value="displayedCharacterName"
                             class="search-input"
                             @input="updateCharacterName"
                             @keydown.enter.prevent="searchAndSaveCharacter"
@@ -251,10 +234,7 @@
                     <div class="character-container">
                         <!-- 동작(action)과 감정(emotion) 선택 셀렉트 박스 -->
                         <img
-                            :src="
-                                characterImage ||
-                                'https://via.placeholder.com/150'
-                            "
+                            :src="characterImage"
                             alt="Character Image"
                             class="character-image"
                             :style="{
@@ -484,8 +464,9 @@ export default {
     mixins: [colorAnalysisMixin],
     data() {
         return {
+            isLoading: false,
             scale: 0.7, // 초기 확대 배율
-            characterName: "", // 검색어
+            characterName: "우멍", // 검색어
             characterInfo: {}, // 캐릭터 정보 데이터
             characterImage: "",
             showAlert: false, // 알림 팝업 상태 추가
@@ -583,6 +564,8 @@ export default {
          */
         async searchAndSaveCharacter() {
             if (!this.characterName) return; // 캐릭터 이름이 없으면 중단
+
+            this.isLoading = true; // 🔥 로딩 시작
             this.selectedAction = "";
             this.selectedEmotion = "";
             this.selectedWmotion = "";
@@ -594,28 +577,30 @@ export default {
                         params: {
                             name: this.characterName,
                             personalColor: this.personalColorAnalysis,
+                            isAutoSearch:
+                                this.characterName === "우멍" &&
+                                this.$route.query.q !== "우멍",
                         },
                     }
                 );
+
                 this.characterInfo = ocidResponse.data.characterInfoDTO;
                 this.characterImage = this.characterInfo.character_image;
-                this.message = "";
-
                 this.characterCashItem = ocidResponse.data.searchedCashItemDTOS;
                 this.characterCashFace = ocidResponse.data.searchedCashFaceDTOS;
 
-                this.loadMotionData(); // 페이지 로드 시 동작/감정 데이터 가져오기
+                await this.loadMotionData(); // 동작/감정 데이터 로드
+
+                // 🔥 이미지 로드 후 컬러 분석까지 끝낸 후에 화면 렌더링
                 const img = new Image();
                 img.crossOrigin = "Anonymous"; // 크로스 도메인 이미지 처리
                 img.src = this.characterImage;
 
                 img.onload = async () => {
-                    //mixin 활용 컬러분석 메서드 호출
                     const sortedColors = await this.extractColors(img);
-
                     const { mainColors, subColors } =
                         this.analyzeMainAndSubColors(sortedColors);
-                    const personalColor = this.determinePersonalColor(
+                    this.personalColorAnalysis = this.determinePersonalColor(
                         mainColors,
                         subColors
                     );
@@ -623,22 +608,20 @@ export default {
                     this.characterInfo.mainColors = mainColors;
                     this.colorForBackground = this.characterInfo.mainColors[0];
                     this.characterInfo.subColors = subColors;
-                    this.personalColorAnalysis = personalColor;
-          
 
-                    this.saveColors(); // 퍼스널컬러 저장
+                    await this.saveColors(); // 퍼스널컬러 저장
+                    this.isLoading = false; // ✅ 로딩 끝나면 화면 렌더링
                 };
-
-                this.message = "";
             } catch (error) {
                 console.error(
                     "캐릭터 정보를 불러오는 중 오류가 발생했습니다:",
                     error
                 );
-                this.showAlert = true; // 오류 발생 시 알림 팝업 표시
-                this.message = "캐릭터 정보를 불러오는 중 오류가 발생했습니다.";
+                this.showAlert = true;
+                this.isLoading = false; // ✅ 에러 발생 시에도 로딩 종료
             }
         },
+
         /**
          * 캐릭터 이미지 URL을 업데이트하는 메서드
          */
@@ -778,14 +761,15 @@ export default {
         },
     },
     created() {
-        this.resetValues(); // 재검색 시 값 초기화
-        // 라우터의 쿼리에서 캐릭터 이름 가져오기
-        this.characterName = this.$route.query.q || "";
-        if (this.characterName) {
-            // 캐릭터 이름이 있을 경우 API 호출
-            this.searchAndSaveCharacter();
-        }
+        this.resetValues();
+        this.characterName = this.$route.query.q || "우멍"; // 기본값 설정
+
+        // 🚀 자동 검색 여부 판단
+        this.isAutoSearch = !this.$route.query.q; // URL에 `q`가 없으면 자동 검색
+
+        this.searchAndSaveCharacter();
     },
+
     computed: {
         filteredItems() {
             return this.REQUIRED_ITEM_TYPES.map((requiredItemType) => {
@@ -864,6 +848,13 @@ export default {
 
             return colorMap[this.personalColorAnalysis] || "default";
         },
+        displayedCharacterName() {
+            // 자동 검색으로 설정된 우멍이면 빈 문자열로
+            if (this.isAutoSearch && this.characterName === "우멍") {
+                return "";
+            }
+            return this.characterName;
+        },
     },
 };
 </script>
@@ -882,7 +873,7 @@ export default {
     padding: 4px 10px;
     border-radius: 20px;
     box-shadow: none;
-    margin-top:20px;
+    margin-top: 20px;
 }
 
 .character-info-background {
