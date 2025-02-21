@@ -132,16 +132,13 @@ export default {
                 const response = await axios.get(
                     `${config.API_BASE_URL}/api/characters/popular?limit=10`
                 );
-
                 // 데이터 구조에 맞게 매핑
                 this.popularCharacters = response.data.map((character) => ({
                     characterName: character.characterName,
                     characterLevel: character.characterLevel,
                     characterClass: character.characterJob,
                     worldName: character.characterWorld,
-                    characterImage:
-                        character.characterImage ||
-                        "https://via.placeholder.com/150", // 디폴트 이미지 추가
+                    characterImage: character.characterImage,
                 }));
             } catch (error) {
                 console.error("Failed to fetch popular characters:", error);
