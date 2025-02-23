@@ -458,7 +458,6 @@
 import axios from "axios";
 import CustomAlert from "@/components/CustomAlert.vue";
 import colorAnalysisMixin from "@/mixins/colorAnalysisMixin";
-import config from "@/config.js";
 
 export default {
     name: "CharacterInfo",
@@ -575,7 +574,7 @@ export default {
 
             try {
                 const ocidResponse = await axios.get(
-                    `${config.API_BASE_URL}/api/characters/ocid`,
+                    `${process.env.VUE_APP_API_BASE_URL}/api/characters/ocid`,
                     {
                         params: {
                             name: this.characterName,
@@ -657,7 +656,7 @@ export default {
         async loadMotionData() {
             try {
                 const response = await axios.get(
-                    `${config.API_BASE_URL}/api/characters/motions`
+                    `${process.env.VUE_APP_API_BASE_URL}/api/characters/motions`
                 );
                 const motions = response.data;
 
@@ -685,7 +684,7 @@ export default {
                 const subColorString = this.characterInfo.subColors.join(",");
 
                 await axios.post(
-                    `${config.API_BASE_URL}/api/characters/colors`,
+                    `${process.env.VUE_APP_API_BASE_URL}/api/characters/colors`,
                     new URLSearchParams({
                         characterImage: this.characterInfo.character_image,
                         personalColor: this.personalColorAnalysis,

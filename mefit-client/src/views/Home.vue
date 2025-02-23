@@ -76,7 +76,6 @@
 <script>
 import axios from "axios";
 import CustomAlert from "@/components/CustomAlert.vue"; // 공통 알림 컴포넌트
-import config from "@/config.js";
 
 export default {
     name: "Home",
@@ -103,7 +102,7 @@ export default {
             try {
                 const response = await axios.get(
                     `${
-                        config.API_BASE_URL
+                        process.env.VUE_APP_API_BASE_URL
                     }/api/characters/ocid?name=${encodeURIComponent(
                         trimmedQuery
                     )}`
@@ -130,7 +129,7 @@ export default {
         async fetchPopularCharacters() {
             try {
                 const response = await axios.get(
-                    `${config.API_BASE_URL}/api/characters/popular?limit=10`
+                    `${process.env.VUE_APP_API_BASE_URL}/api/characters/popular?limit=10`
                 );
                 // 데이터 구조에 맞게 매핑
                 this.popularCharacters = response.data.map((character) => ({

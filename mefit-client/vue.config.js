@@ -1,5 +1,5 @@
 const { defineConfig } = require('@vue/cli-service');
-const config = require('./src/config.js'); 
+require('dotenv').config(); // 환경 변수 로드
 
 module.exports = defineConfig({
   publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
@@ -8,14 +8,14 @@ module.exports = defineConfig({
     historyApiFallback: true,
     proxy: {
       "/api": {
-        target: config.API_BASE_URL, 
+        target: process.env.VUE_APP_API_BASE_URL,
         changeOrigin: true,
         pathRewrite: { "^/api": "" },
       },
-    },
+    }
   } : {},
   productionSourceMap: false,
   configureWebpack: {
     devtool: process.env.NODE_ENV === 'development' ? 'source-map' : false,
-  },
+  }
 });
