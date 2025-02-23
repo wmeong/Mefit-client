@@ -52,11 +52,11 @@
                             >{{ index + 1 }}.
                             {{ character.characterName }}</v-list-item-title
                         >
-                        <v-list-item-subtitle>
+                        <!-- <v-list-item-subtitle>
                             Lv.{{ character.characterLevel }}
                             {{ character.characterClass }} -
                             {{ character.worldName }}
-                        </v-list-item-subtitle>
+                        </v-list-item-subtitle> -->
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
@@ -133,11 +133,11 @@ export default {
                 );
                 // 데이터 구조에 맞게 매핑
                 this.popularCharacters = response.data.map((character) => ({
-                    characterName: character.characterName,
-                    characterLevel: character.characterLevel,
-                    characterClass: character.characterJob,
-                    worldName: character.characterWorld,
-                    characterImage: character.characterImage,
+                    characterName: character.name,
+                    //characterLevel: character.score,
+                    //characterClass: "Unknown",
+                    //worldName: "Unknown",
+                    characterImage: character.image,
                 }));
             } catch (error) {
                 console.error("Failed to fetch popular characters:", error);
