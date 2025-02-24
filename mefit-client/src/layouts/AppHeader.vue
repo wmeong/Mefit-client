@@ -63,9 +63,10 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ffffff;
+    background-color: #F5EAFD; /* 부드러운 연보라 */
     padding: 15px 40px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08); /* 그림자 약하게 */
+    transition: background-color 0.3s ease-in-out;
 }
 
 header h1 {
@@ -100,17 +101,18 @@ header h1 .logo img {
 
 .menu a {
     text-decoration: none;
-    color: #333;
+    color: #4A3F65; /* 짙은 연보라 */
     font-weight: bold;
     font-size: 16px;
     padding: 10px 15px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: all 0.3s ease;
     border-radius: 5px;
 }
 
 .menu a:hover {
-    background-color: #f0f0f0;
-    color: #333;
+    background-color: #A2E4D9; /* 트렌디한 민트 */
+    color: #3B2E5A; /* 진한 보라 */
+    font-weight: bold;
 }
 
 /* 햄버거 버튼 (기본: 숨김) */
@@ -119,7 +121,9 @@ header h1 .logo img {
     font-size: 24px;
     cursor: pointer;
     padding: 10px;
+    color: #4A3F65; /* 짙은 연보라 */
 }
+
 
 /* 모바일에서 햄버거 버튼 활성화 */
 @media (max-width: 768px) {
@@ -136,9 +140,9 @@ header h1 .logo img {
         position: absolute;
         top: 60px;
         right: 0;
-        width: 160px;
-        background: white;
-        border: 1px solid #ddd;
+        width: 180px;
+        background: #FAF3FF; /* 연보라 계열 */
+        border: 1px solid #E0C7FF; /* 살짝 더 진한 연보라 */
         z-index: 100;
         border-radius: 10px;
         padding: 10px;
@@ -162,17 +166,21 @@ header h1 .logo img {
 
     .menu a {
         display: block;
-        padding: 5px;
-        font-size: 14px;
-        color: #333;
+        padding: 6px;
+        font-size: 15px;
+        color: #4A3F65;
         text-decoration: none;
+        border-radius: 5px;
+        transition: 0.3s;
     }
 
     .menu a.router-link-active {
-        background-color: #007bff;
-        color: white;
-        font-weight: bold;
-        border-radius: 5px;
+    background-color: #D6B4FC !important; /* 기존 하늘색 → 연보라 */
+    color: #ffffff !important; /* 텍스트 색상을 흰색으로 */
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px 15px;
+    transition: all 0.3s ease-in-out;
     }
 }
 </style>

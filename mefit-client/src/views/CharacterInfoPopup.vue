@@ -344,19 +344,43 @@ export default {
 
 /* 계절별 팝업 테두리 배경색 */
 .popup-card.Spring {
-    background-color: #ffe5fb; /* 연한 봄웜 */
+    background-color: #FFF5EB; /* 크림 오렌지 */
+    border: 3px solid #FF9F80; /* 코랄 */
+    color: #6D3B00; /* 브라운 */
+}
+
+.center-title.Spring {
+    color: #FF9F80; /* 따뜻한 코랄 */
 }
 
 .popup-card.Summer {
-    background-color: #f0f9ff; /* 연한 여름쿨 */
+    background-color: #EAF6FF; /* 맑은 스카이 블루 */
+    border: 3px solid #74B9FF; /* 밝은 블루 */
+    color: #2D5D87; /* 시원한 블루 */
+}
+
+.center-title.Summer {
+    color: #74B9FF; /* 밝은 블루 */
 }
 
 .popup-card.Autumn {
-    background-color: #fff5e0; /* 연한 가을웜 */
+    background-color: #FFF1E0; /* 부드러운 크림 브라운 */
+    border: 3px solid #D48A3C; /* 웜톤 브라운 */
+    color: #5E3A15; /* 딥 브라운 */
+}
+
+.center-title.Autumn {
+    color: #D48A3C; /* 웜톤 브라운 */
 }
 
 .popup-card.Winter {
-    background-color: #e6e6e6; /* 연한 겨울쿨 */
+    background-color: #F1F1F5; /* 차가운 아이보리 */
+    border: 3px solid #7D83FF; /* 퍼플 블루 */
+    color: #3A3A68; /* 어두운 블루 */
+}
+
+.center-title.Winter {
+    color: #7D83FF; /* 퍼플 블루 */
 }
 
 .center-title {
@@ -394,23 +418,23 @@ export default {
 }
 
 .personal-color-result.Spring {
-    background-color: #fbe7c6;
-    color: #8d5524;
+    background-color: #FBE7C6; /* 연한 크림톤 */
+    color: #8D5524; /* 따뜻한 브라운 */
 }
 
 .personal-color-result.Summer {
-    background-color: #e6f7ff;
-    color: #007acc;
+    background-color: #E6F7FF; /* 연한 블루 */
+    color: #007ACC; /* 진한 블루 */
 }
 
 .personal-color-result.Autumn {
-    background-color: #fdecc8;
-    color: #a64b2a;
+    background-color: #FDECC8; /* 부드러운 브라운 */
+    color: #A64B2A; /* 다크 브라운 */
 }
 
 .personal-color-result.Winter {
-    background-color: #f0f4f7;
-    color: #3a4e80;
+    background-color: #F0F4F7; /* 연한 회색 블루 */
+    color: #3A4E80; /* 다크 블루 */
 }
 
 /* 메인, 서브컬러 영역 */
@@ -422,19 +446,19 @@ export default {
 }
 
 .color-box.Spring {
-    background-color: #fdf3e9; /* 연한 봄웜 */
+     background-color: #FFE8D6; /* 연한 복숭아 톤 */
 }
 
 .color-box.Summer {
-    background-color: #f3fbff; /* 연한 여름쿨 */
+    background-color: #DCEEF8; /* 연한 하늘색 */
 }
 
 .color-box.Autumn {
-    background-color: #fff3e5; /* 연한 가을웜 */
+    background-color: #F5D2B4; /* 연한 브라운 톤 */
 }
 
 .color-box.Winter {
-    background-color: #faf5fa; /* 연한 겨울쿨 */
+    background-color: #E3E6F3; /* 연한 블루톤 그레이 */
 }
 
 /* 컬러 라벨 스타일 */

@@ -7,7 +7,7 @@
             </span>
             <div class="button-icon-group">
                 <v-btn class="donate-btn" color="primary" @click="toggleAccount"
-                    >문의&제보💰</v-btn
+                    >문의&후원💰</v-btn
                 >
                 <div v-if="showAccount" class="icon-group">
                     <a href="https://www.youtube.com/@wmeong" target="_blank">
