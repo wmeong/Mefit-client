@@ -53,11 +53,10 @@
             <v-list-item-title class="character-name-box">
               {{ index + 1 }} {{ character.characterName }}
             </v-list-item-title>
-            <!-- <v-list-item-subtitle>
-                            Lv.{{ character.characterLevel }}
-                            {{ character.characterClass }} -
-                            {{ character.worldName }}
-                        </v-list-item-subtitle> -->
+            <v-list-item-subtitle>
+              Lv.{{ character.characterLevel }} {{ character.characterClass }} -
+              {{ character.worldName }}
+            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -133,9 +132,9 @@ export default {
         // 데이터 구조에 맞게 매핑
         this.popularCharacters = response.data.map((character) => ({
           characterName: character.name,
-          //characterLevel: character.score,
-          //characterClass: "Unknown",
-          //worldName: "Unknown",
+          characterLevel: character.level,
+          characterClass: character.job,
+          worldName: character.world,
           characterImage: character.image,
         }));
       } catch (error) {
@@ -199,7 +198,7 @@ h2 {
   color: #ff88aa;
 }
 .search-button {
-  background-color: #ffa8c6 ; 
+  background-color: #ffa8c6;
   color: white;
   border: none;
   padding: 6px 12px;
@@ -212,7 +211,7 @@ h2 {
 }
 
 .search-button:hover {
-  background-color: #ff80a4; 
+  background-color: #ff80a4;
 }
 
 .ranking-card {
@@ -295,8 +294,8 @@ h2 {
 }
 
 .star-icon {
-    width: 20px;
-    height: 20px;
-    margin: 0 5px;
+  width: 20px;
+  height: 20px;
+  margin: 0 5px;
 }
 </style>
