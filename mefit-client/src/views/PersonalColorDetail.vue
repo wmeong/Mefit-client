@@ -53,7 +53,6 @@
         <v-row justify="center">
             <v-col cols="12" class="text-center">
                 <div class="dotted-box-container">
-                    <!-- ✅ 추가한 div -->
                     <div class="dotted-box">
                         <p class="season-description">
                             <img
@@ -533,6 +532,12 @@ export default {
     font-size: 1rem;
     color: #333333ce;
 }
+.heart-text-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
 
 .refresh-button {
     position: absolute;
@@ -650,12 +655,6 @@ export default {
     line-height: 1;
     cursor: pointer;
 }
-.heart-text-icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
-    vertical-align: middle;
-}
 
 @media screen and (max-width: 768px) {
     /* ✅ 하위 색상 아이템 */
@@ -687,8 +686,8 @@ export default {
         text-align: center;
     }
     .dotted-box {
-        width: 100%; /* ✅ 모바일에서 너비를 최대로 설정 */
-        max-width: 100%; /* ✅ 부모 크기에 맞게 자동 조정 */
+        width: 100%;
+        max-width: 100%; 
     }
 
     /* ✅ 모바일에서만 스크롤바 스타일 적용 */
