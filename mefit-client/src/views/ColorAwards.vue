@@ -7,9 +7,9 @@
   </div>
   <!-- 상단 설명 -->
   <div class="color-awards-description">
-    🎨 Mefit의 가장 인기 있는 캐릭터 스타일을 확인하세요! 계절별로 가장 많은
-    ❤️을 받은 캐릭터들이 여기에 모였습니다. 어떤 스타일이 가장 사랑받았는지
-    확인하고, 나만의 컬러 스타일을 찾아보세요! 🌟
+가장 사랑받는 컬러별 베스트 캐릭터!
+봄, 여름, 가을, 겨울 컬러 별로 가장 주목받은 스타일입니다
+<img src="@/assets/mintstar.webp" alt="하트" class="heart-icon" />
   </div>
 
   <!-- 랭킹 컨테이너 -->
@@ -26,20 +26,14 @@
 
       <!-- 순위 목록 -->
       <div class="season-column" :class="`season-bg-${index}`">
-        <div
-          v-for="(rank, idx) in rankings[season] || []"
-          :key="rank.characterImage"
-          class="rank-item"
-        >
+        <div v-for="(rank, idx) in rankings[season] || []" :key="rank.characterImage" class="rank-item">
+          <img src="@/assets/crown.webp" alt="왕관" class="crown-icon" v-if="idx === 0" />
           <div class="rank-badge">{{ idx + 1 }}</div>
-          <img
-            :src="rank.characterImage"
-            alt="캐릭터 이미지"
-            class="rank-image"
-            @click="openPopup(rank.characterImage)"
-          />
+          <img :src="rank.characterImage" alt="캐릭터 이미지" class="rank-image" @click="openPopup(rank.characterImage)" />
 
-          <span class="character-name">🧡 {{ rank.totalVotes }} </span>
+          <span class="character-name">
+            <img src="@/assets/heart.webp" alt="하트" class="heart-icon" /> {{ rank.totalVotes }}
+          </span>
         </div>
       </div>
     </div>
@@ -118,25 +112,25 @@ export default {
 
 /*상단 텍스트(컬러어워즈)*/
 .color-awards-banner {
-  text-align: center;
   position: relative;
-  margin-bottom: 20px;
+  background: #e6d6ff; /* 연보라 */
+  overflow: hidden;
+  padding: 4px 10px;
+  border-radius: 20px;
+  box-shadow: none;
   margin-top: 20px;
 }
 
 .award-background {
-  position: relative;
-  background: linear-gradient(90deg, #FFD700, #FFA500);
-  overflow: hidden;
+  background: #e6d6ff; /* 연보라 */
   padding: 15px;
   border-radius: 20px;
-  box-shadow: none;
 }
 
 .color-awards-title {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #ffffff;
+  color: #fff8f0;
   text-transform: uppercase;
   text-shadow: 0 0 20px rgba(193, 101, 255, 0.8),
     0 0 40px rgba(255, 223, 0, 0.6), 0 0 60px rgba(255, 223, 0, 0.4);
@@ -197,19 +191,19 @@ export default {
 
 /* 계절별 컬러 */
 .season-bg-0 {
-  background-color: #ffc1cc9b; /* 봄 */
+  background-color: #ffeaee9b; /* 봄 */
 }
 
 .season-bg-1 {
-  background-color: #b3e5fc8b; /* 여름 */
+  background-color: #e4f6ff8b; /* 여름 */
 }
 
 .season-bg-2 {
-  background-color: #d7a97b82; /* 가을 */
+  background-color: #f2d7bd82; /* 가을 */
 }
 
 .season-bg-3 {
-  background-color: #683ab785; /* 겨울 */
+  background-color: #bba6de85; /* 겨울 */
 }
 
 /* 순위 아이템 */
@@ -226,7 +220,7 @@ export default {
   position: absolute;
   top: -10px;
   left: -10px;
-  background: #fbfe69;
+  background: #ffeaaa;
   color: #716c6ca6;
   font-size: 0.9rem;
   font-weight: bold;
@@ -269,6 +263,22 @@ export default {
     margin-bottom: 20px;
     font-weight: 500;
     line-height: 1.5;
+}
+
+.crown-icon {
+  position: absolute;
+  top: -25px;
+  left: -30px;
+  width: 35px;
+  height: 35px;
+  z-index: 15;
+}
+
+.heart-icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 5px;
 }
 
 /* 애니메이션 효과 */

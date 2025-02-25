@@ -1164,7 +1164,7 @@ export default {
 }
 
 .search-button2 {
-  background-color: #78d6c6; /* 기존 민트 유지 */
+  background-color: #A2E4D9; /* 기존 민트 유지 */
   color: white;
   font-weight: bold;
   border: none;
@@ -1175,7 +1175,7 @@ export default {
 }
 
 .search-button2:hover {
-  background-color: #5fc3b0;
+  background-color:#8DD3C7;
 }
 
 /*캐릭터 정보 영역*/
