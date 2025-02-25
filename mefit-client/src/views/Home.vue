@@ -284,7 +284,7 @@ h2 {
   font-size: 18px;
   font-weight: bold;
   color: #ff88aa;
-  margin-left: 25px;
+  margin-left: 8px;
   margin-right: 8px;
 }
 
