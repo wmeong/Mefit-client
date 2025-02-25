@@ -25,7 +25,8 @@
               @keydown.enter.prevent="searchAndSaveCharacter"
             />
             <button @click="searchAndSaveCharacter" class="search-button2">
-              🔍 검색
+              <img src="@/assets/search2.webp" alt="검색" class="search-icon" />
+              검색
             </button>
           </div>
 
@@ -772,6 +773,14 @@ export default {
 </script>
 
 <style scoped>
+
+.search-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
 .title {
   margin-bottom: 20px;
   color: #4d535b;
@@ -784,7 +793,7 @@ export default {
 
 .character-info-banner {
   position: relative;
-  background: #E6D6FF; /* 연보라 */
+  background: #e6d6ff; /* 연보라 */
   overflow: hidden;
   padding: 4px 10px;
   border-radius: 20px;
@@ -793,7 +802,7 @@ export default {
 }
 
 .character-info-background {
-  background: #E6D6FF; /* 연보라 */
+  background: #e6d6ff; /* 연보라 */
   padding: 15px;
   border-radius: 20px;
 }
@@ -904,7 +913,7 @@ export default {
   font-size: 12px;
   padding: 0 8px;
   border-radius: 4px;
-  background-color: #B5A4FF; /* 연보라 */
+  background-color: #b5a4ff; /* 연보라 */
   color: white;
   cursor: pointer;
   margin-left: auto;
@@ -912,7 +921,7 @@ export default {
 }
 
 .color-pick-button:hover {
-  background-color: #A390FF;
+  background-color: #a390ff;
 }
 
 /* 확대, 다운로드 버튼 그룹*/
@@ -989,7 +998,7 @@ export default {
 }
 
 .equipment-item:hover {
-  border: 1px solid #AEEEEE; /* 파스텔 민트 */
+  border: 1px solid #aeeeee; /* 파스텔 민트 */
   box-shadow: 0px 4px 10px rgba(174, 238, 238, 0.3);
 }
 
@@ -1037,28 +1046,28 @@ export default {
 }
 
 .character-info-table .badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px 8px;
-    font-size: 11px;
-    font-weight: bold;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    
-    background: #FFE4E1; /* 기존보다 연한 핑크 */
-    border: 2px solid #FFA6B9; /* 연핑크 테두리 */
-    border-radius: 8px; /* 기존보다 부드러운 모서리 */
-    box-shadow: 1.5px 1.5px 5px rgba(255, 182, 193, 0.4); /* 부드러운 그림자 */
-    transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+  background: #ffe4e1; /* 기존보다 연한 핑크 */
+  border: 2px solid #ffa6b9; /* 연핑크 테두리 */
+  border-radius: 8px; /* 기존보다 부드러운 모서리 */
+  box-shadow: 1.5px 1.5px 5px rgba(255, 182, 193, 0.4); /* 부드러운 그림자 */
+  transition: all 0.2s ease-in-out;
 }
 
 .character-info-table .badge:hover {
-    background: #FFD9E0;
-    border: 2px solid #FF8FA3;
-    box-shadow: 2px 2px 7px rgba(255, 140, 160, 0.5);
-    transform: translate(-0.5px, -0.5px);
+  background: #ffd9e0;
+  border: 2px solid #ff8fa3;
+  box-shadow: 2px 2px 7px rgba(255, 140, 160, 0.5);
+  transform: translate(-0.5px, -0.5px);
 }
 
 .icon-cell {
@@ -1155,7 +1164,7 @@ export default {
 }
 
 .search-button2 {
-  background-color: #78D6C6; /* 기존 민트 유지 */
+  background-color: #78d6c6; /* 기존 민트 유지 */
   color: white;
   font-weight: bold;
   border: none;
@@ -1166,14 +1175,14 @@ export default {
 }
 
 .search-button2:hover {
-  background-color: #5FC3B0;
+  background-color: #5fc3b0;
 }
 
 /*캐릭터 정보 영역*/
 .character-info-card {
   height: 230px;
-  background-color: #FFE8F5; /* 연한 핑크 */
-  border: 2px solid #FFC6D9; /* 부드러운 핑크 테두리 */
+  background-color: #ffe8f5; /* 연한 핑크 */
+  border: 2px solid #ffc6d9; /* 부드러운 핑크 테두리 */
   border-radius: 12px;
   box-shadow: 2px 2px 10px rgba(255, 182, 193, 0.3); /* 부드러운 핑크 그림자 */
   display: flex;
@@ -1185,7 +1194,7 @@ export default {
 .personal-color-card {
   height: 230px;
   background-color: white; /* 흰색 유지 */
-  border: 2px solid #E0E0E0; /* 옅은 회색 테두리 */
+  border: 2px solid #e0e0e0; /* 옅은 회색 테두리 */
   color: #2c3e50;
   border-radius: 12px;
   box-shadow: 2px 2px 10px rgba(200, 200, 200, 0.3); /* 부드러운 그림자 */
@@ -1193,7 +1202,6 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-
 
 /*퍼스널컬러 결과 */
 .personal-color-result {
@@ -1246,7 +1254,7 @@ export default {
   margin: 0;
   padding-top: 8px;
   font-size: 11px;
-  color: #5A5A5A;
+  color: #5a5a5a;
   font-weight: bold;
   white-space: nowrap; /* 개행 방지 */
 }
