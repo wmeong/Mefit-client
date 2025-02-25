@@ -61,15 +61,14 @@
                                 alt="Heart Icon"
                                 class="heart-text-icon"
                             />
-                            캐릭터의 퍼스널컬러를 확인해 보세요!
+                            캐릭터의 퍼스널컬러를 확인해 보세요
                             <img
                                 src="@/assets/heart.webp"
                                 alt="Heart Icon"
                                 class="heart-text-icon"
                             />
                             <br />
-                            세부 톤을 선택하고 어울리는 캐릭터 스타일을 확인해
-                            보세요!
+                            세부 톤을 선택하면 어울리는 스타일을 추천해 드려요!
                         </p>
                     </div>
                 </div>
