@@ -1261,7 +1261,7 @@ input {
   font-size: 13px;
   padding: 0 !important;
   font-weight: bold;
-  background-color: #82b6eb !important;
+  background-color: #A2E4D9 !important;
 }
 .close-button {
   position: absolute;

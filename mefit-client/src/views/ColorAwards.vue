@@ -6,10 +6,29 @@
     </div>
   </div>
   <!-- 상단 설명 -->
-  <div class="color-awards-description">
-가장 사랑받는 컬러별 베스트 캐릭터!
-봄, 여름, 가을, 겨울 컬러 별로 가장 주목받은 스타일입니다
-<img src="@/assets/mintstar.webp" alt="하트" class="heart-icon" />
+  <div class="dotted-box-container">
+    <div class="dotted-box">
+      <p class="season-description">
+        <img
+          src="@/assets/mintstar.webp"
+          alt="Heart Icon"
+          class="heart-text-icon"
+        />
+        가장 사랑받는 컬러별 베스트 캐릭터
+        <img
+          src="@/assets/mintstar.webp"
+          alt="Heart Icon"
+          class="heart-text-icon"
+        />
+        <br />
+        봄, 여름, 가을, 겨울 컬러 별로 가장 주목받은 스타일을 확인해보세요
+        <img
+          src="@/assets/stars.webp"
+          alt="Heart Icon"
+          class="heart-text-icon"
+        />
+      </p>
+    </div>
   </div>
 
   <!-- 랭킹 컨테이너 -->
@@ -26,13 +45,28 @@
 
       <!-- 순위 목록 -->
       <div class="season-column" :class="`season-bg-${index}`">
-        <div v-for="(rank, idx) in rankings[season] || []" :key="rank.characterImage" class="rank-item">
-          <img src="@/assets/crown.webp" alt="왕관" class="crown-icon" v-if="idx === 0" />
+        <div
+          v-for="(rank, idx) in rankings[season] || []"
+          :key="rank.characterImage"
+          class="rank-item"
+        >
+          <img
+            src="@/assets/crown.webp"
+            alt="왕관"
+            class="crown-icon"
+            v-if="idx === 0"
+          />
           <div class="rank-badge">{{ idx + 1 }}</div>
-          <img :src="rank.characterImage" alt="캐릭터 이미지" class="rank-image" @click="openPopup(rank.characterImage)" />
+          <img
+            :src="rank.characterImage"
+            alt="캐릭터 이미지"
+            class="rank-image"
+            @click="openPopup(rank.characterImage)"
+          />
 
           <span class="character-name">
-            <img src="@/assets/heart.webp" alt="하트" class="heart-icon" /> {{ rank.totalVotes }}
+            <img src="@/assets/heart.webp" alt="하트" class="heart-icon" />
+            {{ rank.totalVotes }}
           </span>
         </div>
       </div>
@@ -256,15 +290,6 @@ export default {
   margin-top: 8px;
 }
 
-.color-awards-description {
-    text-align: center;
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 20px;
-    font-weight: 500;
-    line-height: 1.5;
-}
-
 .crown-icon {
   position: absolute;
   top: -25px;
@@ -279,6 +304,33 @@ export default {
   height: 16px;
   vertical-align: middle;
   margin-right: 5px;
+}
+
+.dotted-box-container {
+  display: flex;
+  justify-content: center; /* ✅ 가운데 정렬 */
+  width: 100%; /* ✅ 부모 크기 유지 */
+  margin-top: 30px;
+}
+
+.dotted-box {
+  border: 2px dashed rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  padding: 10px 15px; /* 내부 여백 줄이기 */
+  text-align: center;
+  width: auto; /* 필요 이상으로 커지는 것 방지 */
+  max-width: 800px; /* 최대 너비 제한 */
+  min-height: unset; /* min-height 제거 */
+  background-color: #fbf7ff;
+  margin-bottom: 10px;
+  display: inline-block; /* 내용에 맞춰 크기 조절 */
+}
+
+.heart-text-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  vertical-align: middle;
 }
 
 /* 애니메이션 효과 */
@@ -313,7 +365,6 @@ export default {
     opacity: 1;
   }
 }
-
 
 /* 모바일 */
 @media (max-width: 768px) {
@@ -360,6 +411,10 @@ export default {
   }
   .character-name {
     font-size: 0.6rem !important;
+  }
+  .dotted-box {
+    width: 100%;
+    max-width: 100%;
   }
 }
 </style>

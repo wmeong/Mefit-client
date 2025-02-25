@@ -71,6 +71,18 @@
       @close="showAlert = false"
     />
   </div>
+<!-- <v-snackbar
+  v-model="snackbar"
+  :timeout="2000"
+  color="teal accent-1"
+  elevation="0"
+>
+  {{ snackbarMessage }}
+  <template #actions>
+    <v-btn color="white" text @click="snackbar = false">닫기</v-btn>
+  </template>
+</v-snackbar> -->
+
 </template>
 
 <script>
@@ -86,6 +98,8 @@ export default {
       popularCharacters: [], // 인기 캐릭터 리스트
       showAlert: false, // 알림 팝업 표시 여부
       isSearching: false, // 검색 중 상태 플래그
+      snackbar: false,
+      snackbarMessage: "",
     };
   },
   methods: {
@@ -98,6 +112,8 @@ export default {
       const trimmedQuery = this.searchQuery.trim();
       if (!trimmedQuery) return;
 
+      this.snackbarMessage = "OPEN API 검색중이에요.";
+      this.snackbar = true;
       this.isSearching = true;
       try {
         const response = await axios.get(
@@ -116,6 +132,7 @@ export default {
       } catch (error) {
         console.error("Search failed:", error);
         this.showAlert = true;
+        //this.snackbarMessage = "존재하지 않는 캐릭터입니다.";
       } finally {
         this.isSearching = false;
       }

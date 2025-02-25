@@ -8,12 +8,6 @@
                     </h1>
                 </div>
             </div>
-            <v-col cols="12" class="text-center">
-                <p class="description">
-                    계절별 퍼스널 컬러를 선택하고, 나에게 어울리는 색상을 확인해보세요!
-                     <img src="@/assets/rainbowpaint.webp" alt="Yellow Star" class="yellow-star-icon">
-                </p>
-            </v-col>
         </v-row>
         <div class="season-grid">
             <div class="season-item spring" @click="navigateToSeason('spring')">
@@ -101,14 +95,6 @@ export default {
   }
 }
 
-/* 설명 문구 */
-.description {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #4a3d5c;
-    margin-bottom: 20px;
-}
-
 /* 계절 선택 버튼 스타일 */
 .season-grid {
     display: grid;
@@ -116,7 +102,7 @@ export default {
     gap: 25px;
     justify-content: center;
     width: auto;
-    margin: 0 auto;
+    margin-top: 50px;
 }
 
 .season-item {
@@ -203,8 +189,5 @@ export default {
         letter-spacing: 1px;
     }
 
-    .description {
-        font-size: 1rem;
-    }
 }
 </style>
