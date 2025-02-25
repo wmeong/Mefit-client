@@ -14,7 +14,9 @@
     <!-- 인기 캐릭터 리스트 -->
     <v-card class="ranking-card mt-5">
       <v-card-title class="title-container">
-        <span class="title">🌟 인기 캐릭터 🌟</span>
+        <img src="@/assets/yellowstar.webp" alt="star" class="star-icon" />
+        <span class="title"> 인기 캐릭터 </span>
+        <img src="@/assets/yellowstar.webp" alt="star" class="star-icon" />
         <!-- <v-btn
           icon
           color="grey darken-2"
@@ -175,14 +177,14 @@ h2 {
 .search-bar {
   display: flex;
   align-items: center;
-  border: 2px solid #f8e1ec; /* 연한 핑크로 변경 */
+  border: 2px solid #ffccff;
   border-radius: 20px;
   padding: 8px 12px;
   width: 300px;
   margin: 0 auto;
-  box-shadow: 0 0 8px #f8e1ec;
+  box-shadow: 0 0 8px #ffccff;
   transition: box-shadow 0.3s ease;
-  background-color: #fef5f7; /* 연핑크 → 부드러운 살구빛 핑크 */
+  background-color: #fff5ff;
 }
 
 .search-bar input {
@@ -194,10 +196,10 @@ h2 {
 }
 
 .search-bar input::placeholder {
-   color: #d685a0; 
+  color: #ff88aa;
 }
 .search-button {
-  background-color: #e6c3e6; /* 연보라색으로 변경 */
+  background-color: #ffa8c6 ; 
   color: white;
   border: none;
   padding: 6px 12px;
@@ -210,19 +212,19 @@ h2 {
 }
 
 .search-button:hover {
-  background-color: #ff66a3; /* 진한 핑크 */
+  background-color: #ff80a4; 
 }
 
 .ranking-card {
   max-width: 350px;
   margin: 20px auto;
   border-radius: 12px;
-  background-color: #faf3f0; /* 크림색 계열로 변경 */
-  box-shadow: 0 0 10px #f8e1ec;
+  background-color: #fff5ff;
+  box-shadow: 0 0 10px #ffccff;
   max-height: 600px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #d685a0 #faf3f0;
+  scrollbar-color: #ffd0de #fff5ff;
 }
 
 .ranking-card::-webkit-scrollbar {
@@ -230,7 +232,7 @@ h2 {
 }
 
 .ranking-card::-webkit-scrollbar-thumb {
-  background-color: #d685a0;
+  background-color: #ff88aa;
   border-radius: 6px;
 }
 
@@ -239,7 +241,7 @@ h2 {
 }
 
 .character-item:hover {
-   background-color: #fceef1;
+  background-color: #ffebf5;
 }
 
 .avatar-container {
@@ -247,7 +249,6 @@ h2 {
   justify-content: center;
   align-items: center;
 }
-
 
 .avatar-image {
   border-radius: 50%;
@@ -293,35 +294,9 @@ h2 {
   cursor: pointer;
 }
 
-/* 인기 캐릭터 네모 박스 스타일 */
-.character-name-box {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px 10px;
-    min-width: 75px;
-    max-width: 100px;
+.star-icon {
+    width: 20px;
     height: 20px;
-    background: #fef5f7; /* 기존보다 부드러운 톤 */
-    border: 1.5px solid #d685a0; /* 연한 로즈핑크 */
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #d685a0;
-    box-shadow: 1px 1px 0px #d685a0;
-    transition: all 0.2s ease-in-out;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    text-align: center;
+    margin: 0 5px;
 }
-
-/* 호버 효과 (너무 튀지 않게 부드럽게) */
-.character-name-box:hover {
-    background: #fceef1;
-    border-color: #c56e8d;
-    transform: scale(1.03);
-}
-
-
 </style>
