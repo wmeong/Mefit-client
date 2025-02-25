@@ -1,145 +1,167 @@
 <template>
-  <v-container class="personal-detail-container" fluid>
-    <!-- 상단 네비 -->
-    <v-row class="upper-navi">
-      <v-col>
-        <!-- 퍼스널컬러 화면으로 돌아가기 -->
-        <v-icon color="grey darken-1" size="18">mdi-chevron-right</v-icon>
-        <span class="hover-personal-color" @click="navigateToPersonalColorPage"
-          >퍼스널컬러</span
-        >
-      </v-col>
-    </v-row>
-    <v-row justify="center" align="center" class="title-container">
-      <v-col cols="auto" class="text-center">
-        <h3 :class="['page-title', titleClass]">{{ seasonTitle }}</h3>
-      </v-col>
-      <v-col cols="auto" class="text-right">
-        <v-btn
-          class="refresh-button"
-          icon
-          small
-          color="primary"
-          v-tooltip.bottom="'새로고침'"
-          @click="fetchSeasonData"
-        >
-          <v-icon size="15">mdi-refresh</v-icon>
-        </v-btn>
-      </v-col>
-    </v-row>
+    <v-container class="personal-detail-container" fluid>
+        <!-- 상단 네비 -->
+        <v-row class="upper-navi">
+            <v-col>
+                <!-- 퍼스널컬러 화면으로 돌아가기 -->
+                <v-icon color="grey darken-1" size="18"
+                    >mdi-chevron-right</v-icon
+                >
+                <span
+                    class="hover-personal-color"
+                    @click="navigateToPersonalColorPage"
+                    >퍼스널컬러</span
+                >
+            </v-col>
+        </v-row>
+        <v-row justify="center" align="center" class="title-container">
+            <v-col cols="auto" class="text-center">
+                <h3 :class="['page-title', titleClass]">{{ seasonTitle }}</h3>
+            </v-col>
+            <v-col cols="auto" class="text-right">
+                <v-btn
+                    class="refresh-button"
+                    icon
+                    small
+                    color="primary"
+                    v-tooltip.bottom="'새로고침'"
+                    @click="fetchSeasonData"
+                >
+                    <v-icon size="15">mdi-refresh</v-icon>
+                </v-btn>
+            </v-col>
+        </v-row>
 
-    <!-- ✨ 여기에 문구 추가 -->
-    <v-row justify="center" class="season-intro">
-      <v-col cols="12" class="text-center">
-        <p class="season-description">
-          ✨ 당신의 계절 타입은 <strong>{{ seasonTitle }}</strong> 입니다! ✨
-          <br />
-          🎨 아래에서 세부 톤을 선택하고,
-          <br />
-          어울리는 캐릭터 스타일을 확인해 보세요!
-        </p>
-      </v-col>
-    </v-row>
+        <!-- 하위 색상 표시 -->
+        <v-row justify="center" class="sub-tone-row">
+            <v-col
+                v-for="type in subTones"
+                :key="type.name"
+                cols="3"
+                class="text-center sub-tone-item"
+                @click="navigateToTwelvePage(type.name)"
+            >
+                <div
+                    class="tone-circle"
+                    :style="{ backgroundColor: type.color }"
+                ></div>
+                <p class="tone-label">{{ type.name }}</p>
+            </v-col>
+        </v-row>
 
-    <!-- 하위 색상 표시 -->
-    <v-row justify="center" class="sub-tone-row">
-      <v-col
-        v-for="type in subTones"
-        :key="type.name"
-        cols="3"
-        class="text-center sub-tone-item"
-        @click="navigateToTwelvePage(type.name)"
-      >
-        <div class="tone-circle" :style="{ backgroundColor: type.color }"></div>
-        <p class="tone-label">{{ type.name }}</p>
-      </v-col>
-    </v-row>
-    <v-row justify="center">
-      <h4>🌟 Character Showcase 🌟</h4>
-      <!-- 도움말 아이콘 버튼 -->
-      <v-btn
-        icon
-        color="grey darken-2"
-        class="help-btn ml-2"
-        style="width: 20px; height: 20px"
-      >
-        <v-tooltip bottom>
-          <template #activator="{ props }">
-            <v-icon v-bind="props" class="help-icon">
-              mdi-help-circle-outline
-            </v-icon>
-          </template>
-          <span>
-            퍼스널컬러 분석은 캐릭터 색상을
-            <br />
-            기반으로 제공됩니다.
-            <br />
-            기술적 처리 방식과 이미지의 특성상
-            <br />
-            일부 색상 정보가 왜곡될 수 있으며,
-            <br />
-            화면 환경에 따라 차이가 발생할 수 있습니다.
-            <br />
-            분석 결과는 참고용으로 활용해 주세요.
-          </span>
-        </v-tooltip>
-      </v-btn>
-    </v-row>
+        <!-- ✅ 점선 네모 -->
+        <v-row justify="center">
+            <v-col cols="12" class="text-center">
+                <div class="dotted-box-container">
+                    <!-- ✅ 추가한 div -->
+                    <div class="dotted-box">
+                        <p class="season-description">
+                            <img
+                                src="@/assets/heart.webp"
+                                alt="Heart Icon"
+                                class="heart-text-icon"
+                            />
+                            캐릭터의 퍼스널컬러를 확인해 보세요!
+                            <img
+                                src="@/assets/heart.webp"
+                                alt="Heart Icon"
+                                class="heart-text-icon"
+                            />
+                            <br />
+                            세부 톤을 선택하고 어울리는 캐릭터 스타일을 확인해
+                            보세요!
+                        </p>
+                    </div>
+                </div>
+                <div class="separator-line"></div>
+            </v-col>
+        </v-row>
+        <v-row justify="center">
+            <h4>🌟 Character Showcase 🌟</h4>
+            <!-- 도움말 아이콘 버튼 -->
+            <v-btn
+                icon
+                color="grey darken-2"
+                class="help-btn ml-2"
+                style="width: 20px; height: 20px"
+            >
+                <v-tooltip bottom>
+                    <template #activator="{ props }">
+                        <v-icon v-bind="props" class="help-icon">
+                            mdi-help-circle-outline
+                        </v-icon>
+                    </template>
+                    <span>
+                        퍼스널컬러 분석은 캐릭터 색상을
+                        <br />
+                        기반으로 제공됩니다.
+                        <br />
+                        기술적 처리 방식과 이미지의 특성상
+                        <br />
+                        일부 색상 정보가 왜곡될 수 있으며,
+                        <br />
+                        화면 환경에 따라 차이가 발생할 수 있습니다.
+                        <br />
+                        분석 결과는 참고용으로 활용해 주세요.
+                    </span>
+                </v-tooltip>
+            </v-btn>
+        </v-row>
 
-    <!-- 캐릭터 아바타 그리드 -->
-    <v-row justify="center" class="avatar-grid">
-      <v-col
-        v-for="(avatar, index) in avatars"
-        :key="index"
-        cols="3"
-        class="text-center avatar-container"
-      >
-        <!-- 캐릭터 이미지 -->
-        <img
-          :src="avatar.characterImage"
-          alt="Character Avatar"
-          class="avatar-img"
-          @click="openPopup(avatar.characterImage)"
+        <!-- 캐릭터 아바타 그리드 -->
+        <v-row justify="center" class="avatar-grid">
+            <v-col
+                v-for="(avatar, index) in avatars"
+                :key="index"
+                cols="3"
+                class="text-center avatar-container"
+            >
+                <!-- 캐릭터 이미지 -->
+                <img
+                    :src="avatar.characterImage"
+                    alt="Character Avatar"
+                    class="avatar-img"
+                    @click="openPopup(avatar.characterImage)"
+                />
+                <!-- 하트 버튼 -->
+                <div class="vote-container">
+                    <v-icon
+                        class="heart-icon"
+                        :style="{
+                            color: votedCharacters.has(avatar.characterImage)
+                                ? '#FF0000'
+                                : '#FFB6C1',
+                        }"
+                        @click="voteForAvatar($event, avatar)"
+                    >
+                        {{
+                            votedCharacters.has(avatar.characterImage)
+                                ? "mdi-heart"
+                                : "mdi-heart-outline"
+                        }}
+                    </v-icon>
+                </div>
+            </v-col>
+        </v-row>
+
+        <!-- CharacterInfoPopup 컴포넌트 -->
+        <CharacterInfoPopup
+            v-if="popupVisible"
+            :model-value="popupVisible"
+            @update:model-value="popupVisible = $event"
+            :character="selectedCharacter"
         />
-        <!-- 하트 버튼 -->
-        <div class="vote-container">
-          <v-icon
-            class="heart-icon"
-            :style="{
-              color: votedCharacters.has(avatar.characterImage)
-                ? '#FF0000'
-                : '#FFB6C1',
-            }"
-            @click="voteForAvatar($event, avatar)"
-          >
-            {{
-              votedCharacters.has(avatar.characterImage)
-                ? "mdi-heart"
-                : "mdi-heart-outline"
-            }}
-          </v-icon>
-        </div>
-      </v-col>
-    </v-row>
+        <CustomAlert
+            v-if="showAlert"
+            :visible="showAlert"
+            title="알림"
+            :message="alertMessage"
+            @close="showAlert = false"
+            @confirm="onPopupConfirm"
+        />
+    </v-container>
 
-    <!-- CharacterInfoPopup 컴포넌트 -->
-    <CharacterInfoPopup
-      v-if="popupVisible"
-      :model-value="popupVisible"
-      @update:model-value="popupVisible = $event"
-      :character="selectedCharacter"
-    />
-    <CustomAlert
-      v-if="showAlert"
-      :visible="showAlert"
-      title="알림"
-      :message="alertMessage"
-      @close="showAlert = false"
-      @confirm="onPopupConfirm"
-    />
-  </v-container>
-
-  <!-- ✅ 공통 알림 팝업 추가 (v-container 밖에서 전체 화면 적용) -->
+    <!-- ✅ 공통 알림 팝업 추가 (v-container 밖에서 전체 화면 적용) -->
 </template>
 
 <script>
@@ -148,248 +170,248 @@ import CharacterInfoPopup from "./CharacterInfoPopup.vue";
 import CustomAlert from "@/components/CustomAlert.vue";
 
 export default {
-  components: { CharacterInfoPopup, CustomAlert },
-  props: ["season"],
-  data() {
-    return {
-      avatars: [], //characterImage 데이터를 저장할 배열
-      popupVisible: false, // 팝업 표시 상태
-      selectedCharacter: null, // 선택된 캐릭터 데이터
-      votedCharacters: new Set(), // ✅ 투표한 캐릭터 저장
-      showAlert: false, // ✅ 공통 팝업 표시 여부
-      alertMessage: "", // ✅ 공통 팝업 메시지
-      processingVote: false, // ✅ 투표 요청 중인지 상태 플래그 (중복 방지)
-    };
-  },
-  computed: {
-    // 상단 타이틀 표시
-    seasonTitle() {
-      const season = this.$route.query.season || this.season; // query 또는 props에서 가져오기
-      const titles = {
-        spring: "봄웜",
-        summer: "여름쿨",
-        fall: "가을웜",
-        winter: "겨울쿨",
-      };
-      return titles[season];
-    },
-    titleClass() {
-      const classMapping = {
-        봄웜: "spring-title",
-        여름쿨: "summer-title",
-        가을웜: "fall-title",
-        겨울쿨: "winter-title",
-      };
-      return classMapping[this.seasonTitle] || "";
-    },
-
-    // 하위 톤 목록
-    subTones() {
-      const tones = {
-        봄웜톤: [
-          { name: "라이트", color: "#FFEBE8" },
-          { name: "브라이트", color: "#FFC1CC" },
-          { name: "트루", color: "#FFB7A5" },
-        ],
-        여름쿨톤: [
-          { name: "라이트", color: "#D4F1F9" },
-          { name: "브라이트", color: "#A3D8F4" },
-          { name: "뮤트", color: "#91C7D6" },
-        ],
-        가을웜톤: [
-          { name: "뮤트", color: "#D7A97B" },
-          { name: "스트롱", color: "#B97543" },
-          { name: "딥", color: "#8A5539" },
-        ],
-        겨울쿨톤: [
-          { name: "브라이트", color: "#C5B3E7" },
-          { name: "스트롱", color: "#7E57C2" },
-          { name: "다크", color: "#512DA8" },
-        ],
-      };
-      // 현재 seasonTitle에 해당하는 하위 톤 반환
-      const baseTones = tones[this.seasonTitle + "톤"] || []; // "봄웜톤" 등으로 찾기
-      return baseTones.map((tone) => ({
-        name: `${this.seasonTitle} ${tone.name}`, // 시즌 타이틀과 톤 이름 이어 붙임
-        color: tone.color,
-      }));
-    },
-  },
-  methods: {
-    async fetchSeasonData() {
-      try {
-        const response = await axios.get(
-          `${process.env.VUE_APP_API_BASE_URL}/api/personal/season`,
-          {
-            params: { season: this.seasonTitle.trim() }, // ✅ 불필요한 공백 제거
-          }
-        );
-        this.avatars = response.data;
-      } catch (error) {
-        console.error("데이터 로드 중 오류 발생:", error);
-      }
-    },
-    async voteForAvatar(event, avatar) {
-      event.stopPropagation();
-
-      // 동일한 캐릭터에 대한 중복 요청 방지 플래그
-      if (this.processingVote) return;
-      this.processingVote = true;
-
-      if (this.votedCharacters.has(avatar.characterImage)) {
-        // ✅ 좋아요 취소 시 팝업을 띄우고, 확인을 누르면 취소 처리
-        this.alertMessage = "좋아요를 취소하시겠습니까?"; // ✅ 취소 메시지 설정
-        this.showAlert = true; // ✅ 팝업 표시
-
-        // ✅ 확인 버튼 로직 (중복 방지)
-        this.onPopupConfirm = async () => {
-          try {
-            await axios.delete(
-              `${process.env.VUE_APP_API_BASE_URL}/api/personal/vote`,
-              {
-                params: {
-                  characterImage: avatar.characterImage,
-                },
-              }
-            );
-
-            this.votedCharacters.delete(avatar.characterImage);
-            this.saveHeartState();
-          } catch (error) {
-            console.error("투표 취소 중 오류 발생:", error);
-          } finally {
-            this.showAlert = false; // ✅ 팝업 닫기
-            this.processingVote = false; // ✅ 처리 완료 후 플래그 해제
-          }
+    components: { CharacterInfoPopup, CustomAlert },
+    props: ["season"],
+    data() {
+        return {
+            avatars: [], //characterImage 데이터를 저장할 배열
+            popupVisible: false, // 팝업 표시 상태
+            selectedCharacter: null, // 선택된 캐릭터 데이터
+            votedCharacters: new Set(), // ✅ 투표한 캐릭터 저장
+            showAlert: false, // ✅ 공통 팝업 표시 여부
+            alertMessage: "", // ✅ 공통 팝업 메시지
+            processingVote: false, // ✅ 투표 요청 중인지 상태 플래그 (중복 방지)
         };
+    },
+    computed: {
+        // 상단 타이틀 표시
+        seasonTitle() {
+            const season = this.$route.query.season || this.season; // query 또는 props에서 가져오기
+            const titles = {
+                spring: "봄웜",
+                summer: "여름쿨",
+                fall: "가을웜",
+                winter: "겨울쿨",
+            };
+            return titles[season];
+        },
+        titleClass() {
+            const classMapping = {
+                봄웜: "spring-title",
+                여름쿨: "summer-title",
+                가을웜: "fall-title",
+                겨울쿨: "winter-title",
+            };
+            return classMapping[this.seasonTitle] || "";
+        },
 
-        return;
-      }
+        // 하위 톤 목록
+        subTones() {
+            const tones = {
+                봄웜톤: [
+                    { name: "라이트", color: "#FFEBE8" },
+                    { name: "브라이트", color: "#FFC1CC" },
+                    { name: "트루", color: "#FFB7A5" },
+                ],
+                여름쿨톤: [
+                    { name: "라이트", color: "#D4F1F9" },
+                    { name: "브라이트", color: "#A3D8F4" },
+                    { name: "뮤트", color: "#91C7D6" },
+                ],
+                가을웜톤: [
+                    { name: "뮤트", color: "#D7A97B" },
+                    { name: "스트롱", color: "#B97543" },
+                    { name: "딥", color: "#8A5539" },
+                ],
+                겨울쿨톤: [
+                    { name: "브라이트", color: "#C5B3E7" },
+                    { name: "스트롱", color: "#7E57C2" },
+                    { name: "다크", color: "#512DA8" },
+                ],
+            };
+            // 현재 seasonTitle에 해당하는 하위 톤 반환
+            const baseTones = tones[this.seasonTitle + "톤"] || []; // "봄웜톤" 등으로 찾기
+            return baseTones.map((tone) => ({
+                name: `${this.seasonTitle} ${tone.name}`, // 시즌 타이틀과 톤 이름 이어 붙임
+                color: tone.color,
+            }));
+        },
+    },
+    methods: {
+        async fetchSeasonData() {
+            try {
+                const response = await axios.get(
+                    `${process.env.VUE_APP_API_BASE_URL}/api/personal/season`,
+                    {
+                        params: { season: this.seasonTitle.trim() }, // ✅ 불필요한 공백 제거
+                    }
+                );
+                this.avatars = response.data;
+            } catch (error) {
+                console.error("데이터 로드 중 오류 발생:", error);
+            }
+        },
+        async voteForAvatar(event, avatar) {
+            event.stopPropagation();
 
-      // ✅ 새로운 투표 처리 (팝업 없이 즉시 처리)
-      if (!avatar || !avatar.characterImage || !avatar.personalColor) {
-        console.error("❌ 유효하지 않은 캐릭터 데이터:", avatar);
-        this.processingVote = false;
-        return;
-      }
+            // 동일한 캐릭터에 대한 중복 요청 방지 플래그
+            if (this.processingVote) return;
+            this.processingVote = true;
 
-      try {
-        // ✅ 팝업 없이 바로 axios 요청으로 투표 진행
-        await axios.post(
-          `${process.env.VUE_APP_API_BASE_URL}/api/personal/vote`,
-          null,
-          {
-            params: {
-              characterImage: avatar.characterImage,
-              personalColor: avatar.personalColor,
-            },
-          }
-        );
+            if (this.votedCharacters.has(avatar.characterImage)) {
+                // ✅ 좋아요 취소 시 팝업을 띄우고, 확인을 누르면 취소 처리
+                this.alertMessage = "좋아요를 취소하시겠습니까?"; // ✅ 취소 메시지 설정
+                this.showAlert = true; // ✅ 팝업 표시
 
-        // ✅ 새로운 투표 상태 저장
-        this.votedCharacters.add(avatar.characterImage);
-        this.saveHeartState();
-      } catch (error) {
-        console.error("투표 중 오류 발생:", error);
-      } finally {
-        this.processingVote = false;
-      }
-    },
+                // ✅ 확인 버튼 로직 (중복 방지)
+                this.onPopupConfirm = async () => {
+                    try {
+                        await axios.delete(
+                            `${process.env.VUE_APP_API_BASE_URL}/api/personal/vote`,
+                            {
+                                params: {
+                                    characterImage: avatar.characterImage,
+                                },
+                            }
+                        );
 
-    //로컬스토리지 이용해 하트 상태 저장
-    saveHeartState() {
-      const state = {
-        votedCharacters: Array.from(this.votedCharacters),
-        timestamp: Date.now(), // 현재 시간 저장
-      };
-      localStorage.setItem("heartState", JSON.stringify(state));
+                        this.votedCharacters.delete(avatar.characterImage);
+                        this.saveHeartState();
+                    } catch (error) {
+                        console.error("투표 취소 중 오류 발생:", error);
+                    } finally {
+                        this.showAlert = false; // ✅ 팝업 닫기
+                        this.processingVote = false; // ✅ 처리 완료 후 플래그 해제
+                    }
+                };
+
+                return;
+            }
+
+            // ✅ 새로운 투표 처리 (팝업 없이 즉시 처리)
+            if (!avatar || !avatar.characterImage || !avatar.personalColor) {
+                console.error("❌ 유효하지 않은 캐릭터 데이터:", avatar);
+                this.processingVote = false;
+                return;
+            }
+
+            try {
+                // ✅ 팝업 없이 바로 axios 요청으로 투표 진행
+                await axios.post(
+                    `${process.env.VUE_APP_API_BASE_URL}/api/personal/vote`,
+                    null,
+                    {
+                        params: {
+                            characterImage: avatar.characterImage,
+                            personalColor: avatar.personalColor,
+                        },
+                    }
+                );
+
+                // ✅ 새로운 투표 상태 저장
+                this.votedCharacters.add(avatar.characterImage);
+                this.saveHeartState();
+            } catch (error) {
+                console.error("투표 중 오류 발생:", error);
+            } finally {
+                this.processingVote = false;
+            }
+        },
+
+        //로컬스토리지 이용해 하트 상태 저장
+        saveHeartState() {
+            const state = {
+                votedCharacters: Array.from(this.votedCharacters),
+                timestamp: Date.now(), // 현재 시간 저장
+            };
+            localStorage.setItem("heartState", JSON.stringify(state));
+        },
+        //하트 상태 로드
+        loadHeartState() {
+            const state = JSON.parse(localStorage.getItem("heartState"));
+            if (state && !this.isExpired(state.timestamp)) {
+                this.votedCharacters = new Set(state.votedCharacters);
+            } else {
+                localStorage.removeItem("heartState"); // 만료된 경우 초기화
+            }
+        },
+        //하트 만료 시간 체크(10분)
+        isExpired(timestamp) {
+            const thirtyMinutes = 30 * 60 * 1000; // 30분 (밀리초 단위)
+            return Date.now() - timestamp > thirtyMinutes;
+        },
+        //하위 상세12 페이지로 이동
+        navigateToTwelvePage(toneName) {
+            this.$router.push({
+                path: `/personal-color-twelve/${encodeURIComponent(toneName)}`,
+            });
+        },
+        //상위 퍼스널컬러 선택 페이지로 이동
+        navigateToPersonalColorPage() {
+            this.$router.push({
+                name: "PersonalColorSelect",
+            });
+        },
+        openPopup(characterImage) {
+            this.selectedCharacter = { image: characterImage };
+            this.popupVisible = true;
+        },
     },
-    //하트 상태 로드
-    loadHeartState() {
-      const state = JSON.parse(localStorage.getItem("heartState"));
-      if (state && !this.isExpired(state.timestamp)) {
-        this.votedCharacters = new Set(state.votedCharacters);
-      } else {
-        localStorage.removeItem("heartState"); // 만료된 경우 초기화
-      }
+    mounted() {
+        // 컴포넌트가 마운트될 때 데이터 가져오기
+        this.fetchSeasonData();
+        this.loadHeartState();
     },
-    //하트 만료 시간 체크(10분)
-    isExpired(timestamp) {
-      const thirtyMinutes = 30 * 60 * 1000; // 30분 (밀리초 단위)
-      return Date.now() - timestamp > thirtyMinutes;
-    },
-    //하위 상세12 페이지로 이동
-    navigateToTwelvePage(toneName) {
-      this.$router.push({
-        path: `/personal-color-twelve/${encodeURIComponent(toneName)}`,
-      });
-    },
-    //상위 퍼스널컬러 선택 페이지로 이동
-    navigateToPersonalColorPage() {
-      this.$router.push({
-        name: "PersonalColorSelect",
-      });
-    },
-    openPopup(characterImage) {
-      this.selectedCharacter = { image: characterImage };
-      this.popupVisible = true;
-    },
-  },
-  mounted() {
-    // 컴포넌트가 마운트될 때 데이터 가져오기
-    this.fetchSeasonData();
-    this.loadHeartState();
-  },
 };
 </script>
 
 <style scoped>
 .personal-detail-container {
-  position: relative;
-  padding: 20px;
+    position: relative;
+    padding: 20px;
 }
 /*네비*/
 .upper-navi {
-  position: absolute;
-  top: 20px;
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
+    position: absolute;
+    top: 20px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
 }
 
 .hover-personal-color,
 .hover-main-season {
-  cursor: pointer;
-  color: #424242;
-  transition: color 0.2s ease, text-decoration 0.2s ease;
+    cursor: pointer;
+    color: #424242;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
 }
 
 .hover-personal-color:hover,
 .hover-main-season:hover {
-  color: #edc1f1f8;
-  text-decoration: underline;
+    color: #edc1f1f8;
+    text-decoration: underline;
 }
 
 .title-container {
-  position: relative;
+    position: relative;
 }
 
 .page-title {
-  font-size: 2.6rem;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 20px;
-  letter-spacing: 1px;
-  font-family: "Jua", sans-serif;
-  text-transform: uppercase;
-  text-shadow: 0 0 10px rgba(255, 182, 193, 0.6),
-    0 0 20px rgba(255, 99, 132, 0.4);
+    font-size: 2.6rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    font-family: "Jua", sans-serif;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(255, 182, 193, 0.6),
+        0 0 20px rgba(255, 99, 132, 0.4);
 }
 
 /* 각 시즌별 색상 */
 /* 🌸 봄웜 */
 .spring-title {
-    background: linear-gradient(90deg, #FFCCCC, #FF99A1);
+    background: linear-gradient(90deg, #ffcccc, #ff99a1);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -401,7 +423,7 @@ export default {
 
 /* ❄️ 여름쿨 */
 .summer-title {
-    background: linear-gradient(90deg, #AEE3FF, #7CC9F8);
+    background: linear-gradient(90deg, #aee3ff, #7cc9f8);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -413,7 +435,7 @@ export default {
 
 /* 🍂 가을웜 */
 .fall-title {
-    background: linear-gradient(90deg, #E8B77E, #D69A5E);
+    background: linear-gradient(90deg, #e8b77e, #d69a5e);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -425,7 +447,7 @@ export default {
 
 /* ❄️ 겨울쿨 */
 .winter-title {
-    background: linear-gradient(90deg, #9278FF, #6A5ACD);
+    background: linear-gradient(90deg, #9278ff, #6a5acd);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -435,94 +457,115 @@ export default {
     text-shadow: 1px 1px 5px rgba(130, 100, 230, 0.8);
 }
 
-
 .summer-title {
-  color: #91c7d6;
+    color: #91c7d6;
 }
 
 .fall-title {
-  color: #d68d63;
+    color: #d68d63;
 }
 
 .winter-title {
-  color: #7e57c2;
+    color: #7e57c2;
 }
 @import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
 
 /* 페이지 타이틀 */
 .page-title {
-  font-size: 2.2rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
-  letter-spacing: 1px;
-  font-family: "Jua", sans-serif;
+    font-size: 2.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    font-family: "Jua", sans-serif;
 }
 
 /* 봄웜 스타일 */
 .spring-title {
-  color: #ffb6b9;
-  background: linear-gradient(90deg, #ffe4e4, #ffb6b9);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    color: #ffb6b9;
+    background: linear-gradient(90deg, #ffe4e4, #ffb6b9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* 여름쿨 스타일 */
 .summer-title {
-  color: #91c7d6;
-  background: linear-gradient(90deg, #d4f1f9, #91c7d6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    color: #91c7d6;
+    background: linear-gradient(90deg, #d4f1f9, #91c7d6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* 가을웜 스타일 */
 .fall-title {
-  color: #d68d63;
-  background: linear-gradient(90deg, #f5ceb1, #d68d63);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    color: #d68d63;
+    background: linear-gradient(90deg, #f5ceb1, #d68d63);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* 겨울쿨 스타일 */
 .winter-title {
-  color: #7e57c2;
-  background: linear-gradient(90deg, #c5b3e7, #7e57c2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    color: #7e57c2;
+    background: linear-gradient(90deg, #c5b3e7, #7e57c2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.dotted-box-container {
+    display: flex;
+    justify-content: center; /* ✅ 가운데 정렬 */
+    width: 100%; /* ✅ 부모 크기 유지 */
+}
+
+.dotted-box {
+    border: 2px dashed rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    width: 90%; /* ✅ separator-line과 동일한 너비 */
+    max-width: 950px; /* ✅ 최대 너비 동일 */
+    min-height: 80px;
+    background-color: #fbf7ff;
+    margin-bottom: 10px;
+}
+
+.season-description {
+    font-size: 1rem;
+    color: #333333ce;
 }
 
 .refresh-button {
-  position: absolute;
-  top: 15px;
-  right: 80px;
-  background-color: #afacacb8 !important;
-  width: 30px !important;
-  height: 30px !important;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 15px;
+    right: 80px;
+    background-color: #afacacb8 !important;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 .refresh-button v-icon {
-  font-size: 9px !important; /* 아이콘 크기 줄이기 */
+    font-size: 9px !important; /* 아이콘 크기 줄이기 */
 }
 
 /* 하위 색상 그리드 */
 .sub-tone-row {
-  margin-bottom: 10px;
-  padding: 10px;
-  border-bottom: 1px solid #d3d3d381;
-  width: 90%;
-  margin: 0 auto 10px auto;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 90%;
+    margin: 0 auto 10px auto;
 }
 
 .sub-tone-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 .tone-circle {
     width: 100px;
@@ -542,162 +585,153 @@ export default {
 }
 
 .tone-circle:hover {
-  transform: scale(1.1);
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    transform: scale(1.1);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* 클릭 효과 */
 .tone-circle:active {
-  transform: scale(0.95);
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    transform: scale(0.95);
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
 }
 .tone-label {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2c3e50;
 }
 
 /* 아바타 그리드 */
 .avatar-grid {
-  margin-top: 30px;
-  min-height: 500px; /* 데이터가 없을 때도 이 높이를 유지 */
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-.avatar-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.avatar-img {
-  width: 130px;
-  height: 130px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-/* 마우스 호버 시 애니메이션 */
-.avatar-container:hover .avatar-img {
-  transform: translateY(-5px);
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* 투표 컨테이너 */
-.vote-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-}
-.heart-icon {
-  cursor: pointer;
-  font-size: 25px;
-  transition: transform 0.2s ease;
-}
-.heart-icon:hover {
-  transform: scale(1.2);
-}
-.help-icon {
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.season-intro {
-    margin-top: 10px;
-    margin-bottom: 15px;
-}
-
-.season-description {
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: #4a3d5c;
-    background: linear-gradient(135deg, #f9e1e1, #e4d9ff);
-    padding: 18px 22px;
-    border-radius: 15px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    display: inline-block;
-    text-align: center;
-    line-height: 1.6;
-}
-
-
-@media screen and (max-width: 768px) {
-  /* ✅ 하위 색상 아이템 */
-  .sub-tone-row {
-    display: flex;
-    flex-wrap: nowrap; /* 한 줄 유지 */
-    overflow-x: auto; /* 가로 스크롤 활성화 */
-    scroll-behavior: smooth; /* 부드러운 스크롤 */
-    white-space: nowrap;
-    padding-bottom: 10px;
-    max-width: 100%; /* 부모 컨테이너 기준으로 크기 제한 */
-  }
-
-  /* ✅ 하위 색상 원 크기 줄이기 */
-  .tone-circle {
-    width: 70px;
-    height: 70px;
-    margin-bottom: 5px;
-  }
-
-  /* ✅ 라벨 크기 줄이고 두 줄 방지 */
-  .tone-label {
-    font-size: 10px; /* 글자 크기 줄이기 */
-    font-weight: bold;
-    width: 80px; /* 고정 너비 설정 */
-    overflow: hidden; /* 넘치는 글자는 숨김 */
-    text-overflow: ellipsis; /* 말줄임표(...) 적용 */
-    white-space: nowrap; /* 두 줄로 내려가지 않도록 설정 */
-    text-align: center;
-  }
-
-  /* ✅ 모바일에서만 스크롤바 스타일 적용 */
-  .sub-tone-row::-webkit-scrollbar {
-    height: 5px;
-  }
-
-  .sub-tone-row::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 10px;
-  }
-
-  .sub-tone-row::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .avatar-grid {
+    margin-top: 30px;
+    min-height: 500px; /* 데이터가 없을 때도 이 높이를 유지 */
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-  }
-
-  .avatar-img {
-    width: 90px; /* 모바일에서 크기 줄이기 */
-    height: 90px;
-  }
-
-  .avatar-container {
-    width: 50%; /* 2개씩 정렬 */
+}
+.avatar-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  }
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.avatar-img {
+    width: 130px;
+    height: 130px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
 
-  .heart-icon {
-    font-size: 18px; /* 모바일에서 아이콘 크기 줄이기 */
-  }
+/* 마우스 호버 시 애니메이션 */
+.avatar-container:hover .avatar-img {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
 
-  .vote-container {
-    margin-top: 3px;
-  }
+/* 투표 컨테이너 */
+.vote-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+.heart-icon {
+    cursor: pointer;
+    font-size: 25px;
+    transition: transform 0.2s ease;
+}
+.heart-icon:hover {
+    transform: scale(1.2);
+}
+.help-icon {
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+}
+.heart-text-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+@media screen and (max-width: 768px) {
+    /* ✅ 하위 색상 아이템 */
+    .sub-tone-row {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        white-space: nowrap;
+        padding-bottom: 10px;
+        max-width: 100%;
+    }
+
+    /* ✅ 하위 색상 원 크기 줄이기 */
+    .tone-circle {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 5px;
+    }
+
+    /* ✅ 라벨 크기 줄이고 두 줄 방지 */
+    .tone-label {
+        font-size: 10px;
+        font-weight: bold;
+        width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: center;
+    }
+    .dotted-box {
+        width: 100%; /* ✅ 모바일에서 너비를 최대로 설정 */
+        max-width: 100%; /* ✅ 부모 크기에 맞게 자동 조정 */
+    }
+
+    /* ✅ 모바일에서만 스크롤바 스타일 적용 */
+    .sub-tone-row::-webkit-scrollbar {
+        height: 5px;
+    }
+
+    .sub-tone-row::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+    }
+
+    .sub-tone-row::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .avatar-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .avatar-img {
+        width: 90px; /* 모바일에서 크기 줄이기 */
+        height: 90px;
+    }
+
+    .avatar-container {
+        width: 50%; /* 2개씩 정렬 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .heart-icon {
+        font-size: 18px; /* 모바일에서 아이콘 크기 줄이기 */
+    }
+
+    .vote-container {
+        margin-top: 3px;
+    }
 }
 </style>
