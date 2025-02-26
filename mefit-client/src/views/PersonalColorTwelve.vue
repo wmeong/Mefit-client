@@ -48,7 +48,7 @@
         <div class="palette-section" v-if="palette.length">
             <v-row justify="center" align="center">
                 <img
-                    src="@/assets/back.webp"
+                    src="@/assets/colorbrush.webp"
                     alt="Back Icon"
                     class="back-text-icon"
                 />
