@@ -35,30 +35,41 @@
       </v-card-title>
       <v-divider></v-divider>
       <v-list dense class="character-list">
-        <v-list-item
-          v-for="(character, index) in popularCharacters"
-          :key="index"
-          class="character-item"
-          @click="selectCharacter(character.characterName)"
-        >
-          <v-list-item-avatar class="avatar-container">
-            <v-img
-              :src="character.characterImage"
-              alt="character avatar"
-              max-width="90"
-              max-height="90"
-            ></v-img>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title class="character-name-box">
-              {{ index + 1 }} {{ character.characterName }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              Lv.{{ character.characterLevel }} {{ character.characterClass }} -
-              {{ character.worldName }}
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
+        <template v-if="loading">
+          <v-skeleton-loader
+            v-for="i in 5"
+            :key="i"
+            class="skeleton-item"
+            type="list-item-avatar-three-line"
+          />
+        </template>
+        <template v-else>
+          <v-list-item
+            v-for="(character, index) in popularCharacters"
+            :key="index"
+            class="character-item"
+            @click="selectCharacter(character.characterName)"
+          >
+            <v-list-item-avatar class="avatar-container">
+              <v-img
+                :src="character.characterImage"
+                alt="character avatar"
+                max-width="90"
+                max-height="90"
+              ></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title class="character-name-box">
+                {{ index + 1 }} {{ character.characterName }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Lv.{{ character.characterLevel }}
+                {{ character.characterClass }} -
+                {{ character.worldName }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
       </v-list>
     </v-card>
 
@@ -70,19 +81,19 @@
       message="존재하지 않는 캐릭터입니다."
       @close="showAlert = false"
     />
+    <!-- 검색 중 Snackbar -->
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="2000"
+      color="teal lighten-3"
+      elevation="0"
+    >
+      {{ snackbarMessage }}
+      <template #actions>
+        <v-btn color="white" text @click="snackbar = false">닫기</v-btn>
+      </template>
+    </v-snackbar>
   </div>
-<!-- <v-snackbar
-  v-model="snackbar"
-  :timeout="2000"
-  color="teal accent-1"
-  elevation="0"
->
-  {{ snackbarMessage }}
-  <template #actions>
-    <v-btn color="white" text @click="snackbar = false">닫기</v-btn>
-  </template>
-</v-snackbar> -->
-
 </template>
 
 <script>
@@ -100,6 +111,7 @@ export default {
       isSearching: false, // 검색 중 상태 플래그
       snackbar: false,
       snackbarMessage: "",
+      loading: true,
     };
   },
   methods: {
@@ -142,7 +154,9 @@ export default {
      * 인기 캐릭터 목록 가져오기
      */
     async fetchPopularCharacters() {
+      this.loading = true;
       try {
+        // await new Promise((resolve) => setTimeout(resolve, 3000)); // 스켈레톤 테스트 3초 지연
         const response = await axios.get(
           `${process.env.VUE_APP_API_BASE_URL}/api/characters/popular?limit=10`
         );
@@ -156,6 +170,8 @@ export default {
         }));
       } catch (error) {
         console.error("Failed to fetch popular characters:", error);
+      } finally {
+        this.loading = false;
       }
     },
 
@@ -168,6 +184,10 @@ export default {
         name: "CharacterInfo",
         query: { q: name },
       });
+    },
+    closeAlert() {
+      this.showAlert = false;
+      this.snackbar = false; // 공통 팝업이 뜰 때 스낵바 숨김
     },
   },
   created() {
@@ -314,5 +334,9 @@ h2 {
   width: 20px;
   height: 20px;
   margin: 0 5px;
+}
+
+.skeleton-item {
+  margin: 10px 0;
 }
 </style>

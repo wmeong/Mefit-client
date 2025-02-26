@@ -126,7 +126,7 @@ header h1 .logo img {
 
 
 /* 모바일에서 햄버거 버튼 활성화 */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
     .hamburger-menu {
         display: block;
         position: absolute;

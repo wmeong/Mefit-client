@@ -8,7 +8,35 @@
         </div>
       </div>
     </v-row>
-
+  <div class="dotted-box-container">
+    <div class="dotted-box">
+      <p class="season-description">
+        <img
+          src="@/assets/spoid.webp"
+          alt="Heart Icon"
+          class="heart-text-icon"
+        />
+        검색해서 컬러픽! 캐릭터를 검색해 퍼스널컬러를 확인하고, 원하는 색을 선택해보세요
+        <img
+          src="@/assets/blink.webp"
+          alt="Heart Icon"
+          class="heart-text-icon"
+        />
+        <br />
+         <img
+          src="@/assets/pinkbox.webp"
+          alt="Heart Icon"
+          class="heart-text-icon"
+        />
+        게임에서 컬러픽! 마음에 드는 스타일을 발견했다면, 바로 컬러를 찍어 분석하고 나만의 컬러 팔레트를 만들어보세요
+        <img
+          src="@/assets/threehearts.webp"
+          alt="Heart Icon"
+          class="heart-text-icon"
+        />
+      </p>
+    </div>
+  </div>
     <!-- 검색 영역 -->
     <div class="search-bar-container">
       <!-- 검색창 -->
@@ -627,6 +655,32 @@ export default {
     vertical-align: middle;
 }
 
+.heart-text-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.dotted-box-container {
+  display: flex;
+  justify-content: center; /* ✅ 가운데 정렬 */
+  width: 100%; /* ✅ 부모 크기 유지 */
+  margin-top: 30px;
+}
+
+.dotted-box {
+  border: 2px dashed rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  padding: 10px 15px; /* 내부 여백 줄이기 */
+  text-align: center;
+  width: auto; /* 필요 이상으로 커지는 것 방지 */
+  max-width: 800px; /* 최대 너비 제한 */
+  min-height: unset; /* min-height 제거 */
+  background-color: #fbf7ff;
+  margin-bottom: 10px;
+  display: inline-block; /* 내용에 맞춰 크기 조절 */
+}
 
 @media (max-width: 600px) {
   :deep(.v-container),
